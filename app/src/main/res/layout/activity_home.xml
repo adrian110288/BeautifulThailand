@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.adrianlesniak.beautifulthailand.HomeActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.adrianlesniak.beautifulthailand.BTToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:actionBarSize"
+            android:background="@color/colorPrimary"
+            android:elevation="10dp"
+            app:primary_icon="@drawable/ic_sample_11"
+            app:secondary_icon="@drawable/ic_sample_18">
+
+        </com.adrianlesniak.beautifulthailand.BTToolbar>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="@dimen/navigation_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/colorPrimary"
+        android:fitsSystemWindows="true">
+
+        <!--<fragment-->
+            <!--android:id="@+id/navigationFragment"-->
+            <!--android:name="com.adrianlesniak.beautifulthailand.navigation.NavigationFragment"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
+
+    </FrameLayout>
+
+</android.support.v4.widget.DrawerLayout>
