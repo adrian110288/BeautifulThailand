@@ -41,10 +41,10 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         });
 
         this.mPlacePhotoView = (ImageView) findViewById(R.id.place_photo_view);
-        this.mPlacePhotoView.setVisibility(this.mPlace.getPhotos() != null && this.mPlace.getPhotos().size() > 0? View.VISIBLE : View.GONE);
-        if(this.mPlace.getPhotos() != null && this.mPlace.getPhotos().size() > 0) {
+        this.mPlacePhotoView.setVisibility(this.mPlace.getPhotosList() != null && this.mPlace.getPhotosList().size() > 0? View.VISIBLE : View.GONE);
+        if(this.mPlace.getPhotosList() != null && this.mPlace.getPhotosList().size() > 0) {
 
-            String uri = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=" + this.mPlace.getPhotos().get(0).getWidth() + "&photoreference=" + this.mPlace.getPhotos().get(0).getPhotoReference() + "&key=" + this.getString(R.string.api_key);
+            String uri = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=" + this.mPlace.getPhotosList().get(0).getWidth() + "&photoreference=" + this.mPlace.getPhotosList().get(0).getPhotoReference() + "&key=" + this.getString(R.string.api_key);
 
             Picasso.with(this).
                     load(Uri.parse(uri)).

@@ -1,6 +1,7 @@
 package com.adrianlesniak.beautifulthailand;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
 import org.json.JSONException;
@@ -26,23 +27,23 @@ public class LocalPlacesLoader extends AsyncTaskLoader<LocalPlacesResponse> {
 
     private OkHttpClient mClient;
 
-    private Location mLocation;
+    private Bundle mLocationBundle;
 
     private int mRadius;
 
-    public LocalPlacesLoader(Context context, Location location, int radius) {
+    public LocalPlacesLoader(Context context, Bundle bundle, int radius) {
         super(context);
 
         this.mContext = context;
         this.mClient = new OkHttpClient();
-        this.mLocation = location;
+        this.mLocationBundle = bundle;
         mRadius = radius;
     }
 
     @Override
     public LocalPlacesResponse loadInBackground() {
 
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + String.valueOf(mLocation.getLatitude()) + "," + String.valueOf(mLocation.getLongitude()) + "&radius=" + String.valueOf(mRadius) + "&key=" + mContext.getString(R.string.api_key);
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + String.valueOf(this.mLocationBundle.getDouble(BUNDLE_LAT)) + "," + String.valueOf(this.mLocationBundle.getDouble(BUNDLE_LNG)) + "&radius=" + String.valueOf(mRadius) + "&key=" + mContext.getString(R.string.api_key);
 
         Request request = new Request.Builder()
                 .url(url)

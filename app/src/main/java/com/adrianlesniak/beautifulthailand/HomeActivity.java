@@ -3,6 +3,7 @@ package com.adrianlesniak.beautifulthailand;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -18,6 +19,9 @@ import android.view.Gravity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class HomeActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse>, LocalPlacesAdapter.OnItemClickListener {
@@ -78,7 +82,6 @@ public class HomeActivity extends AppCompatActivity implements
         super.onStop();
     }
 
-
     @Override
     public void onConnected(Bundle connectionHint) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -123,7 +126,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     private void getLastKnownLocation() {
 
-        android.location.Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
 
             Bundle locationBundle = new Bundle();
@@ -137,9 +140,7 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     public Loader<LocalPlacesResponse> onCreateLoader(int id, Bundle args) {
 
-        com.adrianlesniak.beautifulthailand.Location location = new com.adrianlesniak.beautifulthailand.Location(args.getDouble(LocalPlacesLoader.BUNDLE_LAT), args.getDouble(LocalPlacesLoader.BUNDLE_LNG));
-
-        return new LocalPlacesLoader(this, location, 500);
+        return new LocalPlacesLoader(this, args, 500);
     }
 
     @Override

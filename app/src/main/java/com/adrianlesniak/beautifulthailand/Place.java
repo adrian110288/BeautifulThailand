@@ -7,70 +7,103 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by adrian on 21/01/2017.
  */
 
-public class Place implements Parcelable {
+public class Place extends RealmObject implements Parcelable {
 
-    private String mId;
+    @PrimaryKey
+    private String id;
 
-    private String mPlaceId;
+    private String placeId;
 
-    private String mName;
+    private String name;
 
-    private List<Photo> mPhotos;
+    private RealmList<Photo> photosList;
+
+    private boolean isFavourite;
+
+    private boolean toVisit;
+
+    public Place(){}
 
     public Place(JSONObject mPlaceData) throws JSONException {
 
-        this.mId = mPlaceData.getString("id");
-        this.mPlaceId = mPlaceData.getString("place_id");
-        this.mName = mPlaceData.getString("name");
+        this.id = mPlaceData.getString("id");
+        this.placeId = mPlaceData.getString("place_id");
+        this.name = mPlaceData.getString("name");
 
         JSONArray photosArray = mPlaceData.has("photos")? mPlaceData.getJSONArray("photos") : null;
         parsePhotos(photosArray);
+
+        this.isFavourite = false;
+        this.toVisit = false;
     }
 
     public Place(Parcel parcel) {
-        this.mId = parcel.readString();
-        this.mPlaceId = parcel.readString();
-        this.mName = parcel.readString();
+        this.id = parcel.readString();
+        this.placeId = parcel.readString();
+        this.name = parcel.readString();
 
-        this.mPhotos = new ArrayList<>();
-        parcel.readTypedList(this.mPhotos, Photo.CREATOR);
+        this.photosList = new RealmList<>();
+
+        parcel.readTypedList(this.photosList, Photo.CREATOR);
+
+        this.isFavourite = parcel.readByte() != 0;
+        this.toVisit = parcel.readByte() != 0;
     }
 
     private void parsePhotos(JSONArray photosArray) throws JSONException {
 
         if(photosArray != null) {
 
-            this.mPhotos = new ArrayList<>(photosArray.length());
+            this.photosList = new RealmList<>();
 
             for (int index = 0; index < photosArray.length(); index++) {
 
                 Photo photo = new Photo(photosArray.getJSONObject(index));
-                this.mPhotos.add(photo);
+                this.photosList.add(photo);
             }
         }
     }
 
     public String getId() {
-        return this.mId;
+        return this.id;
     }
 
     public String getPlaceId() {
-        return this.mPlaceId;
+        return this.placeId;
     }
 
     public String getName() {
-        return this.mName;
+        return this.name;
     }
 
-    public List<Photo> getPhotos() {
-        return this.mPhotos;
+    public List<Photo> getPhotosList() {
+        return this.photosList;
+    }
+
+    public boolean getIsFavourite() {
+        return this.isFavourite;
+    }
+
+    public void setIsFavourite(boolean favourite) {
+        this.isFavourite = favourite;
+    }
+
+    public boolean getToVisit() {
+        return this.toVisit;
+    }
+
+    public void setToVisit(boolean visit) {
+        this.toVisit= visit;
     }
 
     @Override
@@ -80,10 +113,12 @@ public class Place implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.mId);
-        dest.writeString(this.mPlaceId);
-        dest.writeString(this.mName);
-        dest.writeTypedList(this.mPhotos);
+        dest.writeString(this.id);
+        dest.writeString(this.placeId);
+        dest.writeString(this.name);
+        dest.writeTypedList(this.photosList);
+        dest.writeByte((byte)(this.isFavourite? 0x01 : 0x00));
+        dest.writeByte((byte)(this.toVisit? 0x01 : 0x00));
     }
 
     public static final Parcelable.Creator<Place> CREATOR = new Parcelable.Creator<Place>() {
@@ -95,59 +130,4 @@ public class Place implements Parcelable {
             return new Place[size];
         }
     };
-
-    public static class Photo implements Parcelable {
-
-        private int mWidth;
-
-        private int mHeight;
-
-        private String mPhotoReference;
-
-        public Photo(JSONObject photoData) throws JSONException {
-            this.mWidth = photoData.getInt("width");
-            this.mHeight = photoData.getInt("height");
-            this.mPhotoReference = photoData.getString("photo_reference");
-        }
-
-        public Photo(Parcel parcel) {
-            this.mWidth = parcel.readInt();
-            this.mHeight = parcel.readInt();
-            this.mPhotoReference = parcel.readString();
-        }
-
-        public int getWidth() {
-            return this.mWidth;
-        }
-
-        public int getHeight() {
-            return this.mHeight;
-        }
-
-        public String getPhotoReference() {
-            return this.mPhotoReference;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(this.mWidth);
-            dest.writeInt(this.mHeight);
-            dest.writeString(this.mPhotoReference);
-        }
-
-        public static final Parcelable.Creator<Photo> CREATOR = new Parcelable.Creator<Photo>() {
-            public Photo createFromParcel(Parcel in) {
-                return new Photo(in);
-            }
-
-            public Photo[] newArray(int size) {
-                return new Photo[size];
-            }
-        };
-    }
 }
