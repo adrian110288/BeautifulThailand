@@ -24,9 +24,13 @@ public class LocalPlacesResponse {
 
     private String mStatus;
 
+    private String mNextPageToken;
+
     public LocalPlacesResponse(JSONObject mResponse) throws JSONException {
 
         this.mStatus = mResponse.getString("status");
+
+        this.mNextPageToken = mResponse.has("next_page_token")? mResponse.getString("next_page_token") : null;
 
         JSONArray resultsArray = mResponse.getJSONArray("results");
         parseResults(resultsArray);
@@ -52,5 +56,9 @@ public class LocalPlacesResponse {
 
     public List<Place> getResults() {
         return this.mResults;
+    }
+
+    public String getNextPageToken() {
+        return this.mNextPageToken;
     }
 }

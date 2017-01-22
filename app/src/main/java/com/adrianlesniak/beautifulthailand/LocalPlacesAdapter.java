@@ -1,11 +1,17 @@
 package com.adrianlesniak.beautifulthailand;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -15,24 +21,42 @@ import java.util.List;
 
 public class LocalPlacesAdapter extends RecyclerView.Adapter<LocalPlacesAdapter.ViewHolder> {
 
+    public interface OnItemClickListener {
+        void onItemClicked(Place place);
+    }
+
     private List<Place> mDataSet;
 
-    public LocalPlacesAdapter(List<Place> dataSet) {
+    private OnItemClickListener mOnItemClickListener;
+
+    public LocalPlacesAdapter(List<Place> dataSet, OnItemClickListener listener) {
         this.mDataSet = dataSet;
+        this.mOnItemClickListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.place_list_item, parent, false);
 
-        ViewHolder vh = new ViewHolder(view);
+        ViewHolder vh = new ViewHolder(parent.getContext(), view);
 
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindData(this.mDataSet.get(position));
+
+        final Place place = this.mDataSet.get(position);
+
+        holder.bindData(place);
+        holder.getView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClicked(place);
+                }
+            }
+        });
     }
 
     @Override
@@ -47,16 +71,70 @@ public class LocalPlacesAdapter extends RecyclerView.Adapter<LocalPlacesAdapter.
 
     protected static final class ViewHolder extends RecyclerView.ViewHolder {
 
+        private Place mPlace;
+
+        private Context mContext;
+
+        private View mView;
+
         private TextView mPlaceNameView;
 
-        public ViewHolder(View itemView) {
+        private ImageView mPlacePhotoView;
+
+        private ImageButton mPlaceAddToFavView;
+
+        private ImageButton mPlaceAddToVisit;
+
+        public ViewHolder(Context context, View itemView) {
             super(itemView);
 
+            this.mView = itemView;
+            this.mContext = context;
             this.mPlaceNameView = (TextView) itemView.findViewById(R.id.place_name_view);
+            this.mPlacePhotoView = (ImageView) itemView.findViewById(R.id.place_photo_view);
+            this.mPlaceAddToFavView = (ImageButton) itemView.findViewById(R.id.place_add_to_fav);
+            this.mPlaceAddToFavView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mPlace != null) {
+                        // TODO: Set place to favourite
+                    }
+                }
+            });
+            this.mPlaceAddToVisit = (ImageButton) itemView.findViewById(R.id.place_add_to_visit);
+            this.mPlaceAddToVisit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if(mPlace != null) {
+                        // TODO: Set place to visit
+                    }
+
+                }
+            });
         }
 
         public void bindData(Place place) {
+
+            this.mPlace = place;
+
             this.mPlaceNameView.setText(place.getName());
+
+            if(place.getPhotos() != null && place.getPhotos().size() > 0) {
+
+                String uri = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=" + place.getPhotos().get(0).getWidth() + "&photoreference=" + place.getPhotos().get(0).getPhotoReference() + "&key=" + this.mContext.getString(R.string.api_key);
+
+                Picasso.with(this.mContext).
+                        load(Uri.parse(uri)).
+                        into(this.mPlacePhotoView);
+            }
+
+
+
+        }
+
+        public View getView() {
+            return this.mView;
         }
     }
 }

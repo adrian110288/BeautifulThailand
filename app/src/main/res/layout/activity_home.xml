@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?android:actionBarSize"
             android:background="@color/colorPrimary"
-            android:elevation="10dp"
+            android:elevation="15dp"
             app:primary_icon="@drawable/ic_sample_11"
             app:secondary_icon="@drawable/ic_sample_18">
 

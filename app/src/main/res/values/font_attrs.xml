@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BTTextView_attrs">
+        <attr name="font_type" format="enum">
+            <enum name="bold" value="0" />
+            <enum name="bold_italic" value="1" />
+            <enum name="demi_bold_italic" value="2" />
+            <enum name="demi_bold" value="3" />
+            <enum name="extra_light_italic" value="4" />
+            <enum name="extra_light" value="5" />
+            <enum name="heavy" value="6" />
+            <enum name="heavy_italic" value="7" />
+            <enum name="light" value="8" />
+            <enum name="light_italic" value="9" />
+            <enum name="medium" value="10" />
+            <enum name="medium_italic" value="11" />
+            <enum name="regular" value="12" />
+            <enum name="regular_italic" value="13" />
+            <enum name="stencil" value="14" />
+        </attr>
+    </declare-styleable>
+</resources>

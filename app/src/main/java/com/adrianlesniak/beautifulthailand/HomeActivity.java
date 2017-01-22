@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -18,7 +19,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 public class HomeActivity extends AppCompatActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse> {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse>, LocalPlacesAdapter.OnItemClickListener {
 
     private DrawerLayout mDrawerLayout;
 
@@ -54,7 +55,7 @@ public class HomeActivity extends AppCompatActivity implements
         this.mPlacesList = (RecyclerView) this.findViewById(R.id.places_list);
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        this.mAdapter = new LocalPlacesAdapter(null);
+        this.mAdapter = new LocalPlacesAdapter(null, this);
         this.mPlacesList.setAdapter(this.mAdapter);
 
         if (this.mGoogleApiClient == null) {
@@ -147,6 +148,11 @@ public class HomeActivity extends AppCompatActivity implements
 
     @Override
     public void onLoaderReset(Loader<LocalPlacesResponse> loader) {
+
+    }
+
+    @Override
+    public void onItemClicked(Place place) {
 
     }
 }
