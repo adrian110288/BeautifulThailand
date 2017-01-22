@@ -18,8 +18,8 @@
             android:layout_height="?android:actionBarSize"
             android:background="@color/colorPrimary"
             android:elevation="15dp"
-            app:primary_icon="@drawable/ic_sample_11"
-            app:secondary_icon="@drawable/ic_sample_18">
+            app:primary_icon="@drawable/ic_drawer"
+            app:secondary_icon="@drawable/ic_search">
 
         </com.adrianlesniak.beautifulthailand.BTToolbar>
 

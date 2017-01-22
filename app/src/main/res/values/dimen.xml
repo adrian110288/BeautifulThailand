@@ -2,4 +2,5 @@
 <resources>
     <dimen name="standard_margin">16dp</dimen>
     <dimen name="navigation_width">300dp</dimen>
+    <dimen name="place_list_item_photo_height">250dp</dimen>
 </resources>

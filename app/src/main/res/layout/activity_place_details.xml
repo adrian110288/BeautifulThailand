@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.adrianlesniak.beautifulthailand.BTToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="15dp"
+        app:primary_icon="@drawable/ic_close"
+        app:secondary_icon="@drawable/ic_bookmark">
+
+    </com.adrianlesniak.beautifulthailand.BTToolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/place_photo_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"/>
+
+            <com.adrianlesniak.beautifulthailand.BTTextView
+                android:id="@+id/place_name_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/place_photo_view"
+                android:layout_margin="@dimen/standard_margin"
+                android:layout_toRightOf="@+id/place_title_icon"
+                android:textSize="30sp"
+                app:font_type="bold"
+                tools:text="Stretford Grammar School" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>

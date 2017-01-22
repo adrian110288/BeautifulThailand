@@ -17,9 +17,8 @@
         <ImageView
             android:id="@+id/place_photo_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/place_list_item_photo_height"
             android:adjustViewBounds="true"
-            android:cropToPadding="false"
             android:scaleType="centerCrop" />
 
         <RelativeLayout
@@ -32,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/standard_margin"
-                app:srcCompat="@drawable/ic_sample_19" />
+                app:srcCompat="@drawable/ic_globe" />
 
             <com.adrianlesniak.beautifulthailand.BTTextView
                 android:id="@+id/place_name_view"
@@ -55,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/place_name_view"
                 android:background="@android:color/transparent"
-                app:srcCompat="@drawable/ic_sample_03" />
+                app:srcCompat="@drawable/ic_heart_off" />
 
             <ImageButton
                 android:id="@+id/place_add_to_visit"
@@ -64,7 +63,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/place_name_view"
                 android:background="@android:color/transparent"
-                app:srcCompat="@drawable/ic_sample_16" />
+                app:srcCompat="@drawable/ic_bookmark" />
         </RelativeLayout>
     </LinearLayout>
 
