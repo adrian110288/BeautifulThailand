@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/navigation_item_height"
+    android:background="@drawable/navigation_list_item_background">
+
+    <FrameLayout
+        android:id="@+id/navigation_item_border"
+        android:layout_width="@dimen/navigation_item_left_border_width"
+        android:layout_height="match_parent"
+        android:background="@drawable/navigation_list_item_border_state_color_list"></FrameLayout>
+
+    <ImageView
+        android:id="@+id/navigation_item_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/standard_margin"
+        android:layout_marginRight="@dimen/standard_margin"
+        android:layout_toRightOf="@+id/navigation_item_border"
+        android:tint="@color/navigation_item_state_color_list"
+        app:srcCompat="@drawable/ic_bin" />
+
+    <com.adrianlesniak.beautifulthailand.BTTextView
+        android:id="@+id/navigation_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/navigation_item_icon"
+        android:textColor="@color/navigation_item_state_color_list"
+        app:font_type="bold"
+        tools:text="Home" />
+</RelativeLayout>

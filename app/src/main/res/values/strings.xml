@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Beautiful Thailand</string>
     <string name="api_key">AIzaSyCo2jpKyqCaInfuJrjHx_Ff-5zXiCjwzQA</string>
+
+    <!-- Navigation items-->
+
+    <string name="navigation_item_home">Home</string>
+    <string name="navigation_item_favourite">Favourite</string>
+    <string name="navigation_item_to_visit">To visit</string>
+    <string name="navigation_item_weather">Weather</string>
+    <string name="navigation_item_currency">Currency</string>
+    <string name="navigation_item_food">Food</string>
+    <string name="navigation_item_settings">Settings</string>
 </resources>

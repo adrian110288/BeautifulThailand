@@ -37,11 +37,11 @@
         android:background="@color/colorPrimary"
         android:fitsSystemWindows="true">
 
-        <!--<fragment-->
-            <!--android:id="@+id/navigationFragment"-->
-            <!--android:name="com.adrianlesniak.beautifulthailand.navigation.NavigationFragment"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent" />-->
+        <fragment
+            android:id="@+id/navigationFragment"
+            android:name="com.adrianlesniak.beautifulthailand.navigation.NavigationFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </FrameLayout>
 
