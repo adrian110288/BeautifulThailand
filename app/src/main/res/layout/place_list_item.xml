@@ -54,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/place_name_view"
                 android:background="@android:color/transparent"
-                app:srcCompat="@drawable/favourite_icon_state_list" />
+                app:srcCompat="@drawable/favourite_icon_state_list"
+                android:tint="@color/colorHeart"/>
 
             <ImageButton
                 android:id="@+id/place_add_to_visit"

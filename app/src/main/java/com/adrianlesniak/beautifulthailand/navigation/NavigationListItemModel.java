@@ -6,7 +6,7 @@ import android.support.annotation.DrawableRes;
  * Created by adrian on 22/01/2017.
  */
 
-public class NavigationListItem {
+public class NavigationListItemModel {
 
     @DrawableRes
     private int mIconRes;
@@ -17,7 +17,7 @@ public class NavigationListItem {
 
     private boolean mSelected;
 
-    public NavigationListItem(int iconRes, String title, Class destination, boolean selected) {
+    public NavigationListItemModel(int iconRes, String title, Class destination, boolean selected) {
         this.mIconRes = iconRes;
         this.mTitle = title;
         this.mDestination = destination;
