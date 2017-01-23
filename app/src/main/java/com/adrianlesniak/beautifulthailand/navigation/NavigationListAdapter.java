@@ -9,8 +9,6 @@ import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
 
-import java.util.ArrayList;
-
 /**
  * Created by adrian on 22/01/2017.
  */
@@ -18,7 +16,7 @@ import java.util.ArrayList;
 public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAdapter.NavigationItemViewHolder> {
 
     public interface OnNavigationListItemClicked {
-        void onNavigationListItemClicked(NavigationListItem item);
+        void onNavigationListItemClicked(NavigationListItemModel item);
     }
 
     private NavigationListData mListData;
@@ -44,7 +42,7 @@ public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAd
     @Override
     public void onBindViewHolder(NavigationItemViewHolder holder, int position) {
 
-        final NavigationListItem itemData = this.mListData.get(position);
+        final NavigationListItemModel itemData = this.mListData.get(position);
 
         holder.bindData(itemData);
         holder.getView().setOnClickListener(new View.OnClickListener() {
@@ -85,7 +83,7 @@ public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAd
             this.mNavigationItemIcon = (ImageView) itemView.findViewById(R.id.navigation_item_icon);
         }
 
-        public void bindData(NavigationListItem data) {
+        public void bindData(NavigationListItemModel data) {
 
             this.mView.setSelected(data.isSelected());
 

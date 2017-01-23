@@ -53,7 +53,7 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
     }
 
     @Override
-    public void onNavigationListItemClicked(NavigationListItem item) {
+    public void onNavigationListItemClicked(NavigationListItemModel item) {
 
         if(item != null && item.getDestination() != null)  {
             Intent navigationIntent = new Intent(getContext(), item.getDestination());

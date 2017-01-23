@@ -2,7 +2,6 @@ package com.adrianlesniak.beautifulthailand;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +14,12 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Created by adrian on 21/01/2017.
  */
 
-public class LocalPlacesAdapter extends RecyclerView.Adapter<LocalPlacesAdapter.ViewHolder> {
+public class LocalPlacesAdapter extends RecyclerView.Adapter<LocalPlacesAdapter.PlaceViewHolder> {
 
     public interface OnItemClickListener {
         void onItemClicked(Place place);
@@ -32,39 +29,67 @@ public class LocalPlacesAdapter extends RecyclerView.Adapter<LocalPlacesAdapter.
 
     private OnItemClickListener mOnItemClickListener;
 
-    public LocalPlacesAdapter(List<Place> dataSet, OnItemClickListener listener) {
+    private Realm mRealmInstance;
+
+    public LocalPlacesAdapter(List<Place> dataSet, OnItemClickListener listener, Realm realmInstance) {
         this.mDataSet = dataSet;
         this.mOnItemClickListener = listener;
+        this.mRealmInstance = realmInstance;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PlaceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.place_list_item, parent, false);
 
-        ViewHolder vh = new ViewHolder(view);
-
-        return vh;
+        return new PlaceViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(PlaceViewHolder holder, int position) {
 
         final Place place = this.mDataSet.get(position);
 
-        Place queriedPlace = Realm.getDefaultInstance().where(Place.class).equalTo("id", place.getId()).findFirst();
+        Place queriedPlace = this.mRealmInstance.where(Place.class).equalTo("id", place.getId()).findFirst();
         if(queriedPlace != null) {
             place.setIsFavourite(queriedPlace.getIsFavourite());
         }
 
-        holder.bindData(place);
-        holder.getView().setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener holderViewClickListener = new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if(mOnItemClickListener != null) {
                     mOnItemClickListener.onItemClicked(place);
                 }
             }
-        });
+        };
+
+        View.OnClickListener addToFavouriteViewClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                place.setIsFavourite(!place.getIsFavourite());
+
+                mRealmInstance.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealmOrUpdate(place);
+                        view.setSelected(place.getIsFavourite());
+                    }
+                });
+            }
+        };
+
+        View.OnClickListener addToVisitViewClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: Add to visit
+            }
+        };
+
+        holder.bindData(place);
+
+        holder.view.setOnClickListener(holderViewClickListener);
+        holder.addToFavouriteView.setOnClickListener(addToFavouriteViewClickListener);
+        holder.addToVisitView.setOnClickListener(addToVisitViewClickListener);
     }
 
     @Override
@@ -77,79 +102,41 @@ public class LocalPlacesAdapter extends RecyclerView.Adapter<LocalPlacesAdapter.
         this.notifyDataSetChanged();
     }
 
-    protected static final class ViewHolder extends RecyclerView.ViewHolder {
+    protected static final class PlaceViewHolder extends RecyclerView.ViewHolder {
 
-        private Place mPlace;
+        protected View view;
 
-        private View mView;
+        private TextView placeNameView;
 
-        private TextView mPlaceNameView;
+        private ImageView placePhotoView;
 
-        private ImageView mPlacePhotoView;
+        protected ImageButton addToFavouriteView;
 
-        private ImageButton mPlaceAddToFavView;
+        protected ImageButton addToVisitView;
 
-        private ImageButton mPlaceAddToVisit;
-
-        public ViewHolder(View itemView) {
+        public PlaceViewHolder(View itemView) {
             super(itemView);
 
-            this.mView = itemView;
-            this.mPlaceNameView = (TextView) itemView.findViewById(R.id.place_name_view);
-            this.mPlacePhotoView = (ImageView) itemView.findViewById(R.id.place_photo_view);
-            this.mPlaceAddToFavView = (ImageButton) itemView.findViewById(R.id.place_add_to_fav);
-            this.mPlaceAddToFavView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(mPlace != null) {
-
-                        mPlace.setIsFavourite(!mPlace.getIsFavourite());
-
-                        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                realm.copyToRealmOrUpdate(mPlace);
-                                mPlaceAddToFavView.setSelected(mPlace.getIsFavourite());
-                            }
-                        });
-
-                    }
-                }
-            });
-            this.mPlaceAddToVisit = (ImageButton) itemView.findViewById(R.id.place_add_to_visit);
-            this.mPlaceAddToVisit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(mPlace != null) {
-                        // TODO: Set place to visit
-                    }
-
-                }
-            });
+            this.view = itemView;
+            this.placeNameView = (TextView) itemView.findViewById(R.id.place_name_view);
+            this.placePhotoView = (ImageView) itemView.findViewById(R.id.place_photo_view);
+            this.addToFavouriteView = (ImageButton) itemView.findViewById(R.id.place_add_to_fav);
+            this.addToVisitView = (ImageButton) itemView.findViewById(R.id.place_add_to_visit);
         }
 
         public void bindData(Place place) {
 
-            this.mPlace = place;
+            this.placeNameView.setText(place.getName());
+            this.addToFavouriteView.setSelected(place.getIsFavourite());
 
-            this.mPlaceNameView.setText(place.getName());
+            if(place.getPhotosList() != null && !place.getPhotosList().isEmpty()) {
 
-            if(place.getPhotosList() != null && place.getPhotosList().size() > 0) {
+                String uri = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=" + place.getPhotosList().get(0).getWidth() + "&photoreference=" + place.getPhotosList().get(0).getPhotoReference() + "&key=" + this.view.getContext().getString(R.string.api_key);
 
-                String uri = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=" + place.getPhotosList().get(0).getWidth() + "&photoreference=" + place.getPhotosList().get(0).getPhotoReference() + "&key=" + this.mView.getContext().getString(R.string.api_key);
-
-                Picasso.with(this.mView.getContext()).
+                Picasso.with(this.view.getContext()).
                         load(Uri.parse(uri)).
-                        into(this.mPlacePhotoView);
+                        into(this.placePhotoView);
             }
-
-            this.mPlaceAddToFavView.setSelected(place.getIsFavourite());
-        }
-
-        public View getView() {
-            return this.mView;
         }
     }
 }

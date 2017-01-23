@@ -12,27 +12,27 @@ import java.util.ArrayList;
  * Created by adrian on 22/01/2017.
  */
 
-public class NavigationListData extends ArrayList<NavigationListItem> {
+public class NavigationListData extends ArrayList<NavigationListItemModel> {
 
-    private NavigationListItem mSelectedItem;
+    private NavigationListItemModel mSelectedItem;
 
     public NavigationListData(Context context) {
 
-        NavigationListItem itemHome = new NavigationListItem(
+        NavigationListItemModel itemHome = new NavigationListItemModel(
                 R.drawable.ic_local,
                 context.getString(R.string.navigation_item_home),
                 HomeActivity.class,
                 true
         );
 
-        NavigationListItem itemFavourite = new NavigationListItem(
+        NavigationListItemModel itemFavourite = new NavigationListItemModel(
                 R.drawable.ic_heart_off,
                 context.getString(R.string.navigation_item_favourite),
                 FavouritesActivity.class,
                 false
         );
 
-        NavigationListItem itemToVisit = new NavigationListItem(
+        NavigationListItemModel itemToVisit = new NavigationListItemModel(
                 R.drawable.ic_bookmark,
                 context.getString(R.string.navigation_item_to_visit),
                 null,
@@ -40,7 +40,7 @@ public class NavigationListData extends ArrayList<NavigationListItem> {
 //                FavouritesActivity.class
         );
 
-        NavigationListItem itemWeather = new NavigationListItem(
+        NavigationListItemModel itemWeather = new NavigationListItemModel(
                 R.drawable.ic_weather,
                 context.getString(R.string.navigation_item_weather),
                 null,
@@ -48,7 +48,7 @@ public class NavigationListData extends ArrayList<NavigationListItem> {
 //                WeatherActivity.class
         );
 
-        NavigationListItem itemCurrency = new NavigationListItem(
+        NavigationListItemModel itemCurrency = new NavigationListItemModel(
                 R.drawable.ic_currency,
                 context.getString(R.string.navigation_item_currency),
                 null,
@@ -56,7 +56,7 @@ public class NavigationListData extends ArrayList<NavigationListItem> {
 //                CurrencyActivity.class
         );
 
-        NavigationListItem itemFood = new NavigationListItem(
+        NavigationListItemModel itemFood = new NavigationListItemModel(
                 R.drawable.ic_food,
                 context.getString(R.string.navigation_item_food),
                 null,
@@ -64,7 +64,7 @@ public class NavigationListData extends ArrayList<NavigationListItem> {
 //                FoodActivity.class
         );
 
-        NavigationListItem itemSettings = new NavigationListItem(
+        NavigationListItemModel itemSettings = new NavigationListItemModel(
                 R.drawable.ic_settings,
                 context.getString(R.string.navigation_item_settings),
                 null,
@@ -81,7 +81,7 @@ public class NavigationListData extends ArrayList<NavigationListItem> {
         this.add(itemSettings);
     }
 
-    public void setSelectedItem(NavigationListItem selectedItem) {
+    public void setSelectedItem(NavigationListItemModel selectedItem) {
 
         this.mSelectedItem = selectedItem;
 

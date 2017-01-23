@@ -18,6 +18,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import io.realm.Realm;
+
 public class HomeActivity extends ToolbarActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse>, LocalPlacesAdapter.OnItemClickListener {
 
@@ -29,12 +31,16 @@ public class HomeActivity extends ToolbarActivity implements
 
     private GoogleApiClient mGoogleApiClient;
 
+    private Realm mRealmInstance;
+
     private static final int BT_PERMISSION_REQUEST_COARSE_LCOATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        this.mRealmInstance = Realm.getDefaultInstance();
 
         setup();
     }
@@ -48,7 +54,7 @@ public class HomeActivity extends ToolbarActivity implements
         this.mPlacesList = (RecyclerView) this.findViewById(R.id.places_list);
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        this.mAdapter = new LocalPlacesAdapter(null, this);
+        this.mAdapter = new LocalPlacesAdapter(null, this, this.mRealmInstance);
         this.mPlacesList.setAdapter(this.mAdapter);
 
         if (this.mGoogleApiClient == null) {
@@ -68,6 +74,13 @@ public class HomeActivity extends ToolbarActivity implements
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        this.mRealmInstance.close();
     }
 
     @Override
