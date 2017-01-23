@@ -1,5 +1,7 @@
 package com.adrianlesniak.beautifulthailand;
 
+import com.adrianlesniak.beautifulthailand.models.Place;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

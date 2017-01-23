@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand;
+package com.adrianlesniak.beautifulthailand.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.adrianlesniak.beautifulthailand.R;
+import com.adrianlesniak.beautifulthailand.views.BTTextView;
 
 /**
  * Created by adrian on 20/01/2017.

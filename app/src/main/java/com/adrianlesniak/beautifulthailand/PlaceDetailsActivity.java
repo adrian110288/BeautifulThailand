@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.adrianlesniak.beautifulthailand.models.Place;
+import com.adrianlesniak.beautifulthailand.views.BTTextView;
 import com.squareup.picasso.Picasso;
 
 public class PlaceDetailsActivity extends CloseableActivity {

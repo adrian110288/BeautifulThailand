@@ -33,7 +33,7 @@
                 android:layout_marginRight="@dimen/standard_margin"
                 app:srcCompat="@drawable/ic_globe" />
 
-            <com.adrianlesniak.beautifulthailand.BTTextView
+            <com.adrianlesniak.beautifulthailand.views.BTTextView
                 android:id="@+id/place_name_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

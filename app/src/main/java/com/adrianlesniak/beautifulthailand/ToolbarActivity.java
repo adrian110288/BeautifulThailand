@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.adrianlesniak.beautifulthailand.views.BTToolbar;
+
 /**
  * Created by adrian on 23/01/2017.
  */

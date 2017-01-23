@@ -24,7 +24,7 @@
         android:tint="@color/navigation_item_state_color_list"
         app:srcCompat="@drawable/ic_bin" />
 
-    <com.adrianlesniak.beautifulthailand.BTTextView
+    <com.adrianlesniak.beautifulthailand.views.BTTextView
         android:id="@+id/navigation_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

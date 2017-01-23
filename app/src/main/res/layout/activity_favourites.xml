@@ -8,7 +8,7 @@
     tools:context="com.adrianlesniak.beautifulthailand.FavouritesActivity"
     android:orientation="vertical">
 
-    <com.adrianlesniak.beautifulthailand.BTToolbar
+    <com.adrianlesniak.beautifulthailand.views.BTToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"

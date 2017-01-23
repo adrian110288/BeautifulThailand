@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand;
+package com.adrianlesniak.beautifulthailand.utilities;
 
 import android.content.Context;
 import android.graphics.Typeface;

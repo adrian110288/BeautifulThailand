@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 
+import com.adrianlesniak.beautifulthailand.models.Place;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -21,13 +22,13 @@ import com.google.android.gms.location.LocationServices;
 import io.realm.Realm;
 
 public class HomeActivity extends ToolbarActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse>, LocalPlacesAdapter.OnItemClickListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse>, PlacesListAdapter.OnItemClickListener {
 
     private DrawerLayout mDrawerLayout;
 
     private RecyclerView mPlacesList;
 
-    private LocalPlacesAdapter mAdapter;
+    private PlacesListAdapter mAdapter;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -54,7 +55,7 @@ public class HomeActivity extends ToolbarActivity implements
         this.mPlacesList = (RecyclerView) this.findViewById(R.id.places_list);
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        this.mAdapter = new LocalPlacesAdapter(null, this, this.mRealmInstance);
+        this.mAdapter = new PlacesListAdapter(null, this, this.mRealmInstance);
         this.mPlacesList.setAdapter(this.mAdapter);
 
         if (this.mGoogleApiClient == null) {

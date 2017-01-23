@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.adrianlesniak.beautifulthailand.BTToolbar
+        <com.adrianlesniak.beautifulthailand.views.BTToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:actionBarSize"
@@ -21,7 +21,7 @@
             app:primary_icon="@drawable/ic_drawer"
             app:secondary_icon="@drawable/ic_search">
 
-        </com.adrianlesniak.beautifulthailand.BTToolbar>
+        </com.adrianlesniak.beautifulthailand.views.BTToolbar>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/places_list"

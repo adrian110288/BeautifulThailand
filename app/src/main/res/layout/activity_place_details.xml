@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.adrianlesniak.beautifulthailand.BTToolbar
+    <com.adrianlesniak.beautifulthailand.views.BTToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
@@ -32,7 +32,7 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"/>
 
-            <com.adrianlesniak.beautifulthailand.BTTextView
+            <com.adrianlesniak.beautifulthailand.views.BTTextView
                 android:id="@+id/place_name_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

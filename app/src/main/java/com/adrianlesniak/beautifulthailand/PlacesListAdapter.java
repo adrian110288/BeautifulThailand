@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.adrianlesniak.beautifulthailand.models.Place;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import io.realm.Realm;
  * Created by adrian on 21/01/2017.
  */
 
-public class LocalPlacesAdapter extends RecyclerView.Adapter<LocalPlacesAdapter.PlaceViewHolder> {
+public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.PlaceViewHolder> {
 
     public interface OnItemClickListener {
         void onItemClicked(Place place);
@@ -31,7 +32,7 @@ public class LocalPlacesAdapter extends RecyclerView.Adapter<LocalPlacesAdapter.
 
     private Realm mRealmInstance;
 
-    public LocalPlacesAdapter(List<Place> dataSet, OnItemClickListener listener, Realm realmInstance) {
+    public PlacesListAdapter(List<Place> dataSet, OnItemClickListener listener, Realm realmInstance) {
         this.mDataSet = dataSet;
         this.mOnItemClickListener = listener;
         this.mRealmInstance = realmInstance;

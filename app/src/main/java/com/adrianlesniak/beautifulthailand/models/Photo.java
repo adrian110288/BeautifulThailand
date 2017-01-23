@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand;
+package com.adrianlesniak.beautifulthailand.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,7 +10,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by adrian on 22/01/2017.
+ * Created by adrian on 23/01/2017.
  */
 
 public class Photo extends RealmObject implements Parcelable {
