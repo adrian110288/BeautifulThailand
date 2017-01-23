@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 /**
  * Created by adrian on 20/01/2017.
@@ -15,10 +16,10 @@ import android.widget.ImageButton;
 
 public class BTToolbar extends Toolbar {
 
-    public static interface OnToolbarActionListener {
-        void onPrimaryButtonClicked();
+    public interface OnToolbarActionListener {
+        void onPrimaryToolbarButtonClicked();
 
-        void onSecondaryButtonClicked();
+        void onSecondaryToolbarButtonClicked();
     }
 
     private static final int LAYOUT_REF = R.layout.bt_toolbar;
@@ -32,6 +33,8 @@ public class BTToolbar extends Toolbar {
     private ImageButton mSecondaryButton;
 
     private int mSecondaryIcon;
+
+    private TextView mTitle;
 
     public BTToolbar(Context context) {
         this(context, null);
@@ -62,36 +65,54 @@ public class BTToolbar extends Toolbar {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(LAYOUT_REF, this);
 
-        mPrimaryButton = (ImageButton) view.findViewById(R.id.primary_button);
+        this.mPrimaryButton = (ImageButton) view.findViewById(R.id.toolbar_primary_button);
+        this.mSecondaryButton = (ImageButton) view.findViewById(R.id.toolbar_secondary_button);
+        this.setupToolbarButtons();
 
-        mPrimaryButton.setImageResource(mPrimaryIcon);
+        this.mTitle = (BTTextView) view.findViewById(R.id.toolbar_title);
+    }
 
-        mPrimaryButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mOnToolbarActionListener != null) {
-                    mOnToolbarActionListener.onPrimaryButtonClicked();
+    private void setupToolbarButtons() {
+
+        if(this.mPrimaryIcon == -1) {
+            this.mPrimaryButton.setVisibility(View.GONE);
+
+        } else {
+            mPrimaryButton.setImageResource(mPrimaryIcon);
+
+            mPrimaryButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mOnToolbarActionListener != null) {
+                        mOnToolbarActionListener.onPrimaryToolbarButtonClicked();
+                    }
                 }
-            }
-        });
+            });
+        }
 
-        mSecondaryButton = (ImageButton) view.findViewById(R.id.secondary_button);
+        if(this.mSecondaryIcon == -1) {
+            this.mSecondaryButton.setVisibility(View.GONE);
 
-        mSecondaryButton.setImageResource(mSecondaryIcon);
+        } else {
+            mSecondaryButton.setImageResource(mSecondaryIcon);
 
-        mSecondaryButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mOnToolbarActionListener != null) {
-                    mOnToolbarActionListener.onSecondaryButtonClicked();
+            mSecondaryButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mOnToolbarActionListener != null) {
+                        mOnToolbarActionListener.onSecondaryToolbarButtonClicked();
+                    }
                 }
-            }
-        });
-
+            });
+        }
     }
 
     public void setOnToolbarActionListener(OnToolbarActionListener listener) {
         mOnToolbarActionListener = listener;
+    }
+
+    public void setTitle(String title) {
+        this.mTitle.setText(title);
     }
 
 }

@@ -10,25 +10,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
-
-public class HomeActivity extends AppCompatActivity implements
+public class HomeActivity extends ToolbarActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse>, LocalPlacesAdapter.OnItemClickListener {
 
     private DrawerLayout mDrawerLayout;
-
-    private BTToolbar mToolbar;
 
     private RecyclerView mPlacesList;
 
@@ -43,19 +36,14 @@ public class HomeActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        setup();
+    }
+
+    @Override
+    protected void setup() {
+        super.setup();
+
         this.mDrawerLayout = (DrawerLayout) this.findViewById(R.id.drawer_layout);
-        this.mToolbar = (BTToolbar) this.findViewById(R.id.toolbar);
-        this.mToolbar.setOnToolbarActionListener(new BTToolbar.OnToolbarActionListener() {
-            @Override
-            public void onPrimaryButtonClicked() {
-                mDrawerLayout.openDrawer(Gravity.LEFT);
-            }
-
-            @Override
-            public void onSecondaryButtonClicked() {
-
-            }
-        });
 
         this.mPlacesList = (RecyclerView) this.findViewById(R.id.places_list);
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
@@ -151,6 +139,12 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     public void onLoaderReset(Loader<LocalPlacesResponse> loader) {
 
+    }
+
+    @Override
+    public void onPrimaryToolbarButtonClicked() {
+        super.onPrimaryToolbarButtonClicked();
+        mDrawerLayout.openDrawer(Gravity.LEFT);
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adrianlesniak.beautifulthailand.R;
+import com.adrianlesniak.beautifulthailand.ToolbarActivity;
 
 /**
  * Created by adrian on 22/01/2017.
@@ -38,18 +39,15 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(LAYOUT_RES, container, false);
-
-        this.mNavigationItemList = (RecyclerView) view.findViewById(R.id.navigation_item_list);
-        this.mNavigationItemList.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-
-        return view;
+        return inflater.inflate(LAYOUT_RES, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        this.mNavigationItemList = (RecyclerView) view.findViewById(R.id.navigation_item_list);
+        this.mNavigationItemList.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
 
         this.mNavigationItemList.setAdapter(this.mAdapter);
     }
@@ -57,7 +55,15 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
     @Override
     public void onNavigationListItemClicked(NavigationListItem item) {
 
-//        Intent navigationIntent = new Intent(getContext(), item.getDestination());
-//        this.getActivity().startActivity(navigationIntent);
+        if(item != null && item.getDestination() != null)  {
+            Intent navigationIntent = new Intent(getContext(), item.getDestination());
+
+            Bundle activityBundle = new Bundle();
+            activityBundle.putString(ToolbarActivity.BUNDLE_TITLE, item.getTitle());
+
+            navigationIntent.putExtras(activityBundle);
+
+            this.getActivity().startActivity(navigationIntent);
+        }
     }
 }

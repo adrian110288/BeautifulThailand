@@ -15,9 +15,7 @@
         android:background="@color/colorPrimary"
         android:elevation="15dp"
         app:primary_icon="@drawable/ic_close"
-        app:secondary_icon="@drawable/ic_bookmark">
-
-    </com.adrianlesniak.beautifulthailand.BTToolbar>
+        app:secondary_icon="@drawable/ic_bookmark" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -43,7 +41,7 @@
                 android:layout_toRightOf="@+id/place_title_icon"
                 android:textSize="30sp"
                 app:font_type="bold"
-                tools:text="Stretford Grammar School" />
+                tools:text="Place title" />
 
         </RelativeLayout>
 

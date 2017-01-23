@@ -5,4 +5,5 @@
     <color name="colorAccent">#15d1a2</color>
     <color name="colorHeart">#F44336</color>
     <color name="colorText">#000</color>
+    <color name="windowBackground">#FDFDFD</color>
 </resources>

@@ -2,30 +2,37 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageButton
-        android:id="@+id/primary_button"
+        android:id="@+id/toolbar_primary_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/standard_margin"
         android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:cropToPadding="false" />
+        android:background="@android:color/transparent" />
 
     <ImageButton
-        android:id="@+id/secondary_button"
+        android:id="@+id/toolbar_secondary_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="false"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/standard_margin"
         android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:cropToPadding="false" />
+        android:background="@android:color/transparent" />
+
+    <com.adrianlesniak.beautifulthailand.BTTextView
+        android:id="@+id/toolbar_title"
+        android:text="@string/navigation_item_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:font_type="bold"
+        android:textAllCaps="true" />
 
 </RelativeLayout>
