@@ -18,6 +18,6 @@ public class CloseableActivity extends ToolbarActivity {
     public void onPrimaryToolbarButtonClicked() {
         super.onPrimaryToolbarButtonClicked();
 
-        finish();
+        this.onBackPressed();
     }
 }

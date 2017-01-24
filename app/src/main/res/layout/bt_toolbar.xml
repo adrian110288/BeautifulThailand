@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/standard_margin"
         android:adjustViewBounds="true"
-        android:background="@android:color/transparent" />
+        android:background="@drawable/ripple" />
 
     <ImageButton
         android:id="@+id/toolbar_secondary_button"
@@ -24,7 +24,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/standard_margin"
         android:adjustViewBounds="true"
-        android:background="@android:color/transparent" />
+        android:background="@drawable/ripple" />
 
     <com.adrianlesniak.beautifulthailand.views.BTTextView
         android:id="@+id/toolbar_title"

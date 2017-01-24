@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/place_list_item_photo_height"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/ic_image" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -53,8 +54,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/place_name_view"
-                android:background="@android:color/transparent"
-                app:srcCompat="@drawable/favourite_icon_state_list"
+                android:background="@drawable/ripple_red"
+                app:srcCompat="@drawable/state_list_favourite_icon"
                 android:tint="@color/colorHeart"/>
 
             <ImageButton
@@ -63,8 +64,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/place_name_view"
-                android:background="@android:color/transparent"
-                app:srcCompat="@drawable/ic_bookmark" />
+                android:background="@drawable/ripple"
+                app:srcCompat="@drawable/state_list_to_visit_icon" />
         </RelativeLayout>
     </LinearLayout>
 

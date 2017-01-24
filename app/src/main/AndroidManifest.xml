@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".PlaceDetailsActivity" />
         <activity android:name=".FavouritesActivity"></activity>
+        <activity android:name=".ToVisitActivity"></activity>
     </application>
 
 </manifest>

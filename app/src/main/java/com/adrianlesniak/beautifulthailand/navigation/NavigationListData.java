@@ -5,6 +5,7 @@ import android.content.Context;
 import com.adrianlesniak.beautifulthailand.FavouritesActivity;
 import com.adrianlesniak.beautifulthailand.HomeActivity;
 import com.adrianlesniak.beautifulthailand.R;
+import com.adrianlesniak.beautifulthailand.ToVisitActivity;
 
 import java.util.ArrayList;
 
@@ -33,11 +34,10 @@ public class NavigationListData extends ArrayList<NavigationListItemModel> {
         );
 
         NavigationListItemModel itemToVisit = new NavigationListItemModel(
-                R.drawable.ic_bookmark,
+                R.drawable.ic_bookmark_off,
                 context.getString(R.string.navigation_item_to_visit),
-                null,
+                ToVisitActivity.class,
                 false
-//                FavouritesActivity.class
         );
 
         NavigationListItemModel itemWeather = new NavigationListItemModel(

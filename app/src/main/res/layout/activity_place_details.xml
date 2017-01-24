@@ -15,7 +15,7 @@
         android:background="@color/colorPrimary"
         android:elevation="15dp"
         app:primary_icon="@drawable/ic_close"
-        app:secondary_icon="@drawable/ic_bookmark" />
+        app:secondary_icon="@drawable/ic_bookmark_off" />
 
     <ScrollView
         android:layout_width="match_parent"

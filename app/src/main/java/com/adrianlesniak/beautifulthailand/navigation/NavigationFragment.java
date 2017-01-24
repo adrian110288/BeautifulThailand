@@ -21,17 +21,27 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
 
     private final int LAYOUT_RES = R.layout.fragment_navigation;
 
+    public interface OnNavigationItemClickListener {
+        void onNavigationItemClicked();
+    }
+
     private RecyclerView mNavigationItemList;
 
     private NavigationListAdapter mAdapter;
 
     private NavigationListData mListData;
 
+    private NavigationListItemModel mCurrentListItem;
+
+    private OnNavigationItemClickListener mNavigationItemClickListener;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         this.mListData = new NavigationListData(getContext());
+
+        this.mCurrentListItem = this.mListData.get(0);
 
         this.mAdapter = new NavigationListAdapter(this.mListData, this);
     }
@@ -52,18 +62,32 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
         this.mNavigationItemList.setAdapter(this.mAdapter);
     }
 
+    public void setOnNavigationItemClickedListener(OnNavigationItemClickListener listener) {
+        this.mNavigationItemClickListener = listener;
+    }
+
     @Override
     public void onNavigationListItemClicked(NavigationListItemModel item) {
 
         if(item != null && item.getDestination() != null)  {
-            Intent navigationIntent = new Intent(getContext(), item.getDestination());
 
-            Bundle activityBundle = new Bundle();
-            activityBundle.putString(ToolbarActivity.BUNDLE_TITLE, item.getTitle());
+            if(item != this.mCurrentListItem) {
 
-            navigationIntent.putExtras(activityBundle);
+                this.mCurrentListItem = item;
 
-            this.getActivity().startActivity(navigationIntent);
+                Intent navigationIntent = new Intent(getContext(), item.getDestination());
+
+                Bundle activityBundle = new Bundle();
+                activityBundle.putString(ToolbarActivity.BUNDLE_TITLE, item.getTitle());
+
+                navigationIntent.putExtras(activityBundle);
+
+                this.getActivity().startActivity(navigationIntent);
+            }
+
+            if(this.mNavigationItemClickListener != null) {
+                this.mNavigationItemClickListener.onNavigationItemClicked();
+            }
         }
     }
 }

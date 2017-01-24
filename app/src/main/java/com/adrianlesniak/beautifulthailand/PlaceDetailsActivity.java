@@ -24,14 +24,14 @@ public class PlaceDetailsActivity extends CloseableActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
 
-        this.mPlace = this.getIntent().getParcelableExtra(BUNDLE_PLACE);
-
-        setup();
+        this.setup();
     }
 
     @Override
     protected void setup() {
         super.setup();
+
+        this.mPlace = this.getIntent().getParcelableExtra(BUNDLE_PLACE);
 
         this.mPlacePhotoView = (ImageView) findViewById(R.id.place_photo_view);
         this.mPlacePhotoView.setVisibility(this.mPlace.getPhotosList() != null && this.mPlace.getPhotosList().size() > 0? View.VISIBLE : View.GONE);

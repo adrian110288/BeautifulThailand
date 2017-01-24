@@ -17,7 +17,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by adrian on 23/01/2017.
  */
 
-public class Place extends RealmObject implements Parcelable {
+public class Place extends RealmObject implements Parcelable, ListModel {
 
     @PrimaryKey
     private String id;

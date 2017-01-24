@@ -14,19 +14,25 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 
+import com.adrianlesniak.beautifulthailand.models.ListModel;
 import com.adrianlesniak.beautifulthailand.models.Place;
+import com.adrianlesniak.beautifulthailand.navigation.NavigationFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
+
 import io.realm.Realm;
 
 public class HomeActivity extends ToolbarActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse>, PlacesListAdapter.OnItemClickListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse>, PlacesListAdapter.OnItemClickListener, NavigationFragment.OnNavigationItemClickListener {
 
     private DrawerLayout mDrawerLayout;
 
     private RecyclerView mPlacesList;
+
+    private NavigationFragment mNavigationFragment;
 
     private PlacesListAdapter mAdapter;
 
@@ -39,23 +45,27 @@ public class HomeActivity extends ToolbarActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home);
 
-        this.mRealmInstance = Realm.getDefaultInstance();
-
-        setup();
+        this.setup();
     }
 
     @Override
     protected void setup() {
         super.setup();
 
+        this.mRealmInstance = Realm.getDefaultInstance();
+
         this.mDrawerLayout = (DrawerLayout) this.findViewById(R.id.drawer_layout);
+
+        this.mNavigationFragment = (NavigationFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_fragment);
+        this.mNavigationFragment.setOnNavigationItemClickedListener(this);
 
         this.mPlacesList = (RecyclerView) this.findViewById(R.id.places_list);
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        this.mAdapter = new PlacesListAdapter(null, this, this.mRealmInstance);
+        this.mAdapter = new PlacesListAdapter(new ArrayList<ListModel>(), this, this.mRealmInstance);
         this.mPlacesList.setAdapter(this.mAdapter);
 
         if (this.mGoogleApiClient == null) {
@@ -151,9 +161,7 @@ public class HomeActivity extends ToolbarActivity implements
     }
 
     @Override
-    public void onLoaderReset(Loader<LocalPlacesResponse> loader) {
-
-    }
+    public void onLoaderReset(Loader<LocalPlacesResponse> loader) { }
 
     @Override
     public void onPrimaryToolbarButtonClicked() {
@@ -168,5 +176,10 @@ public class HomeActivity extends ToolbarActivity implements
         detailsIntent.putExtra(PlaceDetailsActivity.BUNDLE_PLACE, place);
 
         this.startActivity(detailsIntent);
+    }
+
+    @Override
+    public void onNavigationItemClicked() {
+        this.mDrawerLayout.closeDrawer(Gravity.LEFT);
     }
 }
