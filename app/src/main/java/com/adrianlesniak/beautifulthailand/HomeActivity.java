@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 
+import com.adrianlesniak.beautifulthailand.database.DatabaseHelper;
 import com.adrianlesniak.beautifulthailand.models.ListModel;
 import com.adrianlesniak.beautifulthailand.models.Place;
 import com.adrianlesniak.beautifulthailand.navigation.NavigationFragment;
@@ -23,10 +24,8 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 
-import io.realm.Realm;
-
 public class HomeActivity extends ToolbarActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse>, PlacesListAdapter.OnItemClickListener, NavigationFragment.OnNavigationItemClickListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse>, PlacesListAdapter.OnPlaceListItemClickListener, NavigationFragment.OnNavigationItemClickListener {
 
     private DrawerLayout mDrawerLayout;
 
@@ -37,8 +36,6 @@ public class HomeActivity extends ToolbarActivity implements
     private PlacesListAdapter mAdapter;
 
     private GoogleApiClient mGoogleApiClient;
-
-    private Realm mRealmInstance;
 
     private static final int BT_PERMISSION_REQUEST_COARSE_LCOATION = 1;
 
@@ -55,8 +52,6 @@ public class HomeActivity extends ToolbarActivity implements
     protected void setup() {
         super.setup();
 
-        this.mRealmInstance = Realm.getDefaultInstance();
-
         this.mDrawerLayout = (DrawerLayout) this.findViewById(R.id.drawer_layout);
 
         this.mNavigationFragment = (NavigationFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_fragment);
@@ -65,7 +60,7 @@ public class HomeActivity extends ToolbarActivity implements
         this.mPlacesList = (RecyclerView) this.findViewById(R.id.places_list);
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        this.mAdapter = new PlacesListAdapter(new ArrayList<ListModel>(), this, this.mRealmInstance);
+        this.mAdapter = new PlacesListAdapter(new ArrayList<ListModel>(), this);
         this.mPlacesList.setAdapter(this.mAdapter);
 
         if (this.mGoogleApiClient == null) {
@@ -91,7 +86,7 @@ public class HomeActivity extends ToolbarActivity implements
     protected void onDestroy() {
         super.onDestroy();
 
-        this.mRealmInstance.close();
+        DatabaseHelper.getInstance().closeRealm();
     }
 
     @Override
@@ -170,7 +165,7 @@ public class HomeActivity extends ToolbarActivity implements
     }
 
     @Override
-    public void onItemClicked(Place place) {
+    public void onPlaceListItemClicked(Place place) {
 
         Intent detailsIntent = new Intent(this, PlaceDetailsActivity.class);
         detailsIntent.putExtra(PlaceDetailsActivity.BUNDLE_PLACE, place);

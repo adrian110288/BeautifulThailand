@@ -7,7 +7,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.adrianlesniak.beautifulthailand.models.EmptyItemModel;
 import com.adrianlesniak.beautifulthailand.models.ListModel;
 import com.adrianlesniak.beautifulthailand.models.Place;
 
@@ -20,7 +19,7 @@ import io.realm.RealmQuery;
  * Created by adrian on 23/01/2017.
  */
 
-public abstract class SavedPlacesActivity extends CloseableActivity implements LoaderManager.LoaderCallbacks<List<ListModel>>, PlacesListAdapter.OnItemClickListener {
+public abstract class SavedPlacesActivity extends CloseableActivity implements LoaderManager.LoaderCallbacks<List<ListModel>>, PlacesListAdapter.OnPlaceListItemClickListener {
 
     protected RecyclerView mPlacesList;
 
@@ -48,7 +47,7 @@ public abstract class SavedPlacesActivity extends CloseableActivity implements L
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
         List<ListModel> emptyItemList = this.getEmptyItemList();
-        this.mAdapter = new PlacesListAdapter(emptyItemList, this, this.mRealmInstance);
+        this.mAdapter = new PlacesListAdapter(emptyItemList, this);
         this.mPlacesList.setAdapter(this.mAdapter);
 
         this.mQuery = this.getQuery();
@@ -68,7 +67,7 @@ public abstract class SavedPlacesActivity extends CloseableActivity implements L
     }
 
     @Override
-    public void onItemClicked(Place place) {
+    public void onPlaceListItemClicked(Place place) {
 
     }
 

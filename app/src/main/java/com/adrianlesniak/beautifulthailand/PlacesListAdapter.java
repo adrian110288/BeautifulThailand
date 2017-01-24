@@ -9,14 +9,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.adrianlesniak.beautifulthailand.database.DatabaseHelper;
 import com.adrianlesniak.beautifulthailand.models.EmptyItemModel;
 import com.adrianlesniak.beautifulthailand.models.ListModel;
 import com.adrianlesniak.beautifulthailand.models.Place;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import io.realm.Realm;
 
 /**
  * Created by adrian on 21/01/2017.
@@ -27,20 +26,17 @@ public class PlacesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public static final int TYPE_PLACE = 0;
     public static final int TYPE_EMPTY = 1;
 
-    public interface OnItemClickListener {
-        void onItemClicked(Place place);
+    public interface OnPlaceListItemClickListener {
+        void onPlaceListItemClicked(Place place);
     }
 
     private List<ListModel> mDataSet;
 
-    private OnItemClickListener mOnItemClickListener;
+    private OnPlaceListItemClickListener mOnPlaceListItemClickListener;
 
-    private Realm mRealmInstance;
-
-    public PlacesListAdapter(List<ListModel> dataSet, OnItemClickListener listener, Realm realmInstance) {
+    public PlacesListAdapter(List<ListModel> dataSet, OnPlaceListItemClickListener listener) {
         this.mDataSet = dataSet;
-        this.mOnItemClickListener = listener;
-        this.mRealmInstance = realmInstance;
+        this.mOnPlaceListItemClickListener = listener;
     }
 
     @Override
@@ -61,74 +57,34 @@ public class PlacesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         int viewType = holder.getItemViewType();
 
         if(viewType == TYPE_EMPTY) {
-            ((EmptyItemViewHolder) holder).bindData((EmptyItemModel) this.mDataSet.get(position));
+
+            EmptyItemViewHolder emptyItemViewHolder = (EmptyItemViewHolder) holder;
+            EmptyItemModel emptyItemModel = (EmptyItemModel) this.mDataSet.get(position);
+
+            emptyItemViewHolder.bindData(emptyItemModel);
 
         } else {
-            final Place place = (Place) this.mDataSet.get(position);
-
-            // TODO: Refactor this adapter for favourite and to visit places. This method below does not have to be called in favourite or to visit activities
-
-            this.mRealmInstance.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    Place queriedPlace = realm.where(Place.class).equalTo("id", place.getId()).findFirst();
-                    if(queriedPlace != null) {
-                        place.setIsFavourite(queriedPlace.getIsFavourite());
-                        place.setToVisit(queriedPlace.getToVisit());
-                    }
-                }
-            });
-
-            View.OnClickListener holderViewClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemClicked(place);
-                    }
-                }
-            };
-
-            View.OnClickListener addToFavouriteViewClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-
-                    mRealmInstance.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-
-                            place.setIsFavourite(!place.getIsFavourite());
-
-                            realm.copyToRealmOrUpdate(place);
-                            view.setSelected(place.getIsFavourite());
-                        }
-                    });
-                }
-            };
-
-            View.OnClickListener addToVisitViewClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-
-                    mRealmInstance.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-
-                            place.setToVisit(!place.getToVisit());
-
-                            realm.copyToRealmOrUpdate(place);
-                            view.setSelected(place.getToVisit());
-                        }
-                    });
-                }
-            };
 
             PlaceViewHolder placeViewHolder = (PlaceViewHolder) holder;
 
-            placeViewHolder.bindData(place);
+            final Place place = (Place) this.mDataSet.get(position);
 
-            placeViewHolder.view.setOnClickListener(holderViewClickListener);
-            placeViewHolder.addToFavouriteView.setOnClickListener(addToFavouriteViewClickListener);
-            placeViewHolder.addToVisitView.setOnClickListener(addToVisitViewClickListener);
+            Place queriedPlace = DatabaseHelper.getInstance().getPlaceById(place.getId());
+            if(queriedPlace != null) {
+                place.setIsFavourite(queriedPlace.getIsFavourite());
+                place.setToVisit(queriedPlace.getToVisit());
+            }
+
+            View.OnClickListener onItemClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mOnPlaceListItemClickListener != null) {
+                        mOnPlaceListItemClickListener.onPlaceListItemClicked(place);
+                    }
+                }
+            };
+
+            placeViewHolder.bindData(place, onItemClickListener);
         }
     }
 
@@ -161,9 +117,11 @@ public class PlacesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    protected static final class PlaceViewHolder extends RecyclerView.ViewHolder {
+    protected static final class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected View view;
+
+        private Place mPlace;
 
         private TextView placeNameView;
 
@@ -183,7 +141,13 @@ public class PlacesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             this.addToVisitView = (ImageButton) itemView.findViewById(R.id.place_add_to_visit);
         }
 
-        public void bindData(Place place) {
+        public void bindData(Place place, View.OnClickListener listener) {
+
+            this.mPlace = place;
+
+            this.view.setOnClickListener(listener);
+            this.addToFavouriteView.setOnClickListener(this);
+            this.addToVisitView.setOnClickListener(this);
 
             this.placeNameView.setText(place.getName());
             this.addToFavouriteView.setSelected(place.getIsFavourite());
@@ -198,6 +162,21 @@ public class PlacesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         fit().
                         centerCrop().
                         into(this.placePhotoView);
+            }
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            if(this.mPlace != null) {
+                if(view == addToFavouriteView) {
+                    Place updatedPlace = DatabaseHelper.getInstance().setPlaceFavourite(this.mPlace, !this.mPlace.getIsFavourite());
+                    view.setSelected(updatedPlace.getIsFavourite());
+                }
+                else if(view == addToVisitView) {
+                    Place updatedPlace = DatabaseHelper.getInstance().setPlaceToVisit(this.mPlace, !this.mPlace.getToVisit());
+                    view.setSelected(updatedPlace.getToVisit());
+                }
             }
         }
     }
