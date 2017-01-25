@@ -75,7 +75,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnC
         Location currentLocation = CurrentLocation.getInstance().getCurrentLocation();
 
         String [] origin = new String[] { String.valueOf(currentLocation.getLatitude()) + "," + String.valueOf(currentLocation.getLongitude()) };
-        String [] destination= new String[] { };
+        String [] destination= new String[] { String.valueOf(this.mPlace.getLocation().getLatitude()) + "," + String.valueOf(this.mPlace.getLocation().getLongitude()) };
 
         DistanceMatrixApiRequest distanceRequest = DistanceMatrixApi.getDistanceMatrix(geoApiContext, origin, destination).
                 mode(TravelMode.WALKING).

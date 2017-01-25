@@ -26,6 +26,8 @@ public class Place extends RealmObject implements Parcelable, ListItem {
 
     private String name;
 
+    private Location mLocation;
+
     private RealmList<Photo> photosList;
 
     private boolean isFavourite;
@@ -34,13 +36,17 @@ public class Place extends RealmObject implements Parcelable, ListItem {
 
     public Place(){}
 
-    public Place(JSONObject mPlaceData) throws JSONException {
+    public Place(JSONObject placeData) throws JSONException {
 
-        this.id = mPlaceData.getString("id");
-        this.placeId = mPlaceData.getString("place_id");
-        this.name = mPlaceData.getString("name");
+        this.id = placeData.getString("id");
+        this.placeId = placeData.getString("place_id");
+        this.name = placeData.getString("name");
 
-        JSONArray photosArray = mPlaceData.has("photos")? mPlaceData.getJSONArray("photos") : null;
+        JSONObject geometry = placeData.getJSONObject("geometry");
+        JSONObject location = geometry.getJSONObject("location");
+        this.mLocation = new Location(location);
+
+        JSONArray photosArray = placeData.has("photos")? placeData.getJSONArray("photos") : null;
         parsePhotos(photosArray);
 
         this.isFavourite = false;
@@ -84,6 +90,10 @@ public class Place extends RealmObject implements Parcelable, ListItem {
 
     public String getName() {
         return this.name;
+    }
+
+    public Location getLocation() {
+        return this.mLocation;
     }
 
     public List<Photo> getPhotosList() {
