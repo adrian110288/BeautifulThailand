@@ -14,6 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/standard_margin"
         android:adjustViewBounds="true"
+        android:tint="@android:color/black"
         android:background="@drawable/ripple" />
 
     <ImageButton
@@ -24,6 +25,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/standard_margin"
         android:adjustViewBounds="true"
+        android:tint="@android:color/black"
         android:background="@drawable/ripple" />
 
     <com.adrianlesniak.beautifulthailand.views.BTTextView
