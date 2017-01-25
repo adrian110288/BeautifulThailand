@@ -1,6 +1,6 @@
 package com.adrianlesniak.beautifulthailand;
 
-import com.adrianlesniak.beautifulthailand.models.ListModel;
+import com.adrianlesniak.beautifulthailand.models.ListItem;
 import com.adrianlesniak.beautifulthailand.models.Place;
 
 import org.json.JSONArray;
@@ -23,7 +23,7 @@ public class LocalPlacesResponse {
         private static final String ZERO_RESULTS = "ZERO_RESULTS";
     }
 
-    private List<ListModel> mResults;
+    private List<ListItem> mResults;
 
     private String mStatus;
 
@@ -57,7 +57,7 @@ public class LocalPlacesResponse {
         return this.mStatus == ResponseStatus.ZERO_RESULTS;
     }
 
-    public List<ListModel> getResults() {
+    public List<ListItem> getResults() {
         return this.mResults;
     }
 

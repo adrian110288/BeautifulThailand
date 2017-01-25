@@ -4,13 +4,13 @@ package com.adrianlesniak.beautifulthailand.models;
  * Created by adrian on 23/01/2017.
  */
 
-public class EmptyItemModel implements ListModel {
+public class EmptyListItem implements ListItem {
 
     private int mIconRes;
 
     private String mTitle;
 
-    public EmptyItemModel(int iconRes, String title) {
+    public EmptyListItem(int iconRes, String title) {
         this.mIconRes = iconRes;
         this.mTitle = title;
     }

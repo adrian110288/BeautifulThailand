@@ -15,7 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 
 import com.adrianlesniak.beautifulthailand.database.DatabaseHelper;
-import com.adrianlesniak.beautifulthailand.models.ListModel;
+import com.adrianlesniak.beautifulthailand.models.ListItem;
 import com.adrianlesniak.beautifulthailand.models.Place;
 import com.adrianlesniak.beautifulthailand.navigation.NavigationFragment;
 import com.google.android.gms.common.ConnectionResult;
@@ -60,7 +60,7 @@ public class HomeActivity extends ToolbarActivity implements
         this.mPlacesList = (RecyclerView) this.findViewById(R.id.places_list);
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        this.mAdapter = new PlacesListAdapter(new ArrayList<ListModel>(), this);
+        this.mAdapter = new PlacesListAdapter(new ArrayList<ListItem>(), this);
         this.mPlacesList.setAdapter(this.mAdapter);
 
         if (this.mGoogleApiClient == null) {

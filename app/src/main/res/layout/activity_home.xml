@@ -41,7 +41,8 @@
             android:id="@+id/navigation_fragment"
             android:name="com.adrianlesniak.beautifulthailand.navigation.NavigationFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_navigation" />
 
     </FrameLayout>
 

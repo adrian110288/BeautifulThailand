@@ -7,7 +7,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.adrianlesniak.beautifulthailand.models.ListModel;
+import com.adrianlesniak.beautifulthailand.models.ListItem;
 import com.adrianlesniak.beautifulthailand.models.Place;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import io.realm.RealmQuery;
  * Created by adrian on 23/01/2017.
  */
 
-public abstract class SavedPlacesActivity extends CloseableActivity implements LoaderManager.LoaderCallbacks<List<ListModel>>, PlacesListAdapter.OnPlaceListItemClickListener {
+public abstract class DatabasePlacesActivity extends CloseableActivity implements LoaderManager.LoaderCallbacks<List<ListItem>>, PlacesListAdapter.OnPlaceListItemClickListener {
 
     protected RecyclerView mPlacesList;
 
@@ -46,8 +46,8 @@ public abstract class SavedPlacesActivity extends CloseableActivity implements L
         this.mPlacesList = (RecyclerView) this.findViewById(R.id.places_list);
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        List<ListModel> emptyItemList = this.getEmptyItemList();
-        this.mAdapter = new PlacesListAdapter(emptyItemList, this);
+        List<ListItem> emptyItemList = this.getEmptyItemList();
+        this.mAdapter = new DatabasePlacesListAdapter(emptyItemList, this);
         this.mPlacesList.setAdapter(this.mAdapter);
 
         this.mQuery = this.getQuery();
@@ -57,7 +57,7 @@ public abstract class SavedPlacesActivity extends CloseableActivity implements L
 
     protected abstract RealmQuery getQuery();
 
-    protected abstract List<ListModel> getEmptyItemList();
+    protected abstract List<ListItem> getEmptyItemList();
 
     @Override
     protected void onDestroy() {
@@ -72,12 +72,12 @@ public abstract class SavedPlacesActivity extends CloseableActivity implements L
     }
 
     @Override
-    public Loader<List<ListModel>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<ListItem>> onCreateLoader(int id, Bundle args) {
         return new DatabasePlacesLoader(this, this.mQuery);
     }
 
     @Override
-    public void onLoadFinished(Loader<List<ListModel>> loader, List<ListModel> data) {
+    public void onLoadFinished(Loader<List<ListItem>> loader, List<ListItem> data) {
 
         if(data.size() != 0) {
             this.mAdapter.swapDataSet(data);
@@ -85,7 +85,7 @@ public abstract class SavedPlacesActivity extends CloseableActivity implements L
     }
 
     @Override
-    public void onLoaderReset(Loader<List<ListModel>> loader) {
+    public void onLoaderReset(Loader<List<ListItem>> loader) {
 
     }
 }

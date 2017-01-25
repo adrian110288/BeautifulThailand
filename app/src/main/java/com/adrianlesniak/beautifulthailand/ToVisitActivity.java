@@ -1,11 +1,7 @@
 package com.adrianlesniak.beautifulthailand;
 
-import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
-
-import com.adrianlesniak.beautifulthailand.models.EmptyItemModel;
-import com.adrianlesniak.beautifulthailand.models.ListModel;
+import com.adrianlesniak.beautifulthailand.models.EmptyListItem;
+import com.adrianlesniak.beautifulthailand.models.ListItem;
 import com.adrianlesniak.beautifulthailand.models.Place;
 
 import java.util.ArrayList;
@@ -17,12 +13,7 @@ import io.realm.RealmQuery;
  * Created by adrian on 23/01/2017.
  */
 
-public class ToVisitActivity extends SavedPlacesActivity {
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+public class ToVisitActivity extends DatabasePlacesActivity {
 
     @Override
     protected RealmQuery getQuery() {
@@ -30,10 +21,10 @@ public class ToVisitActivity extends SavedPlacesActivity {
     }
 
     @Override
-    protected List<ListModel> getEmptyItemList() {
+    protected List<ListItem> getEmptyItemList() {
 
-        List<ListModel> emptyItemList = new ArrayList<>(1);
-        emptyItemList.add(new EmptyItemModel(R.drawable.ic_settings, "Nothing here"));
+        List<ListItem> emptyItemList = new ArrayList<>(1);
+        emptyItemList.add(new EmptyListItem(R.drawable.ic_settings, "Nothing here"));
 
         return emptyItemList;
     }

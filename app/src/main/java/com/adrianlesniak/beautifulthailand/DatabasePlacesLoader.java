@@ -3,7 +3,7 @@ package com.adrianlesniak.beautifulthailand;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.adrianlesniak.beautifulthailand.models.ListModel;
+import com.adrianlesniak.beautifulthailand.models.ListItem;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import io.realm.RealmQuery;
  * Created by adrian on 23/01/2017.
  */
 
-public class DatabasePlacesLoader extends AsyncTaskLoader<List<ListModel>> {
+public class DatabasePlacesLoader extends AsyncTaskLoader<List<ListItem>> {
 
     private RealmQuery mQuery;
 
@@ -23,7 +23,7 @@ public class DatabasePlacesLoader extends AsyncTaskLoader<List<ListModel>> {
     }
 
     @Override
-    public List<ListModel> loadInBackground() {
+    public List<ListItem> loadInBackground() {
         return this.mQuery.findAll();
     }
 }

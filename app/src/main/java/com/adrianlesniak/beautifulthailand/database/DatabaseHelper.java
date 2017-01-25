@@ -20,15 +20,6 @@ public class DatabaseHelper {
         this.mRealmInstance = Realm.getDefaultInstance();
     }
 
-    public Place getPlaceById(String placeId) {
-
-        this.mRealmInstance.beginTransaction();
-        Place place = this.mRealmInstance.where(Place.class).equalTo("id", placeId).findFirst();
-        this.mRealmInstance.commitTransaction();
-
-        return place;
-    }
-
     public Place setPlaceFavourite(Place place, boolean favourite) {
 
         this.mRealmInstance.beginTransaction();
