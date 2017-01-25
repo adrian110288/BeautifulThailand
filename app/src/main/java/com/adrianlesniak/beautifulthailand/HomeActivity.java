@@ -136,6 +136,8 @@ public class HomeActivity extends ToolbarActivity implements
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
 
+            CurrentLocation.getInstance().setCurrentLocation(mLastLocation);
+
             Bundle locationBundle = new Bundle();
             locationBundle.putDouble(LocalPlacesLoader.BUNDLE_LAT, mLastLocation.getLatitude());
             locationBundle.putDouble(LocalPlacesLoader.BUNDLE_LNG, mLastLocation.getLongitude());

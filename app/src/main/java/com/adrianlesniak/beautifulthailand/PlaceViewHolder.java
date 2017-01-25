@@ -1,5 +1,6 @@
 package com.adrianlesniak.beautifulthailand;
 
+import android.location.Location;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,6 +10,13 @@ import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.database.DatabaseHelper;
 import com.adrianlesniak.beautifulthailand.models.Place;
+import com.google.maps.DistanceMatrixApi;
+import com.google.maps.DistanceMatrixApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.PendingResult;
+import com.google.maps.model.DistanceMatrix;
+import com.google.maps.model.TravelMode;
+import com.google.maps.model.Unit;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -17,7 +25,7 @@ import com.squareup.picasso.Picasso;
 
 public class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    protected View view;
+    private View mView;
 
     private Place mPlace;
 
@@ -32,7 +40,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnC
     public PlaceViewHolder(View itemView) {
         super(itemView);
 
-        this.view = itemView;
+        this.mView = itemView;
         this.placeNameView = (TextView) itemView.findViewById(R.id.place_name_view);
         this.placePhotoView = (ImageView) itemView.findViewById(R.id.place_photo_view);
         this.addToFavouriteView = (ImageButton) itemView.findViewById(R.id.place_add_to_fav);
@@ -43,7 +51,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
         this.mPlace = place;
 
-        this.view.setOnClickListener(listener);
+        this.mView.setOnClickListener(listener);
         this.addToFavouriteView.setOnClickListener(this);
         this.addToVisitView.setOnClickListener(this);
 
@@ -53,14 +61,36 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
         if(place.getPhotosList() != null && !place.getPhotosList().isEmpty()) {
 
-            String uri = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=" + place.getPhotosList().get(0).getWidth() + "&photoreference=" + place.getPhotosList().get(0).getPhotoReference() + "&key=" + this.view.getContext().getString(R.string.api_key);
+            String uri = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=" + place.getPhotosList().get(0).getWidth() + "&photoreference=" + place.getPhotosList().get(0).getPhotoReference() + "&key=" + this.mView.getContext().getString(R.string.api_key);
 
-            Picasso.with(this.view.getContext()).
+            Picasso.with(this.mView.getContext()).
                     load(Uri.parse(uri)).
                     fit().
                     centerCrop().
                     into(this.placePhotoView);
         }
+
+        GeoApiContext geoApiContext = new GeoApiContext().setApiKey(this.mView.getResources().getString(R.string.api_key));
+
+        Location currentLocation = CurrentLocation.getInstance().getCurrentLocation();
+
+        String [] origin = new String[] { String.valueOf(currentLocation.getLatitude()) + "," + String.valueOf(currentLocation.getLongitude()) };
+        String [] destination= new String[] { };
+
+        DistanceMatrixApiRequest distanceRequest = DistanceMatrixApi.getDistanceMatrix(geoApiContext, origin, destination).
+                mode(TravelMode.WALKING).
+                units(Unit.METRIC);
+
+        distanceRequest.setCallback(new PendingResult.Callback<DistanceMatrix>() {
+            @Override
+            public void onResult(DistanceMatrix result) {
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+
+            }
+        });
     }
 
     @Override
