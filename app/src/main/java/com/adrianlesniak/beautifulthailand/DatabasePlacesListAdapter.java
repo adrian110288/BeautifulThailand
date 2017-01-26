@@ -2,7 +2,6 @@ package com.adrianlesniak.beautifulthailand;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.adrianlesniak.beautifulthailand.database.DatabaseHelper;
 import com.adrianlesniak.beautifulthailand.models.EmptyListItem;
 import com.adrianlesniak.beautifulthailand.models.ListItem;
 import com.adrianlesniak.beautifulthailand.models.Place;
@@ -15,8 +14,12 @@ import java.util.List;
 
 public class DatabasePlacesListAdapter extends PlacesListAdapter {
 
-    public DatabasePlacesListAdapter(List<ListItem> dataSet, OnPlaceListItemClickListener listener) {
-        super(dataSet, listener);
+    public interface OnPlaceListItemRemoveListener {
+        void onPlaceListItemRemove(Place place);
+    }
+
+    public DatabasePlacesListAdapter(List<ListItem> dataSet, List<ListItem> emptyDataSet, OnPlaceListItemClickListener listener) {
+        super(dataSet, emptyDataSet, listener);
     }
 
     @Override
@@ -27,14 +30,27 @@ public class DatabasePlacesListAdapter extends PlacesListAdapter {
         if(viewType == ListItem.TYPE_EMPTY) {
 
             EmptyItemViewHolder emptyItemViewHolder = (EmptyItemViewHolder) holder;
-            EmptyListItem emptyItemModel = (EmptyListItem) this.mDataSet.get(position);
+            EmptyListItem emptyItemModel = (EmptyListItem) this.mEmptyDataSet.get(position);
 
             emptyItemViewHolder.bindData(emptyItemModel);
 
         } else {
 
             Place place = (Place) this.mDataSet.get(position);
-            ((PlaceViewHolder) holder).bindData(place, this.getOnItemClickListener(place));
+
+            PlaceViewHolder placeViewHolder = (PlaceViewHolder) holder;
+            placeViewHolder.setOnPlaceListItemRemoveListener(new OnPlaceListItemRemoveListener() {
+                @Override
+                public void onPlaceListItemRemove(Place place) {
+                    DatabasePlacesListAdapter.this.notifyItemRemoved(DatabasePlacesListAdapter.this.mDataSet.indexOf(place));
+
+                    if(DatabasePlacesListAdapter.this.mDataSet.isEmpty()) {
+                        DatabasePlacesListAdapter.this.swapDataSet(DatabasePlacesListAdapter.this.mEmptyDataSet);
+                    }
+                }
+
+            });
+            placeViewHolder.bindData(place, this.getOnItemClickListener(place));
         }
     }
 }

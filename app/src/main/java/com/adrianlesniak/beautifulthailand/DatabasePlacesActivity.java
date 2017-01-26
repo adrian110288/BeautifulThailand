@@ -47,7 +47,7 @@ public abstract class DatabasePlacesActivity extends CloseableActivity implement
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
         List<ListItem> emptyItemList = this.getEmptyItemList();
-        this.mAdapter = new DatabasePlacesListAdapter(emptyItemList, this);
+        this.mAdapter = new DatabasePlacesListAdapter(null, emptyItemList, this);
         this.mPlacesList.setAdapter(this.mAdapter);
 
         this.mQuery = this.getQuery();

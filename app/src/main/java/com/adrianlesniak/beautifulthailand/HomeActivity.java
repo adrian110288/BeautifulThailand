@@ -4,8 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -15,17 +15,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 
 import com.adrianlesniak.beautifulthailand.database.DatabaseHelper;
-import com.adrianlesniak.beautifulthailand.models.ListItem;
 import com.adrianlesniak.beautifulthailand.models.Place;
 import com.adrianlesniak.beautifulthailand.navigation.NavigationFragment;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 
-import java.util.ArrayList;
+public class HomeActivity extends ToolbarActivity implements LoaderManager.LoaderCallbacks<LocalPlacesResponse>, PlacesListAdapter.OnPlaceListItemClickListener, NavigationFragment.OnNavigationItemClickListener {
 
-public class HomeActivity extends ToolbarActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LoaderManager.LoaderCallbacks<LocalPlacesResponse>, PlacesListAdapter.OnPlaceListItemClickListener, NavigationFragment.OnNavigationItemClickListener {
+    private LocationManager mLocationManager;
+
+    private int DEFAULT_SEARCH_RADIUS = 500;
 
     private DrawerLayout mDrawerLayout;
 
@@ -35,9 +32,7 @@ public class HomeActivity extends ToolbarActivity implements
 
     private PlacesListAdapter mAdapter;
 
-    private GoogleApiClient mGoogleApiClient;
-
-    private static final int BT_PERMISSION_REQUEST_COARSE_LCOATION = 1;
+    private static final int BT_PERMISSION_REQUEST_FINE_LCOATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +44,31 @@ public class HomeActivity extends ToolbarActivity implements
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        this.mAdapter.notifyDataSetChanged();
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
     protected void setup() {
         super.setup();
+
+        this.mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         this.mDrawerLayout = (DrawerLayout) this.findViewById(R.id.drawer_layout);
 
@@ -60,26 +78,16 @@ public class HomeActivity extends ToolbarActivity implements
         this.mPlacesList = (RecyclerView) this.findViewById(R.id.places_list);
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        this.mAdapter = new PlacesListAdapter(new ArrayList<ListItem>(), this);
+        this.mAdapter = new PlacesListAdapter(null, null, this);
         this.mPlacesList.setAdapter(this.mAdapter);
 
-        if (this.mGoogleApiClient == null) {
-            this.mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, BT_PERMISSION_REQUEST_FINE_LCOATION);
+
+            return;
         }
-    }
 
-    protected void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-    }
-
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
+        this.requestCurrentLocation();
     }
 
     @Override
@@ -90,26 +98,15 @@ public class HomeActivity extends ToolbarActivity implements
     }
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, BT_PERMISSION_REQUEST_COARSE_LCOATION);
-
-            return;
-        }
-
-        this.getLastKnownLocation();
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case BT_PERMISSION_REQUEST_COARSE_LCOATION: {
+            case BT_PERMISSION_REQUEST_FINE_LCOATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    this.getLastKnownLocation();
+                    this.requestCurrentLocation();
 
                 } else {
 
@@ -121,35 +118,13 @@ public class HomeActivity extends ToolbarActivity implements
         }
     }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    private void getLastKnownLocation() {
-
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-
-            CurrentLocation.getInstance().setCurrentLocation(mLastLocation);
-
-            Bundle locationBundle = new Bundle();
-            locationBundle.putDouble(LocalPlacesLoader.BUNDLE_LAT, mLastLocation.getLatitude());
-            locationBundle.putDouble(LocalPlacesLoader.BUNDLE_LNG, mLastLocation.getLongitude());
-
-            getSupportLoaderManager().initLoader(1, locationBundle, this).forceLoad();
-        }
+    public void requestCurrentLocation() {
+       this.mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this.mLocationListenerAdapter, null);
     }
 
     @Override
     public Loader<LocalPlacesResponse> onCreateLoader(int id, Bundle args) {
-
-        return new LocalPlacesLoader(this, args, 500);
+        return new LocalPlacesLoader(this, args, DEFAULT_SEARCH_RADIUS);
     }
 
     @Override
@@ -179,4 +154,21 @@ public class HomeActivity extends ToolbarActivity implements
     public void onNavigationItemClicked() {
         this.mDrawerLayout.closeDrawer(Gravity.LEFT);
     }
+
+    private LocationListenerAdapter mLocationListenerAdapter = new LocationListenerAdapter() {
+        @Override
+        public void onLocationChanged(Location location) {
+
+            CurrentLocation.getInstance().setCurrentLocation(location);
+
+            Bundle locationBundle = new Bundle();
+            locationBundle.putDouble(LocalPlacesLoader.BUNDLE_LAT, location.getLatitude());
+            locationBundle.putDouble(LocalPlacesLoader.BUNDLE_LNG, location.getLongitude());
+
+            getSupportLoaderManager().initLoader(1, locationBundle, HomeActivity.this).forceLoad();
+
+            mLocationManager.removeUpdates(this);
+        }
+    };
+
 }

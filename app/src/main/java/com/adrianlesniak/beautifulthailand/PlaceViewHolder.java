@@ -1,6 +1,5 @@
 package com.adrianlesniak.beautifulthailand;
 
-import android.location.Location;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,13 +9,6 @@ import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.database.DatabaseHelper;
 import com.adrianlesniak.beautifulthailand.models.Place;
-import com.google.maps.DistanceMatrixApi;
-import com.google.maps.DistanceMatrixApiRequest;
-import com.google.maps.GeoApiContext;
-import com.google.maps.PendingResult;
-import com.google.maps.model.DistanceMatrix;
-import com.google.maps.model.TravelMode;
-import com.google.maps.model.Unit;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -36,6 +28,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnC
     protected ImageButton addToFavouriteView;
 
     protected ImageButton addToVisitView;
+
+    protected DatabasePlacesListAdapter.OnPlaceListItemRemoveListener mPlaceListItemRemoveListener;
 
     public PlaceViewHolder(View itemView) {
         super(itemView);
@@ -70,27 +64,31 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnC
                     into(this.placePhotoView);
         }
 
-        GeoApiContext geoApiContext = new GeoApiContext().setApiKey(this.mView.getResources().getString(R.string.api_key));
+//        GeoApiContext geoApiContext = new GeoApiContext().setApiKey(this.mView.getResources().getString(R.string.api_key));
+//
+//        Location currentLocation = CurrentLocation.getInstance().getCurrentLocation();
+//
+//        String [] origin = new String[] { String.valueOf(currentLocation.getLatitude()) + "," + String.valueOf(currentLocation.getLongitude()) };
+//        String [] destination= new String[] { String.valueOf(this.mPlace.getLocation().getLatitude()) + "," + String.valueOf(this.mPlace.getLocation().getLongitude()) };
+//
+//        DistanceMatrixApiRequest distanceRequest = DistanceMatrixApi.getDistanceMatrix(geoApiContext, origin, destination).
+//                mode(TravelMode.WALKING).
+//                units(Unit.METRIC);
+//
+//        distanceRequest.setCallback(new PendingResult.Callback<DistanceMatrix>() {
+//            @Override
+//            public void onResult(DistanceMatrix result) {
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable e) {
+//
+//            }
+//        });
+    }
 
-        Location currentLocation = CurrentLocation.getInstance().getCurrentLocation();
-
-        String [] origin = new String[] { String.valueOf(currentLocation.getLatitude()) + "," + String.valueOf(currentLocation.getLongitude()) };
-        String [] destination= new String[] { String.valueOf(this.mPlace.getLocation().getLatitude()) + "," + String.valueOf(this.mPlace.getLocation().getLongitude()) };
-
-        DistanceMatrixApiRequest distanceRequest = DistanceMatrixApi.getDistanceMatrix(geoApiContext, origin, destination).
-                mode(TravelMode.WALKING).
-                units(Unit.METRIC);
-
-        distanceRequest.setCallback(new PendingResult.Callback<DistanceMatrix>() {
-            @Override
-            public void onResult(DistanceMatrix result) {
-            }
-
-            @Override
-            public void onFailure(Throwable e) {
-
-            }
-        });
+    public void setOnPlaceListItemRemoveListener(DatabasePlacesListAdapter.OnPlaceListItemRemoveListener listener) {
+        this.mPlaceListItemRemoveListener = listener;
     }
 
     @Override
@@ -98,12 +96,18 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
         if(this.mPlace != null) {
             if(view == addToFavouriteView) {
+
                 Place updatedPlace = DatabaseHelper.getInstance().setPlaceFavourite(this.mPlace, !this.mPlace.getIsFavourite());
                 view.setSelected(updatedPlace.getIsFavourite());
             }
             else if(view == addToVisitView) {
+
                 Place updatedPlace = DatabaseHelper.getInstance().setPlaceToVisit(this.mPlace, !this.mPlace.getToVisit());
                 view.setSelected(updatedPlace.getToVisit());
+            }
+
+            if(this.mPlaceListItemRemoveListener != null) {
+                this.mPlaceListItemRemoveListener.onPlaceListItemRemove(this.mPlace);
             }
         }
     }

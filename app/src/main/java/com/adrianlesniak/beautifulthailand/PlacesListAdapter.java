@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.adrianlesniak.beautifulthailand.database.DatabaseHelper;
 import com.adrianlesniak.beautifulthailand.models.EmptyListItem;
 import com.adrianlesniak.beautifulthailand.models.ListItem;
 import com.adrianlesniak.beautifulthailand.models.Place;
@@ -26,12 +25,15 @@ public class PlacesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     protected List<ListItem> mDataSet;
 
+    protected List<ListItem> mEmptyDataSet;
+
     protected OnPlaceListItemClickListener mOnPlaceListItemClickListener;
 
     private Realm mRealmInstance;
 
-    public PlacesListAdapter(List<ListItem> dataSet, OnPlaceListItemClickListener listener) {
+    public PlacesListAdapter(List<ListItem> dataSet, List<ListItem> emptyDataSet,  OnPlaceListItemClickListener listener) {
         this.mDataSet = dataSet;
+        this.mEmptyDataSet = emptyDataSet;
         this.mOnPlaceListItemClickListener = listener;
         this.mRealmInstance = Realm.getDefaultInstance();
     }
@@ -47,7 +49,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        return this.mDataSet.get(position) instanceof Place ? ListItem.TYPE_PLACE : ListItem.TYPE_EMPTY;
+        return this.mDataSet == null? ListItem.TYPE_EMPTY : this.mDataSet.get(position) instanceof Place ? ListItem.TYPE_PLACE : ListItem.TYPE_EMPTY;
     }
 
     @Override
@@ -58,7 +60,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if(viewType == ListItem.TYPE_EMPTY) {
 
             EmptyItemViewHolder emptyItemViewHolder = (EmptyItemViewHolder) holder;
-            EmptyListItem emptyItemModel = (EmptyListItem) this.mDataSet.get(position);
+            EmptyListItem emptyItemModel = (EmptyListItem) this.mEmptyDataSet.get(position);
 
             emptyItemViewHolder.bindData(emptyItemModel);
 
@@ -85,7 +87,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return this.mDataSet == null? 0 : this.mDataSet.size();
+        return this.mDataSet == null? this.mEmptyDataSet == null? 0 : this.mEmptyDataSet.size() : this.mDataSet.size();
     }
 
     public void swapDataSet(List<ListItem> dataSet) {
