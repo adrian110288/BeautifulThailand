@@ -25,12 +25,61 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/place_photo_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"/>
+            <ImageView
+                android:id="@+id/place_photo_view"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/place_address_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/place_name_view"
+                android:layout_below="@+id/place_name_view"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                app:srcCompat="@drawable/ic_address" />
+
+            <ImageView
+                android:id="@+id/place_open_now_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/place_address_icon"
+                android:layout_below="@+id/place_website_text"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                app:srcCompat="@drawable/ic_open" />
+
+            <ImageView
+                android:id="@+id/place_rating_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/place_phone_no_icon"
+                android:layout_below="@+id/place_phone_no_text"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                app:srcCompat="@drawable/ic_star" />
+
+            <ImageView
+                android:id="@+id/place_website_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/place_rating_icon"
+                android:layout_below="@+id/place_rating_text"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                app:srcCompat="@drawable/ic_mouse" />
+
+            <ImageView
+                android:id="@+id/place_phone_no_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/place_address_icon"
+                android:layout_below="@+id/place_address_text"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                app:srcCompat="@drawable/ic_phone" />
 
             <com.adrianlesniak.beautifulthailand.views.BTTextView
                 android:id="@+id/place_name_view"
@@ -42,6 +91,51 @@
                 android:textSize="30sp"
                 app:font_type="bold"
                 tools:text="Place title" />
+
+            <com.adrianlesniak.beautifulthailand.views.BTTextView
+                android:id="@+id/place_address_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/place_address_icon"
+                android:layout_toRightOf="@+id/place_address_icon"
+                app:font_type="regular"
+                tools:text="TextView" />
+
+            <com.adrianlesniak.beautifulthailand.views.BTTextView
+                android:id="@+id/place_phone_no_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/place_phone_no_icon"
+                android:layout_toRightOf="@+id/place_phone_no_icon"
+                app:font_type="regular"
+                tools:text="TextView" />
+
+            <com.adrianlesniak.beautifulthailand.views.BTTextView
+                android:id="@+id/place_website_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/place_website_icon"
+                android:layout_toRightOf="@+id/place_website_icon"
+                app:font_type="regular"
+                tools:text="TextView" />
+
+            <com.adrianlesniak.beautifulthailand.views.BTTextView
+                android:id="@+id/place_rating_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/place_rating_icon"
+                android:layout_toRightOf="@+id/place_rating_icon"
+                app:font_type="regular"
+                tools:text="TextView" />
+
+            <com.adrianlesniak.beautifulthailand.views.BTTextView
+                android:id="@+id/place_open_now_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/place_open_now_icon"
+                android:layout_toRightOf="@+id/place_open_now_icon"
+                app:font_type="regular"
+                tools:text="TextView" />
 
         </RelativeLayout>
 

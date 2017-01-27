@@ -19,6 +19,16 @@ public class PlaceDetailsActivity extends CloseableActivity {
 
     private BTTextView mPlaceNameView;
 
+    private BTTextView mPlaceAddressView;
+
+    private BTTextView mPlacePhoneNoView;
+
+    private BTTextView mPlaceRatingView;
+
+    private BTTextView mPlaceWebsiteView;
+
+    private BTTextView mPlaceOpenNowView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +56,9 @@ public class PlaceDetailsActivity extends CloseableActivity {
 
         this.mPlaceNameView = (BTTextView) findViewById(R.id.place_name_view);
         this.mPlaceNameView.setText(this.mPlace.getName());
+
+        this.mPlaceAddressView = (BTTextView) findViewById(R.id.place_address_text);
+        this.mPlaceAddressView.setText(this.mPlace.getAddress());
     }
 
     @Override

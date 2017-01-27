@@ -1,5 +1,6 @@
 package com.adrianlesniak.beautifulthailand;
 
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,6 +10,9 @@ import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.database.DatabaseHelper;
 import com.adrianlesniak.beautifulthailand.models.Place;
+import com.google.maps.PendingResult;
+import com.google.maps.PhotoRequest;
+import com.google.maps.model.PhotoResult;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -55,10 +59,15 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
         if(place.getPhotosList() != null && !place.getPhotosList().isEmpty()) {
 
-            String uri = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=" + place.getPhotosList().get(0).getWidth() + "&photoreference=" + place.getPhotosList().get(0).getPhotoReference() + "&key=" + this.mView.getContext().getString(R.string.api_key);
+            Uri photoUri = Uri.parse("https://maps.googleapis.com/maps/api/place/photo").
+                    buildUpon().
+                    appendQueryParameter("maxwidth", String.valueOf(this.mView.getContext().getResources().getDimensionPixelSize(R.dimen.place_list_item_photo_height))).
+                    appendQueryParameter("photoreference", place.getPhotosList().get(0).getPhotoReference()).
+                    appendQueryParameter("key", this.mView.getContext().getString(R.string.api_key)).
+                    build();
 
             Picasso.with(this.mView.getContext()).
-                    load(Uri.parse(uri)).
+                    load(photoUri).
                     fit().
                     centerCrop().
                     into(this.placePhotoView);

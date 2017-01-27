@@ -30,6 +30,16 @@ public class Place extends RealmObject implements Parcelable, ListItem {
 
     private RealmList<Photo> photosList;
 
+    private String formattedAddress;
+
+    private String formattedPhoneNumber;
+
+    private double rating;
+
+    private String website;
+
+    private boolean openNow;
+
     private boolean isFavourite;
 
     private boolean toVisit;
@@ -49,6 +59,16 @@ public class Place extends RealmObject implements Parcelable, ListItem {
         JSONArray photosArray = placeData.has("photos")? placeData.getJSONArray("photos") : null;
         parsePhotos(photosArray);
 
+        this.formattedAddress = placeData.has("formatted_address") ? placeData.getString("formatted_address") : null;
+
+        this.formattedPhoneNumber = placeData.has("formatted_phone_number") ? placeData.getString("formatted_phone_number") : null;
+
+//        this.rating = placeData.has("rating") ? placeData.getDouble("rating") : null;
+
+        this.website = placeData.has("website") ? placeData.getString("website") : null;
+
+        this.openNow = placeData.has("opening_hours") ? placeData.has("open_now") ? placeData.getBoolean("open_now") : false : false;
+
         this.isFavourite = false;
         this.toVisit = false;
     }
@@ -61,6 +81,8 @@ public class Place extends RealmObject implements Parcelable, ListItem {
         this.photosList = new RealmList<>();
 
         parcel.readTypedList(this.photosList, Photo.CREATOR);
+
+        this.formattedAddress = parcel.readString();
 
         this.isFavourite = parcel.readByte() != 0;
         this.toVisit = parcel.readByte() != 0;
@@ -100,6 +122,10 @@ public class Place extends RealmObject implements Parcelable, ListItem {
         return this.photosList;
     }
 
+    public String getAddress() {
+        return this.formattedAddress;
+    }
+
     public boolean getIsFavourite() {
         return this.isFavourite;
     }
@@ -127,6 +153,7 @@ public class Place extends RealmObject implements Parcelable, ListItem {
         dest.writeString(this.placeId);
         dest.writeString(this.name);
         dest.writeTypedList(this.photosList);
+        dest.writeString(this.formattedAddress);
         dest.writeByte((byte)(this.isFavourite? 0x01 : 0x00));
         dest.writeByte((byte)(this.toVisit? 0x01 : 0x00));
     }
