@@ -14,6 +14,8 @@ import com.adrianlesniak.beautifulthailand.utilities.FontCache;
 
 public class BTTextView extends AppCompatTextView {
 
+    private int mFontIndex;
+
     public BTTextView(Context context) {
         this(context, null);
     }
@@ -28,18 +30,18 @@ public class BTTextView extends AppCompatTextView {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BTTextView_attrs);
 
         try {
-
-            if (a.hasValue(R.styleable.BTTextView_attrs_font_type)) {
-                int fontIndex = a.getInt(R.styleable.BTTextView_attrs_font_type, 12);
-                this.setTypeface(fontIndex);
-            }
+            this.mFontIndex = a.getInt(R.styleable.BTTextView_attrs_font_type, 12);
 
         } finally {
             a.recycle();
         }
+
+        this.setTypeface(this.mFontIndex);
     }
 
     public void setTypeface(int fontIndex) {
+
+        this.mFontIndex = fontIndex;
 
         if (!isInEditMode()) {
             super.setTypeface(FontCache.getFont(getContext(), fontIndex));

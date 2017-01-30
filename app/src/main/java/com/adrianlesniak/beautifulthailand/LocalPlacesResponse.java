@@ -16,13 +16,6 @@ import java.util.List;
 
 public class LocalPlacesResponse {
 
-    private static final class ResponseStatus {
-
-        private static final String OK_STATUS = "OK";
-
-        private static final String ZERO_RESULTS = "ZERO_RESULTS";
-    }
-
     private List<ListItem> mResults;
 
     private String mStatus;
@@ -50,11 +43,11 @@ public class LocalPlacesResponse {
     }
 
     public boolean isSuccessful() {
-        return this.mStatus == ResponseStatus.OK_STATUS || this.mStatus == ResponseStatus.ZERO_RESULTS;
+        return this.mStatus == MapsAPIResponseStatus.OK_STATUS || this.mStatus == MapsAPIResponseStatus.ZERO_RESULTS;
     }
 
     public boolean hasZeroResults() {
-        return this.mStatus == ResponseStatus.ZERO_RESULTS;
+        return this.mStatus == MapsAPIResponseStatus.ZERO_RESULTS;
     }
 
     public List<ListItem> getResults() {

@@ -25,7 +25,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/list_item_overlay"
+            android:background="@drawable/shape_list_item_overlay"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true">
 

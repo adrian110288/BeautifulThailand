@@ -1,144 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <com.adrianlesniak.beautifulthailand.views.BTToolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
+
         android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="15dp"
-        app:primary_icon="@drawable/ic_close"
-        app:secondary_icon="@drawable/ic_bookmark_off" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
+        <com.adrianlesniak.beautifulthailand.views.BTToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="?android:actionBarSize"
+            android:background="@color/colorPrimary"
+            android:elevation="8dp"
+            app:primary_icon="@drawable/ic_close"
+            app:secondary_icon="@drawable/ic_bookmark_off" />
 
-            <ImageView
-                android:id="@+id/place_photo_view"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop" />
-
-            <ImageView
-                android:id="@+id/place_address_icon"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/place_name_view"
-                android:layout_below="@+id/place_name_view"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                app:srcCompat="@drawable/ic_address" />
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/place_open_now_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/place_address_icon"
-                android:layout_below="@+id/place_website_text"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                app:srcCompat="@drawable/ic_open" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin">
 
-            <ImageView
-                android:id="@+id/place_rating_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/place_phone_no_icon"
-                android:layout_below="@+id/place_phone_no_text"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                app:srcCompat="@drawable/ic_star" />
+                    <com.adrianlesniak.beautifulthailand.views.BTSquareImageView
+                        android:id="@+id/place_photo_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop" />
 
-            <ImageView
-                android:id="@+id/place_website_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/place_rating_icon"
-                android:layout_below="@+id/place_rating_text"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                app:srcCompat="@drawable/ic_mouse" />
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/place_photo_view"
+                        android:background="@drawable/shape_detail_title_overlay">
 
-            <ImageView
-                android:id="@+id/place_phone_no_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/place_address_icon"
-                android:layout_below="@+id/place_address_text"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                app:srcCompat="@drawable/ic_phone" />
+                        <com.adrianlesniak.beautifulthailand.views.BTTextView
+                            android:id="@+id/place_name_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/place_photo_view"
+                            android:layout_margin="@dimen/standard_margin"
+                            android:layout_toRightOf="@+id/place_title_icon"
+                            android:textColor="@android:color/white"
+                            android:textSize="30sp"
+                            app:font_type="bold"
+                            tools:text="Place title" />
+                    </FrameLayout>
 
-            <com.adrianlesniak.beautifulthailand.views.BTTextView
-                android:id="@+id/place_name_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/place_photo_view"
-                android:layout_margin="@dimen/standard_margin"
-                android:layout_toRightOf="@+id/place_title_icon"
-                android:textSize="30sp"
-                app:font_type="bold"
-                tools:text="Place title" />
+                </RelativeLayout>
 
-            <com.adrianlesniak.beautifulthailand.views.BTTextView
-                android:id="@+id/place_address_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/place_address_icon"
-                android:layout_toRightOf="@+id/place_address_icon"
-                app:font_type="regular"
-                tools:text="TextView" />
+                <com.adrianlesniak.beautifulthailand.views.TelephoneCardView
+                    android:id="@+id/card_telephone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="4dp"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
-            <com.adrianlesniak.beautifulthailand.views.BTTextView
-                android:id="@+id/place_phone_no_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/place_phone_no_icon"
-                android:layout_toRightOf="@+id/place_phone_no_icon"
-                app:font_type="regular"
-                tools:text="TextView" />
+                <com.adrianlesniak.beautifulthailand.views.MapCardView
+                    android:id="@+id/card_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="4dp"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
-            <com.adrianlesniak.beautifulthailand.views.BTTextView
-                android:id="@+id/place_website_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/place_website_icon"
-                android:layout_toRightOf="@+id/place_website_icon"
-                app:font_type="regular"
-                tools:text="TextView" />
+            </LinearLayout>
 
-            <com.adrianlesniak.beautifulthailand.views.BTTextView
-                android:id="@+id/place_rating_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/place_rating_icon"
-                android:layout_toRightOf="@+id/place_rating_icon"
-                app:font_type="regular"
-                tools:text="TextView" />
+        </ScrollView>
 
-            <com.adrianlesniak.beautifulthailand.views.BTTextView
-                android:id="@+id/place_open_now_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/place_open_now_icon"
-                android:layout_toRightOf="@+id/place_open_now_icon"
-                app:font_type="regular"
-                tools:text="TextView" />
+    </LinearLayout>
 
-        </RelativeLayout>
+    <ImageButton
+        android:id="@+id/navigate_button"
+        android:layout_width="@dimen/fab_height"
+        android:layout_height="@dimen/fab_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="17dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:adjustViewBounds="true"
+        android:background="@drawable/shape_fab"
+        android:cropToPadding="true"
+        android:elevation="8dp"
+        android:src="@drawable/ic_navigate"
+        android:tint="@android:color/white" />
 
-    </ScrollView>
-
-</LinearLayout>
+</RelativeLayout>
