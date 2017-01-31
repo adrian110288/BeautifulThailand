@@ -2,6 +2,7 @@ package com.adrianlesniak.beautifulthailand.views;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
@@ -16,7 +17,11 @@ public class OpeningHoursCard extends DetailsCard {
     private TextView mOpenNowView;
 
     public OpeningHoursCard(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public OpeningHoursCard(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
         this.mOpenNowView = (TextView) findViewById(R.id.open_now_view);
     }
@@ -26,13 +31,18 @@ public class OpeningHoursCard extends DetailsCard {
         return R.layout.card_opening_hours;
     }
 
-    public void setOpenNow(boolean openNow) {
-        this.mOpenNowView.setText(openNow? "OPEN NOW" : "CLOSE");
+    public void setOpeningHours(OpeningHours openingHours) {
 
-        ColorStateList stateList = getContext().getResources().getColorStateList(openNow? R.color.state_list_open_now_icon : R.color.state_list_close_icon, null);
+        if(openingHours != null) {
+            this.mOpenNowView.setText(openingHours.openNow? "OPEN NOW" : "CLOSE");
 
-        this.mOpenNowView.setTextColor(stateList);
-        this.mIcon.setImageTintList(stateList);
+            ColorStateList stateList = getContext().getResources().getColorStateList(openingHours.openNow? R.color.state_list_open_now_icon : R.color.state_list_close_icon, null);
+
+            this.mOpenNowView.setTextColor(stateList);
+            this.mIcon.setImageTintList(stateList);
+        }
+
+
     }
 
     public void setOpeningTimes(OpeningHours openingHours) {

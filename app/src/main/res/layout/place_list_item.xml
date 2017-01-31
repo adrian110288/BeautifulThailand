@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="210dp"
+    android:layout_height="@dimen/place_card_height"
     android:layout_margin="@dimen/standard_margin"
-    app:cardCornerRadius="2dp"
-    app:cardElevation="10dp">
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
 
             <ImageView
                 android:id="@+id/place_distance_icon"
-                style="@style/BTIconWhiteStyle"
+                style="@style/BTIconStyle.BTIconWhiteStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -53,7 +53,7 @@
 
             <ImageView
                 android:id="@+id/place_title_icon"
-                style="@style/BTIconWhiteStyle"
+                style="@style/BTIconStyle.BTIconWhiteStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/place_add_to_fav"
@@ -74,7 +74,7 @@
 
             <ImageButton
                 android:id="@+id/place_add_to_fav"
-                style="@style/BTIconButtonRedStyle"
+                style="@style/BTIconStyle.BTIconButtonRedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -83,7 +83,8 @@
 
             <ImageButton
                 android:id="@+id/place_add_to_visit"
-                style="@style/BTIconButtonStyle"
+                style="@style/BTIconStyle.BTIconButtonStyle"
+                android:backgroundTint="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"

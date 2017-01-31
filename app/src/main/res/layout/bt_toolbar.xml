@@ -8,7 +8,7 @@
 
     <ImageButton
         android:id="@+id/toolbar_primary_button"
-        style="@style/BTIconButtonStyle"
+        style="@style/BTIconStyle.BTIconButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -17,7 +17,7 @@
 
     <ImageButton
         android:id="@+id/toolbar_secondary_button"
-        style="@style/BTIconButtonStyle"
+        style="@style/BTIconStyle.BTIconButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

@@ -10,21 +10,22 @@
         <item name="android:textColor">@color/colorText</item>
     </style>
 
-    <style name="BTIconStyle" parent="@style/Base.Widget.AppCompat.ImageButton">
+    <style name="BTIconStyle">
         <item name="android:tint">@color/colorPrimaryDark</item>
+        <item name="background">@android:color/transparent</item>
         <item name="android:adjustViewBounds">true</item>
     </style>
 
-    <style name="BTIconWhiteStyle" parent="BTIconStyle">
+    <style name="BTIconStyle.BTIconWhiteStyle">
         <item name="android:tint">@android:color/white</item>
     </style>
 
-    <style name="BTIconButtonStyle" parent="BTIconStyle">
+    <style name="BTIconStyle.BTIconButtonStyle">
         <item name="android:background">@drawable/ripple</item>
         <!--<item name="android:backgroundTint">@color/colorAccent</item>-->
     </style>
 
-    <style name="BTIconButtonRedStyle" parent="BTIconStyle">
+    <style name="BTIconStyle.BTIconButtonRedStyle">
         <item name="android:background">@drawable/ripple</item>
         <item name="android:backgroundTint">@color/colorHeart</item>
         <item name="android:tint">@color/colorHeart</item>
@@ -32,8 +33,10 @@
 
     <style name="DetailsCardView" parent="Base.CardView">
         <item name="cardElevation">@dimen/card_elevation</item>
-        <item name="cardCornerRadius">0dp</item>
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
         <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginLeft">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_vertical_margin</item>
     </style>
 
 </resources>

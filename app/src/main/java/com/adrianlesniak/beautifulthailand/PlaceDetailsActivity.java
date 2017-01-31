@@ -75,7 +75,7 @@ public class PlaceDetailsActivity extends CloseableActivity {
                     @Override
                     public void run() {
                         mTelephoneCard.setTelephoneNo(result.formattedPhoneNumber);
-                        mOpeningHoursCard.setOpenNow(result.openingHours.openNow);
+                        mOpeningHoursCard.setOpeningHours(result.openingHours);
                         mMapCard.setAddress(result.formattedAddress);
                         mMapCard.setLocation(result.geometry.location.lat, result.geometry.location.lng);
                     }

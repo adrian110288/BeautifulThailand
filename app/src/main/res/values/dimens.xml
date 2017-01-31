@@ -7,9 +7,11 @@
     <dimen name="navigation_width">300dp</dimen>
     <dimen name="navigation_item_height">60dp</dimen>
     <dimen name="navigation_item_left_border_width">8dp</dimen>
-    <dimen name="place_list_item_photo_height">210dp</dimen>
+    <dimen name="place_card_height">220dp</dimen>
     <dimen name="ripple_radius">50dp</dimen>
     <dimen name="fab_height">56dp</dimen>
     <dimen name="detail_map_height">160dp</dimen>
-    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_corner_radius">2dp</dimen>
+
 </resources>
