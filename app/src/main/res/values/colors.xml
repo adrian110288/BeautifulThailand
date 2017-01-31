@@ -5,6 +5,8 @@
     <color name="colorAccent">#15D1A2</color>
     <color name="colorHeart">#F44336</color>
     <color name="colorText">#000</color>
+    <color name="colorPositive">#4CAF50</color>
+    <color name="colorNegative">#F44336</color>
     <color name="windowBackground">#EDEDED</color>
 
 </resources>

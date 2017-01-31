@@ -7,10 +7,33 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:textColor">@color/colorText</item>
     </style>
 
     <style name="BTIconStyle" parent="@style/Base.Widget.AppCompat.ImageButton">
         <item name="android:tint">@color/colorPrimaryDark</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+
+    <style name="BTIconWhiteStyle" parent="BTIconStyle">
+        <item name="android:tint">@android:color/white</item>
+    </style>
+
+    <style name="BTIconButtonStyle" parent="BTIconStyle">
+        <item name="android:background">@drawable/ripple</item>
+        <!--<item name="android:backgroundTint">@color/colorAccent</item>-->
+    </style>
+
+    <style name="BTIconButtonRedStyle" parent="BTIconStyle">
+        <item name="android:background">@drawable/ripple</item>
+        <item name="android:backgroundTint">@color/colorHeart</item>
+        <item name="android:tint">@color/colorHeart</item>
+    </style>
+
+    <style name="DetailsCardView" parent="Base.CardView">
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardCornerRadius">0dp</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
     </style>
 
 </resources>

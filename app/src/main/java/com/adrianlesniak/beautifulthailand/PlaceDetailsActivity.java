@@ -1,6 +1,5 @@
 package com.adrianlesniak.beautifulthailand;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,8 +8,9 @@ import com.adrianlesniak.beautifulthailand.models.Photo;
 import com.adrianlesniak.beautifulthailand.models.Place;
 import com.adrianlesniak.beautifulthailand.utilities.BTUriProvider;
 import com.adrianlesniak.beautifulthailand.views.BTTextView;
-import com.adrianlesniak.beautifulthailand.views.MapCardView;
-import com.adrianlesniak.beautifulthailand.views.TelephoneCardView;
+import com.adrianlesniak.beautifulthailand.views.MapCard;
+import com.adrianlesniak.beautifulthailand.views.OpeningHoursCard;
+import com.adrianlesniak.beautifulthailand.views.TelephoneCard;
 import com.google.maps.PendingResult;
 import com.google.maps.PlaceDetailsRequest;
 import com.google.maps.model.PlaceDetails;
@@ -26,9 +26,11 @@ public class PlaceDetailsActivity extends CloseableActivity {
 
     private BTTextView mPlaceNameView;
 
-    private TelephoneCardView mTelephoneCardView;
+    private TelephoneCard mTelephoneCard;
 
-    private MapCardView mMapCardView;
+    private OpeningHoursCard mOpeningHoursCard;
+
+    private MapCard mMapCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +60,11 @@ public class PlaceDetailsActivity extends CloseableActivity {
         this.mPlaceNameView = (BTTextView) findViewById(R.id.place_name_view);
         this.mPlaceNameView.setText(this.mPlace.getName());
 
-        this.mTelephoneCardView = (TelephoneCardView) findViewById(R.id.card_telephone);
+        this.mTelephoneCard = (TelephoneCard) findViewById(R.id.card_telephone);
 
-        this.mMapCardView = (MapCardView) findViewById(R.id.card_map);
+        this.mMapCard = (MapCard) findViewById(R.id.card_map);
+
+        this.mOpeningHoursCard = (OpeningHoursCard) findViewById(R.id.card_opening_hours);
 
         PlaceDetailsRequest placeDetailsRequest = new PlaceDetailsRequest(BTApplication.getGeoApiContext());
         placeDetailsRequest.placeId(this.mPlace.getPlaceId()).setCallback(new PendingResult.Callback<PlaceDetails>() {
@@ -70,9 +74,10 @@ public class PlaceDetailsActivity extends CloseableActivity {
                 PlaceDetailsActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mTelephoneCardView.setTelephoneNo(result.formattedPhoneNumber);
-                        mMapCardView.setAddress(result.formattedAddress);
-                        mMapCardView.setLocation(result.geometry.location.lat, result.geometry.location.lng);
+                        mTelephoneCard.setTelephoneNo(result.formattedPhoneNumber);
+                        mOpeningHoursCard.setOpenNow(result.openingHours.openNow);
+                        mMapCard.setAddress(result.formattedAddress);
+                        mMapCard.setLocation(result.geometry.location.lat, result.geometry.location.lng);
                     }
                 });
 

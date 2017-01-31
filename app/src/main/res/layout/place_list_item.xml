@@ -42,23 +42,22 @@
 
             <ImageView
                 android:id="@+id/place_distance_icon"
+                style="@style/BTIconWhiteStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="@dimen/activity_vertical_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:tint="@android:color/white"
                 app:srcCompat="@drawable/ic_pin" />
 
             <ImageView
                 android:id="@+id/place_title_icon"
+                style="@style/BTIconWhiteStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/place_add_to_fav"
                 android:layout_alignLeft="@+id/place_add_to_fav"
-                android:backgroundTint="@android:color/white"
-                android:tint="@android:color/white"
                 app:srcCompat="@drawable/ic_globe" />
 
             <com.adrianlesniak.beautifulthailand.views.BTTextView
@@ -75,23 +74,21 @@
 
             <ImageButton
                 android:id="@+id/place_add_to_fav"
+                style="@style/BTIconButtonRedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="@dimen/activity_vertical_margin"
-                android:background="@drawable/ripple_red"
-                android:tint="@color/colorHeart"
                 app:srcCompat="@drawable/state_list_favourite_icon" />
 
             <ImageButton
                 android:id="@+id/place_add_to_visit"
+                style="@style/BTIconButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_margin="@dimen/activity_vertical_margin"
-                android:background="@drawable/ripple"
-                android:tint="@android:color/white"
                 app:srcCompat="@drawable/state_list_to_visit_icon" />
         </RelativeLayout>
 

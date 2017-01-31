@@ -8,25 +8,21 @@
 
     <ImageButton
         android:id="@+id/toolbar_primary_button"
+        style="@style/BTIconButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/standard_margin"
-        android:adjustViewBounds="true"
-        android:tint="@android:color/black"
-        android:background="@drawable/ripple" />
+        android:layout_marginLeft="@dimen/standard_margin" />
 
     <ImageButton
         android:id="@+id/toolbar_secondary_button"
+        style="@style/BTIconButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/standard_margin"
-        android:adjustViewBounds="true"
-        android:tint="@android:color/black"
-        android:background="@drawable/ripple" />
+        android:layout_marginRight="@dimen/standard_margin" />
 
     <com.adrianlesniak.beautifulthailand.views.BTTextView
         android:id="@+id/toolbar_title"

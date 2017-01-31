@@ -11,4 +11,5 @@
     <dimen name="ripple_radius">50dp</dimen>
     <dimen name="fab_height">56dp</dimen>
     <dimen name="detail_map_height">160dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
 </resources>

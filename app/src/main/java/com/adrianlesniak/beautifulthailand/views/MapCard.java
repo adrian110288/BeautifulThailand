@@ -16,7 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Created by adrian on 29/01/2017.
  */
 
-public class MapCardView extends DetailCardView implements OnMapReadyCallback {
+public class MapCard extends DetailsCard implements OnMapReadyCallback {
 
     private TextView mAddressView;
 
@@ -26,11 +26,11 @@ public class MapCardView extends DetailCardView implements OnMapReadyCallback {
 
     private double mLng;
 
-    public MapCardView(Context context) {
+    public MapCard(Context context) {
         this(context, null);
     }
 
-    public MapCardView(Context context, AttributeSet attrs) {
+    public MapCard(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         this.mAddressView = (TextView) findViewById(R.id.address_view);

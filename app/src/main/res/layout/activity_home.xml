@@ -19,9 +19,7 @@
             android:background="@color/colorPrimary"
             android:elevation="15dp"
             app:primary_icon="@drawable/ic_drawer"
-            app:secondary_icon="@drawable/ic_search">
-
-        </com.adrianlesniak.beautifulthailand.views.BTToolbar>
+            app:secondary_icon="@drawable/ic_search"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/places_list"
