@@ -20,14 +20,12 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
     private final int LAYOUT_RES = R.layout.fragment_navigation;
 
     public interface OnNavigationItemClickListener {
-        void onNavigationItemClicked();
+        void onNavigationItemClicked(NavigationListItemModel item);
     }
 
     private RecyclerView mNavigationItemList;
 
     private NavigationListAdapter mAdapter;
-
-    private NavigationListData mListData;
 
     private OnNavigationItemClickListener mNavigationItemClickListener;
 
@@ -35,9 +33,7 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.mListData = new NavigationListData(getContext());
-
-        this.mAdapter = new NavigationListAdapter(this.mListData, this);
+        this.mAdapter = new NavigationListAdapter(NavigationListData.getInstance(getContext()), this);
     }
 
     @Nullable
@@ -62,5 +58,9 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
 
     @Override
     public void onNavigationListItemClicked(NavigationListItemModel item) {
+
+        if(this.mNavigationItemClickListener != null) {
+            this.mNavigationItemClickListener.onNavigationItemClicked(item);
+        }
     }
 }

@@ -26,7 +26,6 @@
 
     <com.adrianlesniak.beautifulthailand.views.BTTextView
         android:id="@+id/toolbar_title"
-        android:text="@string/navigation_item_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

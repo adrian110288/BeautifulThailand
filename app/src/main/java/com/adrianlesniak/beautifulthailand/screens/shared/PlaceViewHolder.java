@@ -63,6 +63,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
                 public void onResult(PhotoResult result) {
                     Bitmap photo = BitmapFactory.decodeByteArray(result.imageData, 0, result.imageData.length);
                     placePhotoView.setImageBitmap(photo);
+                    placePhotoView.invalidate();
                 }
 
                 @Override

@@ -43,6 +43,8 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView.Adapter mAdapter;
 
+    public HomeFragment(){}
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -84,6 +86,11 @@ public class HomeFragment extends Fragment {
 
             return;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         this.requestCurrentLocation();
     }
@@ -109,7 +116,10 @@ public class HomeFragment extends Fragment {
     }
 
     public void requestCurrentLocation() {
-        this.mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this.mLocationListenerAdapter, null);
+//        this.mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this.mLocationListenerAdapter, null);
+
+        LatLng latLng = new LatLng(13.737188, 100.523218);
+        MapsApiHelper.getNearbyPlaces(latLng, DEFAULT_SEARCH_RADIUS, onNearbyPlacesCallback);
     }
 
     private LocationListenerAdapter mLocationListenerAdapter = new LocationListenerAdapter() {
@@ -143,8 +153,13 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onFailure(Throwable e) {
-            mAdapter = new EmptyAdapter(mContext, getResources().getString(R.string.error_loading_places_message));
-            mNearbyPlacesList.setAdapter(mAdapter);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter = new EmptyAdapter(mContext, getResources().getString(R.string.error_loading_places_message));
+                    mNearbyPlacesList.setAdapter(mAdapter);
+                }
+            });
         }
     };
 

@@ -15,13 +15,12 @@ public class NavigationListItemModel {
 
     private Class mDestination;
 
-    private boolean mSelected;
+    private boolean mSelected = false;
 
-    public NavigationListItemModel(int iconRes, String title, Class destination, boolean selected) {
+    public NavigationListItemModel(int iconRes, String title, Class destination) {
         this.mIconRes = iconRes;
         this.mTitle = title;
         this.mDestination = destination;
-        this.mSelected = selected;
     }
 
     public int getIcon() {

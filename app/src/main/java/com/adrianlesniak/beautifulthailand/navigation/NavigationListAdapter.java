@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by adrian on 22/01/2017.
  */
@@ -16,17 +19,20 @@ import com.adrianlesniak.beautifulthailand.R;
 public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAdapter.NavigationItemViewHolder> {
 
     public interface OnNavigationListItemClicked {
-        void onNavigationListItemClicked(NavigationListItemModel item);
+        void onNavigationListItemClicked(NavigationListItemModel position);
     }
 
     private NavigationListData mListData;
 
     private OnNavigationListItemClicked mListener;
 
+    private List<NavigationItemViewHolder> mViewHolders;
+
     public NavigationListAdapter(NavigationListData listData, OnNavigationListItemClicked listener) {
 
         this.mListData = listData;
         this.mListener = listener;
+        this.mViewHolders = new ArrayList<>();
     }
 
     @Override
@@ -35,12 +41,13 @@ public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAd
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_navigation, parent, false);
 
         NavigationItemViewHolder vh = new NavigationItemViewHolder(view);
+        this.mViewHolders.add(vh);
 
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(NavigationItemViewHolder holder, int position) {
+    public void onBindViewHolder(final NavigationItemViewHolder holder, final int position) {
 
         final NavigationListItemModel itemData = this.mListData.get(position);
 
@@ -49,11 +56,11 @@ public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAd
             @Override
             public void onClick(View v) {
 
+                for(int index = 0; index < mViewHolders.size(); index++) {
+                    mViewHolders.get(index).mView.setSelected(index == position);
+                }
+
                 if(mListener != null) {
-
-                    mListData.setSelectedItem(itemData);
-                    notifyDataSetChanged();
-
                     mListener.onNavigationListItemClicked(itemData);
                 }
             }
@@ -77,18 +84,14 @@ public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAd
             super(itemView);
 
             this.mView = itemView;
-
             this.mNavigationItemTitleView = (TextView) itemView.findViewById(R.id.navigation_item_title);
-
             this.mNavigationItemIcon = (ImageView) itemView.findViewById(R.id.navigation_item_icon);
         }
 
         public void bindData(NavigationListItemModel data) {
 
             this.mView.setSelected(data.isSelected());
-
             this.mNavigationItemTitleView.setText(data.getTitle());
-
             this.mNavigationItemIcon.setImageResource(data.getIcon());
         }
 
