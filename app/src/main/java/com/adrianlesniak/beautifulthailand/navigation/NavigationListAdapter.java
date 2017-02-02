@@ -32,7 +32,7 @@ public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAd
     @Override
     public NavigationItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.navigation_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_navigation, parent, false);
 
         NavigationItemViewHolder vh = new NavigationItemViewHolder(view);
 

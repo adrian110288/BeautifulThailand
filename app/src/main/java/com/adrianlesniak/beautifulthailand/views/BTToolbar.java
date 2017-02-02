@@ -11,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.views.BTTextView;
 
 /**
  * Created by adrian on 20/01/2017.
@@ -25,7 +24,7 @@ public class BTToolbar extends Toolbar {
         void onSecondaryToolbarButtonClicked();
     }
 
-    private static final int LAYOUT_REF = R.layout.bt_toolbar;
+    private static final int LAYOUT_REF = R.layout.view_toolbar;
 
     private OnToolbarActionListener mOnToolbarActionListener;
 

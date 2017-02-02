@@ -1,6 +1,5 @@
 package com.adrianlesniak.beautifulthailand.navigation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.ToolbarActivity;
 
 /**
  * Created by adrian on 22/01/2017.
@@ -31,8 +29,6 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
 
     private NavigationListData mListData;
 
-    private NavigationListItemModel mCurrentListItem;
-
     private OnNavigationItemClickListener mNavigationItemClickListener;
 
     @Override
@@ -40,8 +36,6 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
         super.onCreate(savedInstanceState);
 
         this.mListData = new NavigationListData(getContext());
-
-        this.mCurrentListItem = this.mListData.get(0);
 
         this.mAdapter = new NavigationListAdapter(this.mListData, this);
     }
@@ -68,26 +62,5 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
 
     @Override
     public void onNavigationListItemClicked(NavigationListItemModel item) {
-
-        if(item != null && item.getDestination() != null)  {
-
-            if(item != this.mCurrentListItem) {
-
-                this.mCurrentListItem = item;
-
-                Intent navigationIntent = new Intent(getContext(), item.getDestination());
-
-                Bundle activityBundle = new Bundle();
-                activityBundle.putString(ToolbarActivity.BUNDLE_TITLE, item.getTitle());
-
-                navigationIntent.putExtras(activityBundle);
-
-                this.getActivity().startActivity(navigationIntent);
-            }
-
-            if(this.mNavigationItemClickListener != null) {
-                this.mNavigationItemClickListener.onNavigationItemClicked();
-            }
-        }
     }
 }

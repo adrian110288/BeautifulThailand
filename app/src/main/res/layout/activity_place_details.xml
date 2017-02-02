@@ -63,19 +63,19 @@
 
                 </RelativeLayout>
 
-                <com.adrianlesniak.beautifulthailand.views.TelephoneCard
+                <com.adrianlesniak.beautifulthailand.screens.details.TelephoneCard
                     android:id="@+id/card_telephone"
                     style="@style/DetailsCardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-                <com.adrianlesniak.beautifulthailand.views.OpeningHoursCard
+                <com.adrianlesniak.beautifulthailand.screens.details.OpeningHoursCard
                     android:id="@+id/card_opening_hours"
                     style="@style/DetailsCardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-                <com.adrianlesniak.beautifulthailand.views.MapCard
+                <com.adrianlesniak.beautifulthailand.screens.details.MapCard
                     android:id="@+id/card_map"
                     style="@style/DetailsCardView"
                     android:layout_width="match_parent"

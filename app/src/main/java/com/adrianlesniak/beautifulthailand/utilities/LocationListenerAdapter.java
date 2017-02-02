@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand;
+package com.adrianlesniak.beautifulthailand.utilities;
 
 import android.location.Location;
 import android.location.LocationListener;

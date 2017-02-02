@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand.views;
+package com.adrianlesniak.beautifulthailand.screens.details;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
