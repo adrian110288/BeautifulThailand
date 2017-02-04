@@ -43,7 +43,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationF
         this.pushFragment(defaultFragment);
     }
 
-
     @Override
     public void onNavigationItemClicked(NavigationListItemModel item) {
         mDrawerLayout.closeDrawer(Gravity.LEFT);

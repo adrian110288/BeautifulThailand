@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.google.maps.model.OpeningHours;
+import com.adrianlesniak.beautifulthailand.models.OpeningHours;
 
 /**
  * Created by adrian on 31/01/2017.

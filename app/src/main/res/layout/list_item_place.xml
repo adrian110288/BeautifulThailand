@@ -26,16 +26,6 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/activity_vertical_margin">
 
-            <!--<ImageView-->
-                <!--android:id="@+id/place_title_icon"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentTop="true"-->
-                <!--android:layout_marginBottom="@dimen/activity_vertical_margin"-->
-                <!--android:layout_marginRight="@dimen/activity_vertical_margin"-->
-                <!--android:tint="@android:color/black"-->
-                <!--app:srcCompat="@drawable/ic_globe" />-->
-
             <com.adrianlesniak.beautifulthailand.views.BTTextView
                 android:id="@+id/place_name_view"
                 android:layout_width="match_parent"
@@ -57,16 +47,6 @@
                 android:layout_below="@+id/place_name_view"
                 app:srcCompat="@drawable/state_list_favourite_icon" />
 
-            <ImageButton
-                android:id="@+id/place_add_to_visit"
-                style="@style/BTIconStyle.BTIconButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/place_add_to_fav"
-                android:layout_alignParentRight="true"
-                android:adjustViewBounds="true"
-                android:tint="@android:color/black"
-                app:srcCompat="@drawable/state_list_to_visit_icon" />
         </RelativeLayout>
 
     </LinearLayout>

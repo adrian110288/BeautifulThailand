@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adrianlesniak.beautifulthailand.R;
+import com.adrianlesniak.beautifulthailand.models.Place;
 import com.adrianlesniak.beautifulthailand.screens.shared.PlaceViewHolder;
-import com.google.maps.model.PlacesSearchResult;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,9 +21,9 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
 
     private Context mContext;
 
-    private List<PlacesSearchResult> mPlaces;
+    private List<Place> mPlaces;
 
-    public NearbyPlacesAdapter(Context context, PlacesSearchResult[] places) {
+    public NearbyPlacesAdapter(Context context, Place[] places) {
         this.mContext = context;
         this.mPlaces = Arrays.asList(places);
     }
@@ -42,5 +42,10 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
     @Override
     public int getItemCount() {
         return this.mPlaces != null? this.mPlaces.size() : 0;
+    }
+
+    public void swapData(Place[] places) {
+        this.mPlaces = Arrays.asList(places);
+        notifyDataSetChanged();
     }
 }

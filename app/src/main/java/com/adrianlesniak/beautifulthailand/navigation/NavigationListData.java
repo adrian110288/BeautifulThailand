@@ -3,7 +3,7 @@ package com.adrianlesniak.beautifulthailand.navigation;
 import android.content.Context;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.screens.FavouritesFragment;
+import com.adrianlesniak.beautifulthailand.screens.favourites.FavouritesFragment;
 import com.adrianlesniak.beautifulthailand.screens.home.HomeFragment;
 
 import java.util.ArrayList;
@@ -40,12 +40,6 @@ public class NavigationListData extends ArrayList<NavigationListItemModel> {
                 FavouritesFragment.class
         );
 
-        NavigationListItemModel itemToVisit = new NavigationListItemModel(
-                R.drawable.ic_bookmark_off,
-                context.getString(R.string.navigation_item_to_visit),
-                null
-        );
-
         NavigationListItemModel itemWeather = new NavigationListItemModel(
                 R.drawable.ic_weather,
                 context.getString(R.string.navigation_item_weather),
@@ -76,7 +70,6 @@ public class NavigationListData extends ArrayList<NavigationListItemModel> {
 
         this.add(itemHome);
         this.add(itemFavourite);
-        this.add(itemToVisit);
         this.add(itemWeather);
         this.add(itemCurrency);
         this.add(itemFood);

@@ -28,8 +28,8 @@ public class FragmentHelper {
             fragmentManager
                     .beginTransaction()
                     .replace(R.id.fragment_container, f)
+                    .addToBackStack(f.getClass().getSimpleName())
                     .commit();
-
 
         } catch (InstantiationException e) {
             e.printStackTrace();
