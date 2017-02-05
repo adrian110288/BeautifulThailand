@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.Photo;
 import com.adrianlesniak.beautifulthailand.models.Place;
+import com.adrianlesniak.beautifulthailand.screens.home.OnPlaceClickListener;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
 
 /**
@@ -38,11 +39,18 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         this.addToFavouriteView = (ImageButton) itemView.findViewById(R.id.place_add_to_fav);
     }
 
-    public void bindData(Place place, View.OnClickListener listener) {
+    public void bindData(final Place place, final OnPlaceClickListener listener) {
 
         this.mPlace = place;
 
-        this.mView.setOnClickListener(listener);
+        this.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null) {
+                    listener.onPlaceClicked(place);
+                }
+            }
+        });
 //        this.addToFavouriteView.setOnClickListener(this);
 
         this.placeNameView.setText(place.name);

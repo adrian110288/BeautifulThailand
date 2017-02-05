@@ -24,7 +24,7 @@ public class OpeningHours {
             /**
              * Time that this Open or Close happens at.
              */
-            public LocalTime time;
+            public int time;
         }
 
         public OpenClose open;

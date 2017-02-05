@@ -91,4 +91,21 @@ public class NavigationListData extends ArrayList<NavigationListItemModel> {
     public NavigationListItemModel getSelectedItem() {
         return this.mSelectedItem;
     }
+
+    public NavigationListItemModel getItemByClass(Class itemClass) {
+
+        NavigationListItemModel item = null;
+
+        for(int index=0; index<this.size(); index++) {
+
+            NavigationListItemModel curr = this.get(index);
+
+            if(curr.getDestination().getSimpleName().equalsIgnoreCase(itemClass.getSimpleName())) {
+                item = curr;
+                break;
+            }
+        }
+
+        return item;
+    }
 }

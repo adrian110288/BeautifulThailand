@@ -23,9 +23,12 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
 
     private List<Place> mPlaces;
 
-    public NearbyPlacesAdapter(Context context, Place[] places) {
+    private OnPlaceClickListener mPlaceClickListener;
+
+    public NearbyPlacesAdapter(Context context, Place[] places, OnPlaceClickListener placeClickListener) {
         this.mContext = context;
         this.mPlaces = Arrays.asList(places);
+        this.mPlaceClickListener = placeClickListener;
     }
 
     @Override
@@ -36,16 +39,11 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
 
     @Override
     public void onBindViewHolder(PlaceViewHolder holder, int position) {
-        holder.bindData(this.mPlaces.get(position), null);
+        holder.bindData(this.mPlaces.get(position), mPlaceClickListener);
     }
 
     @Override
     public int getItemCount() {
         return this.mPlaces != null? this.mPlaces.size() : 0;
-    }
-
-    public void swapData(Place[] places) {
-        this.mPlaces = Arrays.asList(places);
-        notifyDataSetChanged();
     }
 }

@@ -29,7 +29,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        app:font_type="bold"
-        android:textAllCaps="true" />
+        android:textAllCaps="true"
+        android:textSize="18sp"
+        app:font_type="bold" />
 
 </RelativeLayout>

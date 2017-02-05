@@ -8,12 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adrianlesniak.beautifulthailand.R;
+import com.adrianlesniak.beautifulthailand.screens.shared.BaseFragment;
 
 /**
  * Created by adrian on 02/02/2017.
  */
 
-public class FavouritesFragment extends Fragment {
+public class FavouritesFragment extends BaseFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

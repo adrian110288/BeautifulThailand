@@ -1,5 +1,6 @@
 package com.adrianlesniak.beautifulthailand.navigation;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,18 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
     private OnNavigationItemClickListener mNavigationItemClickListener;
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            this.mNavigationItemClickListener = (OnNavigationItemClickListener) context;
+
+        } catch (ClassCastException e) {
+            throw new ClassCastException("NavigationActivity need to implement OnNavigationItemClickListener");
+        }
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -52,15 +65,15 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
         this.mNavigationItemList.setAdapter(this.mAdapter);
     }
 
-    public void setOnNavigationItemClickedListener(OnNavigationItemClickListener listener) {
-        this.mNavigationItemClickListener = listener;
-    }
-
     @Override
     public void onNavigationListItemClicked(NavigationListItemModel item) {
 
         if(this.mNavigationItemClickListener != null) {
             this.mNavigationItemClickListener.onNavigationItemClicked(item);
         }
+    }
+
+    public void selectItemAtPosition(int positionToSelect) {
+        this.mAdapter.selectItemAtPosition(positionToSelect);
     }
 }

@@ -28,6 +28,8 @@ public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAd
 
     private List<NavigationItemViewHolder> mViewHolders;
 
+    private int mIndexSelected = -1;
+
     public NavigationListAdapter(NavigationListData listData, OnNavigationListItemClicked listener) {
 
         this.mListData = listData;
@@ -51,14 +53,11 @@ public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAd
 
         final NavigationListItemModel itemData = this.mListData.get(position);
 
+        holder.getView().setSelected(this.mIndexSelected == position);
         holder.bindData(itemData);
         holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                for(int index = 0; index < mViewHolders.size(); index++) {
-                    mViewHolders.get(index).mView.setSelected(index == position);
-                }
 
                 if(mListener != null) {
                     mListener.onNavigationListItemClicked(itemData);
@@ -70,6 +69,20 @@ public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAd
     @Override
     public int getItemCount() {
         return this.mListData == null? 0 : this.mListData.size();
+    }
+
+    public void selectItemAtPosition(int positionToSelect) {
+
+        this.mIndexSelected = positionToSelect;
+
+        for(int index = 0; index < mViewHolders.size(); index++) {
+            NavigationItemViewHolder vh = mViewHolders.get(index);
+
+            if(vh != null) {
+                vh.getView().setSelected(index == positionToSelect);
+            }
+
+        }
     }
 
     public static class NavigationItemViewHolder extends RecyclerView.ViewHolder {
@@ -89,8 +102,6 @@ public class NavigationListAdapter extends RecyclerView.Adapter<NavigationListAd
         }
 
         public void bindData(NavigationListItemModel data) {
-
-            this.mView.setSelected(data.isSelected());
             this.mNavigationItemTitleView.setText(data.getTitle());
             this.mNavigationItemIcon.setImageResource(data.getIcon());
         }

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 
 import com.adrianlesniak.beautifulthailand.R;
+import com.adrianlesniak.beautifulthailand.screens.home.HomeFragment;
 import com.adrianlesniak.beautifulthailand.utilities.FragmentHelper;
 import com.adrianlesniak.beautifulthailand.views.BTToolbar;
 
@@ -16,6 +17,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationF
     private DrawerLayout mDrawerLayout;
 
     private NavigationFragment mNavigationFragment;
+
+    private NavigationListItemModel mCurrentSelectedItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,21 +39,33 @@ public class NavigationActivity extends AppCompatActivity implements NavigationF
         });
         this.mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         this.mNavigationFragment = (NavigationFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_fragment);
-        this.mNavigationFragment.setOnNavigationItemClickedListener(this);
+    }
 
-        NavigationListItemModel defaultFragment = NavigationListData.getInstance(this).get(0);
-        NavigationListData.getInstance(this).setSelectedItem(defaultFragment);
-        this.pushFragment(defaultFragment);
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        this.mCurrentSelectedItem = NavigationListData.getInstance(this).getItemByClass(HomeFragment.class);
+        FragmentHelper.pushFragment(this, getSupportFragmentManager(), this.mCurrentSelectedItem);
     }
 
     @Override
     public void onNavigationItemClicked(NavigationListItemModel item) {
-        mDrawerLayout.closeDrawer(Gravity.LEFT);
-        this.pushFragment(item);
+        this.mDrawerLayout.closeDrawer(Gravity.LEFT);
+
+        if(this.mCurrentSelectedItem != item) {
+            this.mCurrentSelectedItem = item;
+            FragmentHelper.pushFragment(this, getSupportFragmentManager(), item);
+        }
     }
 
-    private void pushFragment(NavigationListItemModel item) {
-        this.mToolbar.setTitle(item.getTitle());
-        FragmentHelper.pushFragment(this, getSupportFragmentManager(), item);
+    public void onFragmentAttached(Class fragmentClass) {
+
+        this.mCurrentSelectedItem = NavigationListData.getInstance(this).getItemByClass(fragmentClass);
+        this.mToolbar.setTitle(this.mCurrentSelectedItem.getTitle());
+
+        int itemIndex = NavigationListData.getInstance(this).indexOf(this.mCurrentSelectedItem);
+        this.mNavigationFragment.selectItemAtPosition(itemIndex);
+
     }
 }

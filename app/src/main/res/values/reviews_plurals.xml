@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="number_of_place_reviews">
+        <item quantity="one">%d review</item>
+        <item quantity="few">%d reviews</item>
+        <item quantity="many">%d reviews</item>
+        <item quantity="other">%d reviews</item>
+    </plurals>
+</resources>

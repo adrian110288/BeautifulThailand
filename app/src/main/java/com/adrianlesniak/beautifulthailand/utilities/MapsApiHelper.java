@@ -5,6 +5,7 @@ import android.widget.ImageView;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.LatLng;
+import com.adrianlesniak.beautifulthailand.models.PlaceDetailsResponse;
 import com.adrianlesniak.beautifulthailand.models.PlacesSearchResponse;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -76,6 +77,39 @@ public class MapsApiHelper {
                         PlacesSearchResponse placesSearchResponse = gson.fromJson(response.body().string(), PlacesSearchResponse.class);
 
                         emitter.onNext(placesSearchResponse);
+                        emitter.onComplete();
+                    }
+                });
+            }
+        });
+    }
+
+    public Observable getPlaceDetails(final String placeId) {
+
+        return Observable.create(new ObservableOnSubscribe<PlaceDetailsResponse>() {
+            @Override
+            public void subscribe(final ObservableEmitter<PlaceDetailsResponse> emitter) throws Exception {
+
+                String uri = URL_BASE + "place/details/json?placeid=" + placeId + "&key=" +API_KEY;
+
+                Request request = new Request.Builder()
+                        .url(uri)
+                        .build();
+
+                mClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        emitter.onError(e);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+
+                        Gson gson = new Gson();
+                        PlaceDetailsResponse placeDetailsResponse = gson.fromJson(response.body().string(), PlaceDetailsResponse.class);
+
+                        emitter.onNext(placeDetailsResponse);
+                        emitter.onComplete();
                     }
                 });
             }
@@ -92,4 +126,5 @@ public class MapsApiHelper {
             .centerCrop()
             .into(target);
     }
+
 }
