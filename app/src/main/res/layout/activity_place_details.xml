@@ -27,16 +27,18 @@
                 tools:text="New Bridge" />
 
             <com.adrianlesniak.beautifulthailand.views.BTTextView
-                android:id="@+id/place_review_count"
+                android:id="@+id/place_distance_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:layout_gravity="left"
                 android:textSize="14sp"
-                tools:text="1 review"
-                android:textColor="#ccc"/>
+                tools:text="1.2 mi"
+                android:textColor="@color/colorTextFaded"/>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -45,27 +47,35 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/divider_color"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
-                    android:layout_below="@+id/place_title_text_view"/>
+                    android:layout_alignParentTop="true" />
 
                 <com.adrianlesniak.beautifulthailand.views.BTTextView
                     android:id="@+id/rating_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/place_title_text_view"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_margin="@dimen/activity_vertical_margin"
                     android:textColor="@color/colorAccent"
                     android:textSize="24sp"
-                    tools:text="0.0" />
+                    tools:text="3.4" />
+
+                <com.adrianlesniak.beautifulthailand.views.BTTextView
+                    android:id="@+id/place_review_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:textSize="14sp"
+                    tools:text="1 review"
+                    android:textColor="@color/colorTextFaded"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/divider_color"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:layout_below="@+id/place_title_text_view"/>
+                    android:layout_alignParentBottom="true"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <com.adrianlesniak.beautifulthailand.views.BTPhotoCarousel
                 android:id="@+id/photo_carousel"
@@ -77,12 +87,12 @@
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_below="@+id/rating_text_view" />
 
-            <com.adrianlesniak.beautifulthailand.screens.details.BTPlaceMapView
-                android:id="@+id/place_map_view"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_below="@id/photo_carousel"/>
+
+            <!-- Map View including overlay -->
+
+            <include android:layout_width="match_parent"
+                android:layout_height="@dimen/map_view_height"
+                layout="@layout/include_map_layout"/>
 
         </LinearLayout>
 

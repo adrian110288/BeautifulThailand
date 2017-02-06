@@ -45,7 +45,7 @@ public class MapsApiHelper {
 
     private MapsApiHelper(Context context) {
         this.mContext = context;
-        this.API_KEY = mContext.getResources().getString(R.string.api_key);
+        this.API_KEY = mContext.getResources().getString(R.string.google_maps_api_key);
         this.mClient = new OkHttpClient();
         this.mGson = new Gson();
     }

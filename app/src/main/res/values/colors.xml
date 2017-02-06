@@ -5,7 +5,8 @@
     <color name="colorAccent">#15d1a2</color>
     <color name="colorAccentDark">#10a27e</color>
     <color name="colorHeart">#F44336</color>
-    <color name="colorText">#000</color>
+    <color name="colorText">#343434</color>
+    <color name="colorTextFaded">#bfbfbf</color>
     <color name="colorPositive">#4CAF50</color>
     <color name="colorNegative">#F44336</color>
     <color name="windowBackground">#EDEDED</color>

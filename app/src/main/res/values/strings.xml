@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Beautiful Thailand</string>
-    <string name="api_key">AIzaSyCo2jpKyqCaInfuJrjHx_Ff-5zXiCjwzQA</string>
-    <string name="static_map_api_key">AIzaSyCpCohRE_C2s0pRggODofOZ4o2XP24oRpg</string>
 
     <!-- Navigation items-->
 
@@ -12,8 +10,15 @@
     <string name="navigation_item_food">Food</string>
     <string name="navigation_item_settings">Settings</string>
 
+
+    <!--Messages-->
+
     <string name="no_nearby_places_message">No nearby places found</string>
     <string name="error_loading_places_message">Error loading places</string>
-
     <string name="no_reviews_message">No reviews</string>
+
+    <!--Views-->
+
+    <string name="navigate_button_title">Navigate</string>
+
 </resources>

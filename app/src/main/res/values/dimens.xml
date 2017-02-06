@@ -13,5 +13,7 @@
     <dimen name="detail_map_height">160dp</dimen>
     <dimen name="card_elevation">8dp</dimen>
     <dimen name="card_corner_radius">2dp</dimen>
+    <dimen name="navigate_button_height">60dp</dimen>
+    <dimen name="map_view_height">260dp</dimen>
 
 </resources>
