@@ -1,7 +1,5 @@
 package com.adrianlesniak.beautifulthailand.screens.shared;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
@@ -9,10 +7,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.models.Photo;
-import com.adrianlesniak.beautifulthailand.models.Place;
+import com.adrianlesniak.beautifulthailand.models.RecentPlacesDistanceList;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
+import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
+import com.adrianlesniak.beautifulthailand.models.maps.Photo;
+import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.home.OnPlaceClickListener;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by adrian on 25/01/2017.
@@ -30,6 +36,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
 
     protected ImageButton addToFavouriteView;
 
+    private TextView mDistanceTextView;
+
     public PlaceViewHolder(View itemView) {
         super(itemView);
 
@@ -37,6 +45,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         this.placeNameView = (TextView) itemView.findViewById(R.id.place_name_view);
         this.placePhotoView = (ImageView) itemView.findViewById(R.id.place_photo_view);
         this.addToFavouriteView = (ImageButton) itemView.findViewById(R.id.place_add_to_fav);
+        this.mDistanceTextView = (TextView) itemView.findViewById(R.id.distance_text_view);
     }
 
     public void bindData(final Place place, final OnPlaceClickListener listener) {
@@ -51,10 +60,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
                 }
             }
         });
-//        this.addToFavouriteView.setOnClickListener(this);
 
         this.placeNameView.setText(place.name);
-//        this.addToFavouriteView.setSelected(place.getIsFavourite());
 
         Photo photo = this.mPlace.photos != null && this.mPlace.photos.length > 0 ? this.mPlace.photos[0] : null;
 
@@ -62,6 +69,36 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             MapsApiHelper.getInstance(this.mView.getContext()).loadPhoto(photo.photo_reference, photo.width, this.placePhotoView);
         }
 
+        if(RecentPlacesDistanceList.getInstance().containsKey(place.placeId)) {
+            this.setDistanceTextFromResponse(RecentPlacesDistanceList.getInstance().get(place.placeId));
+
+        } else {
+            // TODO Dont forget to change that!
+            LatLng currentLocation= new LatLng(13.737188, 100.523218);
+            LatLng placeLocation = place.geometry.location;
+
+            MapsApiHelper.getInstance(this.mView.getContext())
+                    .getDistanceToPlace(currentLocation, placeLocation)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Consumer<DistanceMatrixResponse>() {
+                        @Override
+                        public void accept(DistanceMatrixResponse distanceResponse) throws Exception {
+
+                            RecentPlacesDistanceList.getInstance()
+                                    .put(place.placeId, distanceResponse);
+
+                            setDistanceTextFromResponse(distanceResponse);
+                        }
+                    });
+        }
+
+    }
+
+    private void setDistanceTextFromResponse(DistanceMatrixResponse response) {
+
+        DistanceMatrixElement firstEl = response.getFirstElement();
+        this.mDistanceTextView.setText(firstEl != null? firstEl.distance != null ? firstEl.distance.text : null : null);
     }
 
 // /        this.mPlaceListItemRemoveListener = listener;

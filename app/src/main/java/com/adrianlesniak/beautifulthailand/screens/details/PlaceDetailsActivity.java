@@ -7,7 +7,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.models.PlaceDetailsResponse;
+import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetailsResponse;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
 import com.adrianlesniak.beautifulthailand.utilities.ObserverAdapter;
 import com.adrianlesniak.beautifulthailand.views.BTPhotoCarousel;

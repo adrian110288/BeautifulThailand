@@ -1,8 +1,6 @@
-package com.adrianlesniak.beautifulthailand.models;
+package com.adrianlesniak.beautifulthailand.models.maps;
 
 import com.google.gson.annotations.SerializedName;
-
-import org.joda.time.Instant;
 
 /**
  * Created by adrian on 04/02/2017.

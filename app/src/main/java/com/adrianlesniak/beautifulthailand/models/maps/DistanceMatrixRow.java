@@ -1,0 +1,10 @@
+package com.adrianlesniak.beautifulthailand.models.maps;
+
+/**
+ * Created by adrian on 06/02/2017.
+ */
+
+public class DistanceMatrixRow {
+
+    public DistanceMatrixElement[] elements;
+}

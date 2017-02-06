@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand.models;
+package com.adrianlesniak.beautifulthailand.models.maps;
 
 /**
  * Created by adrian on 04/02/2017.

@@ -1,6 +1,4 @@
-package com.adrianlesniak.beautifulthailand.models;
-
-import com.google.gson.annotations.SerializedName;
+package com.adrianlesniak.beautifulthailand.models.maps;
 
 /**
  * Created by adrian on 04/02/2017.

@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand.models;
+package com.adrianlesniak.beautifulthailand.models.maps;
 
 import com.google.gson.annotations.SerializedName;
 

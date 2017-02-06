@@ -1,10 +1,6 @@
-package com.adrianlesniak.beautifulthailand.models;
+package com.adrianlesniak.beautifulthailand.models.maps;
 
 import com.google.gson.annotations.SerializedName;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by adrian on 04/02/2017.
