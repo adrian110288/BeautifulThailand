@@ -2,6 +2,7 @@ package com.adrianlesniak.beautifulthailand.screens.details;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -21,6 +22,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -104,9 +108,10 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
         Review[] reviews = this.mPlaceDetailsResponse.result.reviews;
 
         Intent reviewsIntent = new Intent(this, PlaceReviewsActivity.class);
-        reviewsIntent.putExtra(PlaceReviewsActivity.BUNDLE_REVIEWS, reviews);
+        reviewsIntent.putParcelableArrayListExtra(PlaceReviewsActivity.BUNDLE_REVIEWS, new ArrayList<Parcelable>(Arrays.asList(reviews)));
         reviewsIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
+        overridePendingTransition(R.anim.side_up, R.anim.slide_down);
         startActivity(reviewsIntent);
     }
 

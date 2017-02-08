@@ -1,14 +1,19 @@
 package com.adrianlesniak.beautifulthailand.screens.reviews;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.adrianlesniak.beautifulthailand.BTApplication;
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.maps.Review;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by adrian on 08/02/2017.
@@ -22,12 +27,13 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
     public ReviewViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(itemView);
+
+        ButterKnife.bind(this, itemView);
     }
 
     public void bind(Review review) {
         this.mReviewAuthor.setText(review.authorName);
         this.mReviewText.setText(review.text);
-        this.mReviewRating.setText(review.rating);
+        this.mReviewRating.setText(String.valueOf(review.rating * 1.0));
     }
 }

@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.maps.Review;
 
+import java.util.List;
+
 /**
  * Created by adrian on 08/02/2017.
  */
@@ -16,9 +18,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
 
     private LayoutInflater mLayoutInflater;
 
-    private Review[] mReviews;
+    private List<Review> mReviews;
 
-    public ReviewsAdapter(LayoutInflater layoutInflater, Review[] reviews) {
+    public ReviewsAdapter(LayoutInflater layoutInflater, List<Review> reviews) {
         this.mLayoutInflater = layoutInflater;
         this.mReviews = reviews;
     }
@@ -32,11 +34,11 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
 
     @Override
     public void onBindViewHolder(ReviewViewHolder holder, int position) {
-        holder.bind(this.mReviews[position]);
+        holder.bind(this.mReviews.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return this.mReviews != null? this.mReviews.length : 0;
+        return this.mReviews != null? this.mReviews.size() : 0;
     }
 }
