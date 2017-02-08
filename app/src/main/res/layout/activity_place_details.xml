@@ -67,7 +67,8 @@
                     android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:textSize="14sp"
                     tools:text="1 review"
-                    android:textColor="@color/colorTextFaded"/>
+                    android:textColor="@color/state_list_text_color"
+                    android:onClick="showReviews"/>
 
                 <View
                     android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 package com.adrianlesniak.beautifulthailand.screens.details;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.RecentPlacesDistanceList;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetailsResponse;
+import com.adrianlesniak.beautifulthailand.models.maps.Review;
+import com.adrianlesniak.beautifulthailand.screens.reviews.PlaceReviewsActivity;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
 import com.adrianlesniak.beautifulthailand.utilities.ObserverAdapter;
 import com.adrianlesniak.beautifulthailand.views.BTPhotoCarousel;
@@ -94,6 +97,17 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.setupMap(googleMap);
+    }
+
+    public void showReviews(View view) {
+
+        Review[] reviews = this.mPlaceDetailsResponse.result.reviews;
+
+        Intent reviewsIntent = new Intent(this, PlaceReviewsActivity.class);
+        reviewsIntent.putExtra(PlaceReviewsActivity.BUNDLE_REVIEWS, reviews);
+        reviewsIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+        startActivity(reviewsIntent);
     }
 
     private void updateViews() {

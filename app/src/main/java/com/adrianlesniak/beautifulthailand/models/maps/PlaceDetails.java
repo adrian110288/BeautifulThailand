@@ -34,23 +34,6 @@ public class PlaceDetails {
 
     public float rating;
 
-    static public class Review {
-
-        @SerializedName("author_name")
-        public String authorName;
-
-        @SerializedName("author_url")
-        public String authorUrl;
-
-        public String language;
-
-        public int rating;
-
-        public String text;
-
-        public int time;
-    }
-
     public Review[] reviews;
 
     public String[] types;

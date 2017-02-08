@@ -62,6 +62,7 @@ public class HomeFragment extends BaseFragment implements OnPlaceClickListener{
             return;
         }
 
+        // TODO Change this
         LatLng latLng = new LatLng(13.737188, 100.523218);
         MapsApiHelper
                 .getInstance(getContext())
@@ -125,7 +126,7 @@ public class HomeFragment extends BaseFragment implements OnPlaceClickListener{
 
         Intent detailsIntent = new Intent(getContext(), PlaceDetailsActivity.class);
         detailsIntent.putExtras(detailsBundle);
-        detailsIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//        detailsIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         getContext().startActivity(detailsIntent);
     }
