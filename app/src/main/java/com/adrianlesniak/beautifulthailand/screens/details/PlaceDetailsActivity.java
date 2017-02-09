@@ -28,6 +28,7 @@ import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -94,6 +95,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
                 });
     }
 
+    @OnClick(R.id.back)
     public void onBack(View view) {
         this.finish();
     }
