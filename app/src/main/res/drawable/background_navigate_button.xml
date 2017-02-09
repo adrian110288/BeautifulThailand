@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item android:state_pressed="true">
-        <shape>
-            <corners android:radius="32dp"/>
-            <solid android:color="@color/colorAccentDark"/>
+        <shape android:shape="oval">
+            <solid android:color="@color/colorAccentDark"></solid>
         </shape>
-    </item>
-
+        </item>
     <item>
-        <shape>
-            <corners android:radius="32dp"/>
-            <gradient
-                android:startColor="@color/colorAccent"
-                android:endColor="@color/colorAccentDark"
-                android:angle="-90"/>
+        <shape android:shape="oval">
+            <solid android:color="@color/colorAccent"></solid>
         </shape>
-    </item>
 
+    </item>
 </selector>

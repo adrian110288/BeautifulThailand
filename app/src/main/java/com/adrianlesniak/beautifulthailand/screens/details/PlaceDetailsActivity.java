@@ -1,6 +1,8 @@
 package com.adrianlesniak.beautifulthailand.screens.details;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +47,10 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     @BindView(R.id.rating_text_view) TextView mPlaceRatingTextView;
 
     @BindView(R.id.photo_carousel) BTPhotoCarousel mBTPhotoCarousel;
+
+    @BindView(R.id.telephone_text_view) TextView mTelephoneTextView;
+
+    @BindView(R.id.website_text_view) TextView mWebsiteTextView;
 
     @BindView(R.id.address_text_view) TextView mAddressTextView;
 
@@ -95,16 +101,17 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
                 });
     }
 
-    @OnClick(R.id.back)
-    public void onBack(View view) {
-        this.finish();
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.setupMap(googleMap);
     }
 
+    @OnClick(R.id.back)
+    public void onBack(View view) {
+        this.finish();
+    }
+
+    @OnClick(R.id.place_review_count)
     public void showReviews(View view) {
 
         Review[] reviews = this.mPlaceDetailsResponse.result.reviews;
@@ -117,13 +124,65 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
         startActivity(reviewsIntent);
     }
 
+    @OnClick(R.id.telephone_text_view)
+    public void dialNumber(View view) {
+
+        if(this.mPlaceDetailsResponse.result.internationalPhoneNumber!= null) {
+
+            String uri = "tel:" + this.mPlaceDetailsResponse.result.internationalPhoneNumber;
+            Intent telephoneIntent = new Intent(Intent.ACTION_DIAL);
+            telephoneIntent.setData(Uri.parse(uri));
+
+            try {
+                startActivity(telephoneIntent);
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @OnClick(R.id.address_text_view)
+    public void openMaps(View view) {
+
+        if(this.mPlaceDetailsResponse.result.formattedAddress != null) {
+
+            String uri = "geo:" + this.mPlaceDetailsResponse.result.geometry.location.lat + "," + this.mPlaceDetailsResponse.result.geometry.location.lng + "?q=" + this.mPlaceDetailsResponse.result.geometry.location.lat + "," + this.mPlaceDetailsResponse.result.geometry.location.lng;
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+            mapIntent.setData(Uri.parse(uri));
+            mapIntent.setPackage("com.google.android.apps.maps");
+
+            try {
+                startActivity(mapIntent);
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @OnClick(R.id.website_text_view)
+    public void goToLink(View view) {
+
+        if(this.mPlaceDetailsResponse.result.website != null) {
+            Intent websiteIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(this.mPlaceDetailsResponse.result.website));
+            startActivity(websiteIntent);
+        }
+    }
+
     private void updateViews() {
         this.mPlaceTitleTextView.setText(this.mPlaceDetailsResponse.result.name);
         this.mPlaceDistanceTextView.setText(RecentPlacesDistanceList.getInstance().get(this.mPlaceDetailsResponse.result.placeId).getFirstElement().distance.text);
         this.mPlaceReviewCount.setText(this.mPlaceDetailsResponse.result.reviews == null ? getResources().getString(R.string.no_reviews_message) : getResources().getQuantityString(R.plurals.number_of_place_reviews, this.mPlaceDetailsResponse.result.reviews.length, this.mPlaceDetailsResponse.result.reviews.length));
         this.mPlaceRatingTextView.setText(String.valueOf(this.mPlaceDetailsResponse.result.rating));
         this.mBTPhotoCarousel.setPhotos(getSupportFragmentManager(), this.mPlaceDetailsResponse.result.photos);
+
+        this.mTelephoneTextView.setText(this.mPlaceDetailsResponse.result.internationalPhoneNumber != null ? this.mPlaceDetailsResponse.result.internationalPhoneNumber : getResources().getString(R.string.no_telephone_no_message));
+        this.mTelephoneTextView.setEnabled(this.mPlaceDetailsResponse.result.internationalPhoneNumber != null);
+
+        this.mWebsiteTextView.setText(this.mPlaceDetailsResponse.result.website != null ? this.mPlaceDetailsResponse.result.website : getResources().getString(R.string.no_website_message));
+        this.mWebsiteTextView.setEnabled(this.mPlaceDetailsResponse.result.website != null);
+
         this.mAddressTextView.setText(this.mPlaceDetailsResponse.result.formattedAddress);
+        this.mAddressTextView.setEnabled(this.mPlaceDetailsResponse.result.formattedAddress != null);
     }
 
     private void setupMap(GoogleMap googleMap) {

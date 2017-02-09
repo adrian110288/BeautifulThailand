@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.screens.home.HomeFragment;
+import com.adrianlesniak.beautifulthailand.screens.nearby.NearbyFragment;
 import com.adrianlesniak.beautifulthailand.utilities.FragmentHelper;
 import com.adrianlesniak.beautifulthailand.views.BTToolbar;
 
@@ -45,7 +45,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationF
     protected void onResume() {
         super.onResume();
 
-        this.mCurrentSelectedItem = NavigationListData.getInstance(this).getItemByClass(HomeFragment.class);
+        this.mCurrentSelectedItem = NavigationListData.getInstance(this).getItemByClass(NearbyFragment.class);
         FragmentHelper.pushFragment(this, getSupportFragmentManager(), this.mCurrentSelectedItem);
     }
 

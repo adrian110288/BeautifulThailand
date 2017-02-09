@@ -13,7 +13,7 @@ import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
 import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
 import com.adrianlesniak.beautifulthailand.models.maps.Photo;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
-import com.adrianlesniak.beautifulthailand.screens.home.OnPlaceClickListener;
+import com.adrianlesniak.beautifulthailand.screens.nearby.OnPlaceClickListener;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;

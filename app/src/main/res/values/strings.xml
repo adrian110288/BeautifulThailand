@@ -3,7 +3,7 @@
 
     <!-- Navigation items-->
 
-    <string name="navigation_item_home">Home</string>
+    <string name="navigation_item_home">Nearby</string>
     <string name="navigation_item_favourite">Favourites</string>
     <string name="navigation_item_weather">Weather</string>
     <string name="navigation_item_currency">Currency</string>
@@ -16,6 +16,8 @@
     <string name="no_nearby_places_message">No nearby places found</string>
     <string name="error_loading_places_message">Error loading places</string>
     <string name="no_reviews_message">No reviews</string>
+    <string name="no_telephone_no_message">No telephone no.</string>
+    <string name="no_website_message">No website</string>
 
     <!--Views-->
 

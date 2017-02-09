@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand.screens.home;
+package com.adrianlesniak.beautifulthailand.screens.nearby;
 
 import android.Manifest;
 import android.app.Activity;
@@ -33,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by adrian on 01/02/2017.
  */
 
-public class HomeFragment extends BaseFragment implements OnPlaceClickListener{
+public class NearbyFragment extends BaseFragment implements OnPlaceClickListener{
 
     private int DEFAULT_SEARCH_RADIUS = 500;
 
@@ -63,7 +63,7 @@ public class HomeFragment extends BaseFragment implements OnPlaceClickListener{
         }
 
         // TODO Change this
-        LatLng latLng = new LatLng(13.737188, 100.523218);
+        LatLng latLng = new LatLng(13.7488, 100.5286);
         MapsApiHelper
                 .getInstance(getContext())
                 .getNearbyPlaces(latLng, DEFAULT_SEARCH_RADIUS)
@@ -79,7 +79,7 @@ public class HomeFragment extends BaseFragment implements OnPlaceClickListener{
                     public void onNext(PlacesSearchResponse result) {
 
                         if(result.results.length > 0) {
-                            mAdapter = new NearbyPlacesAdapter(getActivity(), result.results, HomeFragment.this);
+                            mAdapter = new NearbyPlacesAdapter(getActivity(), result.results, NearbyFragment.this);
                         } else {
                             mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.no_nearby_places_message));
 
@@ -104,7 +104,7 @@ public class HomeFragment extends BaseFragment implements OnPlaceClickListener{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return inflater.inflate(R.layout.fragment_nearby, container, false);
     }
 
     @Override

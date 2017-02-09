@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand.screens.home;
+package com.adrianlesniak.beautifulthailand.screens.nearby;
 
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 

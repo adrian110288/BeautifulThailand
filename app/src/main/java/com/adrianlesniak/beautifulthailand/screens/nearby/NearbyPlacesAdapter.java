@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand.screens.home;
+package com.adrianlesniak.beautifulthailand.screens.nearby;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

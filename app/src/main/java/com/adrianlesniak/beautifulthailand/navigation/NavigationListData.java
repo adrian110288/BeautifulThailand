@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.screens.favourites.FavouritesFragment;
-import com.adrianlesniak.beautifulthailand.screens.home.HomeFragment;
+import com.adrianlesniak.beautifulthailand.screens.nearby.NearbyFragment;
 
 import java.util.ArrayList;
 
@@ -29,9 +29,9 @@ public class NavigationListData extends ArrayList<NavigationListItemModel> {
     private NavigationListData(Context context) {
 
         NavigationListItemModel itemHome = new NavigationListItemModel(
-                R.drawable.ic_local,
+                R.drawable.ic_address,
                 context.getString(R.string.navigation_item_home),
-                HomeFragment.class
+                NearbyFragment.class
         );
 
         NavigationListItemModel itemFavourite = new NavigationListItemModel(
