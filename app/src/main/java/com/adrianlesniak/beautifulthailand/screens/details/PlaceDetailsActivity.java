@@ -168,6 +168,20 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
         }
     }
 
+    @OnClick(R.id.navigate_button)
+    public void navigateToPlace(View view) {
+
+        String uri = "http://maps.google.com/maps?saddr=13.7488,100.5286&daddr=" + this.mPlaceDetailsResponse.result.geometry.location.lat + "," + this.mPlaceDetailsResponse.result.geometry.location.lng;
+        Intent navigateIntent = new Intent(Intent.ACTION_VIEW);
+        navigateIntent.setData(Uri.parse(uri));
+
+        try {
+            startActivity(navigateIntent);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void updateViews() {
         this.mPlaceTitleTextView.setText(this.mPlaceDetailsResponse.result.name);
         this.mPlaceDistanceTextView.setText(RecentPlacesDistanceList.getInstance().get(this.mPlaceDetailsResponse.result.placeId).getFirstElement().distance.text);
