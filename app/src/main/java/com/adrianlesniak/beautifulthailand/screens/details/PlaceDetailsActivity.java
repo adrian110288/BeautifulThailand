@@ -184,9 +184,14 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
 
     private void updateViews() {
         this.mPlaceTitleTextView.setText(this.mPlaceDetailsResponse.result.name);
+
         this.mPlaceDistanceTextView.setText(RecentPlacesDistanceList.getInstance().get(this.mPlaceDetailsResponse.result.placeId).getFirstElement().distance.text);
+
         this.mPlaceReviewCount.setText(this.mPlaceDetailsResponse.result.reviews == null ? getResources().getString(R.string.no_reviews_message) : getResources().getQuantityString(R.plurals.number_of_place_reviews, this.mPlaceDetailsResponse.result.reviews.length, this.mPlaceDetailsResponse.result.reviews.length));
+        this.mPlaceReviewCount.setEnabled(this.mPlaceDetailsResponse.result.reviews != null);
+
         this.mPlaceRatingTextView.setText(String.valueOf(this.mPlaceDetailsResponse.result.rating));
+
         this.mBTPhotoCarousel.setPhotos(getSupportFragmentManager(), this.mPlaceDetailsResponse.result.photos);
 
         this.mTelephoneTextView.setText(this.mPlaceDetailsResponse.result.internationalPhoneNumber != null ? this.mPlaceDetailsResponse.result.internationalPhoneNumber : getResources().getString(R.string.no_telephone_no_message));
@@ -212,7 +217,10 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
                 .newLatLngZoom(markerOptions.getPosition(), 15);
 
         googleMap.moveCamera(cameraUpdate);
+
         googleMap.getUiSettings().setAllGesturesEnabled(false);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
     }
 
 }

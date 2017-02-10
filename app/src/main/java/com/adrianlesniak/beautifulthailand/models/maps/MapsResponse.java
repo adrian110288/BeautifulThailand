@@ -12,4 +12,8 @@ public class MapsResponse {
     public String htmlAttributions[];
 
     public String status;
+
+    public boolean isSuccessful() {
+        return status.equalsIgnoreCase("OK") & status.equalsIgnoreCase("ZERO_RESULTS");
+    }
 }
