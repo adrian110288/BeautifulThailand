@@ -128,7 +128,7 @@ public class NearbyFragment extends BaseFragment implements OnPlaceClickListener
         detailsIntent.putExtras(detailsBundle);
 //        detailsIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-        getContext().startActivity(detailsIntent);
+        getActivity().startActivity(detailsIntent);
     }
 
 //    @Override

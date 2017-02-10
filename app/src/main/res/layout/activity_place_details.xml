@@ -93,7 +93,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/divider1"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp" />
+                android:layout_marginStart="16dp"
+                app:font_type="bold"/>
 
             <com.adrianlesniak.beautifulthailand.views.BTTextView
                 android:id="@+id/place_review_count"
@@ -102,12 +103,10 @@
                 android:textColor="@color/state_list_text_color"
                 android:textSize="14sp"
                 tools:text="1 review"
-                android:layout_marginTop="0dp"
                 app:layout_constraintTop_toBottomOf="@+id/divider1"
                 android:layout_marginRight="15dp"
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginEnd="15dp"
-                android:layout_marginBottom="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/divider2" />
 
             <View
@@ -140,8 +139,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/photo_carousel"
-                app:layout_constraintHorizontal_bias="0.5">
+                app:layout_constraintTop_toBottomOf="@+id/photo_carousel">
 
                 <ImageView
                     android:id="@+id/telephone_icon"
@@ -168,8 +166,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/telephone_container"
-                app:layout_constraintHorizontal_bias="0.5">
+                app:layout_constraintTop_toBottomOf="@+id/telephone_container">
 
                 <ImageView
                     android:id="@+id/website_icon"
@@ -196,8 +193,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/website_container"
-                app:layout_constraintHorizontal_bias="0.5">
+                app:layout_constraintTop_toBottomOf="@+id/website_container">
 
                 <ImageView
                     android:id="@+id/address_icon"
@@ -218,26 +214,29 @@
 
             </RelativeLayout>
 
-            <fragment
-                android:id="@+id/map_view_fragment"
-                class="com.google.android.gms.maps.SupportMapFragment"
+            <RelativeLayout
+                android:id="@+id/map_container"
                 android:layout_width="0dp"
-                android:layout_height="260dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/address_container"/>
+                app:layout_constraintTop_toBottomOf="@+id/address_container"
+                android:visibility="gone">
 
-            <View
-                android:id="@+id/gradient_top"
-                android:layout_width="0dp"
-                android:layout_height="32dp"
-                android:background="@drawable/background_gradient_white_transparent_vertical"
-                android:rotation="180"
-                app:layout_constraintTop_toTopOf="@+id/map_view_fragment"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                <fragment
+                    android:id="@+id/map_view_fragment"
+                    class="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="260dp" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:background="@drawable/background_gradient_white_transparent_vertical"
+                    android:rotation="180"
+                    android:layout_alignParentTop="true"/>
 
+            </RelativeLayout>
 
         </android.support.constraint.ConstraintLayout>
 

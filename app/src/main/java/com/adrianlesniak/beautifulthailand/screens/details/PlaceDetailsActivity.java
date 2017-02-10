@@ -17,6 +17,8 @@ import com.adrianlesniak.beautifulthailand.screens.reviews.PlaceReviewsActivity;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
 import com.adrianlesniak.beautifulthailand.utilities.ObserverAdapter;
 import com.adrianlesniak.beautifulthailand.views.BTPhotoCarousel;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,8 +56,6 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
 
     @BindView(R.id.address_text_view) TextView mAddressTextView;
 
-    private SupportMapFragment mMapFragment;
-
     private PlaceDetailsResponse mPlaceDetailsResponse;
 
     @Override
@@ -64,8 +64,6 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
         this.setContentView(R.layout.activity_place_details);
 
         ButterKnife.bind(this);
-
-        this.mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_fragment);
     }
 
     @Override
@@ -86,7 +84,14 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
                         //TODO Add loader
 
                         mPlaceDetailsResponse = (PlaceDetailsResponse) value;
-                        mMapFragment.getMapAsync(PlaceDetailsActivity.this);
+
+                        int googlePlayAvailability = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(PlaceDetailsActivity.this);
+                        if(googlePlayAvailability != ConnectionResult.SERVICE_INVALID) {
+
+                            findViewById(R.id.map_container).setVisibility(View.VISIBLE);
+                            ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_fragment))
+                                    .getMapAsync(PlaceDetailsActivity.this);
+                        }
 
                         updateViews();
                     }
@@ -108,7 +113,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
 
     @OnClick(R.id.back)
     public void onBack(View view) {
-        this.finish();
+        finish();
     }
 
     @OnClick(R.id.place_review_count)
