@@ -23,6 +23,11 @@ import com.adrianlesniak.beautifulthailand.screens.shared.BaseFragment;
 import com.adrianlesniak.beautifulthailand.screens.shared.EmptyAdapter;
 import com.adrianlesniak.beautifulthailand.screens.shared.LoadingAdapter;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
+import com.adrianlesniak.beautifulthailand.utilities.NearbyPlacesCache;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -69,20 +74,19 @@ public class NearbyFragment extends BaseFragment implements OnPlaceClickListener
                 .getNearbyPlaces(latLng, DEFAULT_SEARCH_RADIUS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<PlacesSearchResponse>() {
+                .subscribe(new Observer<List<Place>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         // Empty
                     }
 
                     @Override
-                    public void onNext(PlacesSearchResponse result) {
+                    public void onNext(List<Place> nearbyPlaces) {
 
-                        if(result.results.length > 0) {
-                            mAdapter = new NearbyPlacesAdapter(getActivity(), result.results, NearbyFragment.this);
+                        if(!nearbyPlaces.isEmpty()) {
+                            mAdapter = new NearbyPlacesAdapter(getActivity(), nearbyPlaces, NearbyFragment.this);
                         } else {
                             mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.no_nearby_places_message));
-
                         }
 
                         mNearbyPlacesList.setAdapter(mAdapter);

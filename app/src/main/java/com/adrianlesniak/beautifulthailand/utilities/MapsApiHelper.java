@@ -6,12 +6,16 @@ import android.widget.ImageView;
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
 import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
+import com.adrianlesniak.beautifulthailand.models.maps.Place;
+import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetailsResponse;
 import com.adrianlesniak.beautifulthailand.models.maps.PlacesSearchResponse;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -61,9 +65,15 @@ public class MapsApiHelper {
 
     public Observable getNearbyPlaces(final LatLng latLng, final int radius) {
 
-        return Observable.create(new ObservableOnSubscribe<PlacesSearchResponse>() {
+        return Observable.create(new ObservableOnSubscribe<List<Place>>() {
             @Override
-            public void subscribe(final ObservableEmitter<PlacesSearchResponse> emitter) throws Exception {
+            public void subscribe(final ObservableEmitter<List<Place>> emitter) throws Exception {
+
+                if(!NearbyPlacesCache.getsInstance().isCacheEmpty()) {
+                    emitter.onNext(NearbyPlacesCache.getsInstance().getCache());
+                    emitter.onComplete();
+                    return;
+                }
 
                 String uri = URL_BASE + "place/nearbysearch/json?location=" + String.valueOf(latLng.lat) + "," + String.valueOf(latLng.lng) + "&radius=" + String.valueOf(radius) + "&key=" + API_KEY;
 
@@ -82,8 +92,19 @@ public class MapsApiHelper {
 
                         PlacesSearchResponse placesSearchResponse = mGson.fromJson(response.body().string(), PlacesSearchResponse.class);
 
-                        emitter.onNext(placesSearchResponse);
-                        emitter.onComplete();
+                        if(placesSearchResponse.isSuccessful()) {
+
+                            List<Place> placesList = Arrays.asList(placesSearchResponse.results);
+
+                            NearbyPlacesCache.getsInstance().
+                                    setCache(placesList);
+
+                            emitter.onNext(placesList);
+                            emitter.onComplete();
+                        } else {
+                            emitter.onError(new Throwable(placesSearchResponse.status));
+                        }
+
                     }
                 });
             }
@@ -92,9 +113,15 @@ public class MapsApiHelper {
 
     public Observable getPlaceDetails(final String placeId) {
 
-        return Observable.create(new ObservableOnSubscribe<PlaceDetailsResponse>() {
+        return Observable.create(new ObservableOnSubscribe<PlaceDetails>() {
             @Override
-            public void subscribe(final ObservableEmitter<PlaceDetailsResponse> emitter) throws Exception {
+            public void subscribe(final ObservableEmitter<PlaceDetails> emitter) throws Exception {
+
+                if(PlaceDetailsCache.getInstance().isCached(placeId)) {
+                    emitter.onNext(PlaceDetailsCache.getInstance().getPlaceDetails(placeId));
+                    emitter.onComplete();
+                    return;
+                }
 
                 String uri = URL_BASE + "place/details/json?placeid=" + placeId + "&key=" +API_KEY;
 
@@ -113,8 +140,18 @@ public class MapsApiHelper {
 
                         PlaceDetailsResponse placeDetailsResponse = mGson.fromJson(response.body().string(), PlaceDetailsResponse.class);
 
-                        emitter.onNext(placeDetailsResponse);
-                        emitter.onComplete();
+                        if(placeDetailsResponse.isSuccessful()) {
+
+                            PlaceDetailsCache.getInstance().
+                                    addPlaceDetails(placeDetailsResponse.result);
+
+                            emitter.onNext(placeDetailsResponse.result);
+                            emitter.onComplete();
+                        } else {
+                            emitter.onError(new Throwable(placeDetailsResponse.status));
+                        }
+
+
                     }
                 });
             }

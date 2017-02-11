@@ -10,6 +10,8 @@ import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.shared.PlaceViewHolder;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,9 +27,9 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
 
     private OnPlaceClickListener mPlaceClickListener;
 
-    public NearbyPlacesAdapter(Context context, Place[] places, OnPlaceClickListener placeClickListener) {
+    public NearbyPlacesAdapter(Context context, List<Place> places, OnPlaceClickListener placeClickListener) {
         this.mContext = context;
-        this.mPlaces = Arrays.asList(places);
+        this.mPlaces = places;
         this.mPlaceClickListener = placeClickListener;
     }
 

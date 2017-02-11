@@ -93,8 +93,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/divider1"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                app:font_type="bold"/>
+                android:layout_marginStart="16dp"/>
 
             <com.adrianlesniak.beautifulthailand.views.BTTextView
                 android:id="@+id/place_review_count"

@@ -11,11 +11,10 @@ import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.RecentPlacesDistanceList;
-import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetailsResponse;
+import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 import com.adrianlesniak.beautifulthailand.models.maps.Review;
 import com.adrianlesniak.beautifulthailand.screens.reviews.PlaceReviewsActivity;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
-import com.adrianlesniak.beautifulthailand.utilities.ObserverAdapter;
 import com.adrianlesniak.beautifulthailand.views.BTPhotoCarousel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -33,7 +32,9 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class PlaceDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -56,7 +57,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
 
     @BindView(R.id.address_text_view) TextView mAddressTextView;
 
-    private PlaceDetailsResponse mPlaceDetailsResponse;
+    private PlaceDetails mPlaceDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +77,16 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
                 .getPlaceDetails(placeId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new ObserverAdapter() {
+                .subscribe(new Observer<PlaceDetails>() {
                     @Override
-                    public void onNext(Object value) {
-                        super.onNext(value);
+                    public void onSubscribe(Disposable d) { }
+
+                    @Override
+                    public void onNext(PlaceDetails placeDetails) {
 
                         //TODO Add loader
 
-                        mPlaceDetailsResponse = (PlaceDetailsResponse) value;
+                        mPlaceDetails = placeDetails;
 
                         int googlePlayAvailability = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(PlaceDetailsActivity.this);
                         if(googlePlayAvailability != ConnectionResult.SERVICE_INVALID) {
@@ -98,12 +101,13 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
 
                     @Override
                     public void onError(Throwable e) {
-
                         //TODO Add error handling
-
-                        super.onError(e);
                     }
+
+                    @Override
+                    public void onComplete() {}
                 });
+
     }
 
     @Override
@@ -119,7 +123,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     @OnClick(R.id.place_review_count)
     public void showReviews(View view) {
 
-        Review[] reviews = this.mPlaceDetailsResponse.result.reviews;
+        Review[] reviews = this.mPlaceDetails.reviews;
 
         Intent reviewsIntent = new Intent(this, PlaceReviewsActivity.class);
         reviewsIntent.putParcelableArrayListExtra(PlaceReviewsActivity.BUNDLE_REVIEWS, new ArrayList<Parcelable>(Arrays.asList(reviews)));
@@ -132,9 +136,9 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     @OnClick(R.id.telephone_text_view)
     public void dialNumber(View view) {
 
-        if(this.mPlaceDetailsResponse.result.internationalPhoneNumber!= null) {
+        if(this.mPlaceDetails.internationalPhoneNumber!= null) {
 
-            String uri = "tel:" + this.mPlaceDetailsResponse.result.internationalPhoneNumber;
+            String uri = "tel:" + this.mPlaceDetails.internationalPhoneNumber;
             Intent telephoneIntent = new Intent(Intent.ACTION_DIAL);
             telephoneIntent.setData(Uri.parse(uri));
 
@@ -149,9 +153,9 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     @OnClick(R.id.address_text_view)
     public void openMaps(View view) {
 
-        if(this.mPlaceDetailsResponse.result.formattedAddress != null) {
+        if(this.mPlaceDetails.formattedAddress != null) {
 
-            String uri = "geo:" + this.mPlaceDetailsResponse.result.geometry.location.lat + "," + this.mPlaceDetailsResponse.result.geometry.location.lng + "?q=" + this.mPlaceDetailsResponse.result.geometry.location.lat + "," + this.mPlaceDetailsResponse.result.geometry.location.lng;
+            String uri = "geo:" + this.mPlaceDetails.geometry.location.lat + "," + this.mPlaceDetails.geometry.location.lng + "?q=" + this.mPlaceDetails.geometry.location.lat + "," + this.mPlaceDetails.geometry.location.lng;
             Intent mapIntent = new Intent(Intent.ACTION_VIEW);
             mapIntent.setData(Uri.parse(uri));
             mapIntent.setPackage("com.google.android.apps.maps");
@@ -167,8 +171,8 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     @OnClick(R.id.website_text_view)
     public void goToLink(View view) {
 
-        if(this.mPlaceDetailsResponse.result.website != null) {
-            Intent websiteIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(this.mPlaceDetailsResponse.result.website));
+        if(this.mPlaceDetails.website != null) {
+            Intent websiteIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(this.mPlaceDetails.website));
             startActivity(websiteIntent);
         }
     }
@@ -176,7 +180,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     @OnClick(R.id.navigate_button)
     public void navigateToPlace(View view) {
 
-        String uri = "http://maps.google.com/maps?saddr=13.7488,100.5286&daddr=" + this.mPlaceDetailsResponse.result.geometry.location.lat + "," + this.mPlaceDetailsResponse.result.geometry.location.lng;
+        String uri = "http://maps.google.com/maps?saddr=13.7488,100.5286&daddr=" + this.mPlaceDetails.geometry.location.lat + "," + this.mPlaceDetails.geometry.location.lng;
         Intent navigateIntent = new Intent(Intent.ACTION_VIEW);
         navigateIntent.setData(Uri.parse(uri));
 
@@ -188,30 +192,30 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     }
 
     private void updateViews() {
-        this.mPlaceTitleTextView.setText(this.mPlaceDetailsResponse.result.name);
+        this.mPlaceTitleTextView.setText(this.mPlaceDetails.name);
 
-        this.mPlaceDistanceTextView.setText(RecentPlacesDistanceList.getInstance().get(this.mPlaceDetailsResponse.result.placeId).getFirstElement().distance.text);
+        this.mPlaceDistanceTextView.setText(RecentPlacesDistanceList.getInstance().get(this.mPlaceDetails.placeId).getFirstElement().distance.text);
 
-        this.mPlaceReviewCount.setText(this.mPlaceDetailsResponse.result.reviews == null ? getResources().getString(R.string.no_reviews_message) : getResources().getQuantityString(R.plurals.number_of_place_reviews, this.mPlaceDetailsResponse.result.reviews.length, this.mPlaceDetailsResponse.result.reviews.length));
-        this.mPlaceReviewCount.setEnabled(this.mPlaceDetailsResponse.result.reviews != null);
+        this.mPlaceReviewCount.setText(this.mPlaceDetails.reviews == null ? getResources().getString(R.string.no_reviews_message) : getResources().getQuantityString(R.plurals.number_of_place_reviews, this.mPlaceDetails.reviews.length, this.mPlaceDetails.reviews.length));
+        this.mPlaceReviewCount.setEnabled(this.mPlaceDetails.reviews != null);
 
-        this.mPlaceRatingTextView.setText(String.valueOf(this.mPlaceDetailsResponse.result.rating));
+        this.mPlaceRatingTextView.setText(String.valueOf(this.mPlaceDetails.rating));
 
-        this.mBTPhotoCarousel.setPhotos(getSupportFragmentManager(), this.mPlaceDetailsResponse.result.photos);
+        this.mBTPhotoCarousel.setPhotos(getSupportFragmentManager(), this.mPlaceDetails.photos);
 
-        this.mTelephoneTextView.setText(this.mPlaceDetailsResponse.result.internationalPhoneNumber != null ? this.mPlaceDetailsResponse.result.internationalPhoneNumber : getResources().getString(R.string.no_telephone_no_message));
-        this.mTelephoneTextView.setEnabled(this.mPlaceDetailsResponse.result.internationalPhoneNumber != null);
+        this.mTelephoneTextView.setText(this.mPlaceDetails.internationalPhoneNumber != null ? this.mPlaceDetails.internationalPhoneNumber : getResources().getString(R.string.no_telephone_no_message));
+        this.mTelephoneTextView.setEnabled(this.mPlaceDetails.internationalPhoneNumber != null);
 
-        this.mWebsiteTextView.setText(this.mPlaceDetailsResponse.result.website != null ? this.mPlaceDetailsResponse.result.website : getResources().getString(R.string.no_website_message));
-        this.mWebsiteTextView.setEnabled(this.mPlaceDetailsResponse.result.website != null);
+        this.mWebsiteTextView.setText(this.mPlaceDetails.website != null ? this.mPlaceDetails.website : getResources().getString(R.string.no_website_message));
+        this.mWebsiteTextView.setEnabled(this.mPlaceDetails.website != null);
 
-        this.mAddressTextView.setText(this.mPlaceDetailsResponse.result.formattedAddress);
-        this.mAddressTextView.setEnabled(this.mPlaceDetailsResponse.result.formattedAddress != null);
+        this.mAddressTextView.setText(this.mPlaceDetails.formattedAddress);
+        this.mAddressTextView.setEnabled(this.mPlaceDetails.formattedAddress != null);
     }
 
     private void setupMap(GoogleMap googleMap) {
 
-        LatLng placeCoord = new LatLng(this.mPlaceDetailsResponse.result.geometry.location.lat, this.mPlaceDetailsResponse.result.geometry.location.lng);
+        LatLng placeCoord = new LatLng(this.mPlaceDetails.geometry.location.lat, this.mPlaceDetails.geometry.location.lng);
         MarkerOptions markerOptions = new MarkerOptions()
                 .draggable(false)
                 .position(placeCoord);
