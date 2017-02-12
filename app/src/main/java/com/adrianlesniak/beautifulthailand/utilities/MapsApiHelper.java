@@ -1,6 +1,9 @@
 package com.adrianlesniak.beautifulthailand.utilities;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.adrianlesniak.beautifulthailand.R;
@@ -158,15 +161,49 @@ public class MapsApiHelper {
         });
     }
 
-    public void loadPhoto(String photoReference, int maxWidth, ImageView target) {
+    public void loadPhoto(final String photoReference, final View progressView, final ImageView target) {
 
-        String photoUrlRequest = URL_BASE + "place/photo?maxwidth=" + String.valueOf(maxWidth) + "&photoreference=" + photoReference + "&key=" + API_KEY;
+        if(photoReference == null) {
+            progressView.setVisibility(View.GONE);
+            target.setScaleType(ImageView.ScaleType.CENTER);
+            target.setImageDrawable(target.getContext().getResources().getDrawable(R.drawable.ic_image, null));
+            return;
+        }
 
-        Picasso.with(this.mContext)
-            .load(photoUrlRequest)
-            .fit()
-            .centerCrop()
-            .into(target);
+        target.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+
+                int maxPhotoWidth = target.getMeasuredWidth();
+
+                String photoUrlRequest = URL_BASE + "place/photo?maxwidth=" + String.valueOf(maxPhotoWidth) + "&photoreference=" + photoReference + "&key=" + API_KEY;
+
+                Picasso.with(mContext)
+                        .load(photoUrlRequest)
+                        .fit()
+                        .centerCrop()
+                        .into(target, new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                if(progressView != null) {
+                                    progressView.setVisibility(View.GONE);
+                                }
+                            }
+
+                            @Override
+                            public void onError() {
+                                if(progressView != null) {
+                                    progressView.setVisibility(View.GONE);
+                                }
+                            }
+                        });
+
+                target.getViewTreeObserver().removeOnPreDrawListener(this);
+
+
+                return false;
+            }
+        });
     }
 
     public Single<DistanceMatrixResponse> getDistanceToPlace(final LatLng currentLocation, final LatLng placeLocation) {

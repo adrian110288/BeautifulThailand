@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.maps.Photo;
@@ -63,15 +64,12 @@ public class BTPhotoCarousel extends ViewPager {
 
         public static final String BUNDLE_PHOTO_REFERENCE = "photo_reference";
 
-        public static final String BUNDLE_PHOTO_WIDTH = "photo_width";
-
         public static Fragment getInstance(Photo photo) {
 
             PhotoFragment f = new PhotoFragment();
 
             Bundle bundle = new Bundle();
             bundle.putString(BUNDLE_PHOTO_REFERENCE, photo.photo_reference);
-            bundle.putInt(BUNDLE_PHOTO_WIDTH, photo.width);
 
             f.setArguments(bundle);
 
@@ -89,14 +87,11 @@ public class BTPhotoCarousel extends ViewPager {
             super.onViewCreated(view, savedInstanceState);
 
             String photoReference = getArguments().getString(BUNDLE_PHOTO_REFERENCE);
-
-            int maxWidth = getArguments().getInt(BUNDLE_PHOTO_WIDTH);
-
-
             ImageView imageView = ((ImageView) view.findViewById(R.id.photo_image_view));
+            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
             MapsApiHelper.getInstance(getContext())
-                    .loadPhoto(photoReference, maxWidth, imageView);
+                    .loadPhoto(photoReference, progressBar, imageView);
 
         }
     }

@@ -38,6 +38,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
 
     private TextView mDistanceTextView;
 
+    private View mProgressView;
+
     public PlaceViewHolder(View itemView) {
         super(itemView);
 
@@ -46,6 +48,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         this.placePhotoView = (ImageView) itemView.findViewById(R.id.place_photo_view);
         this.addToFavouriteView = (ImageButton) itemView.findViewById(R.id.place_add_to_fav);
         this.mDistanceTextView = (TextView) itemView.findViewById(R.id.distance_text_view);
+        this.mProgressView = itemView.findViewById(R.id.progress_bar);
     }
 
     public void bindData(final Place place, final OnPlaceClickListener listener) {
@@ -66,7 +69,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         Photo photo = this.mPlace.photos != null && this.mPlace.photos.length > 0 ? this.mPlace.photos[0] : null;
 
         if(photo != null) {
-            MapsApiHelper.getInstance(this.mView.getContext()).loadPhoto(photo.photo_reference, photo.width, this.placePhotoView);
+            MapsApiHelper.getInstance(this.mView.getContext()).
+                    loadPhoto(photo != null ? photo.photo_reference : null, mProgressView, this.placePhotoView);
         }
 
         if(RecentPlacesDistanceList.getInstance().containsKey(place.placeId)) {

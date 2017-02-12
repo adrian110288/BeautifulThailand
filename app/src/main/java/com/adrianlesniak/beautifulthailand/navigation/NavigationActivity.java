@@ -1,6 +1,8 @@
 package com.adrianlesniak.beautifulthailand.navigation;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -47,6 +49,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationF
 
         this.mCurrentSelectedItem = NavigationListData.getInstance(this).getItemByClass(NearbyFragment.class);
         FragmentHelper.pushFragment(this, getSupportFragmentManager(), this.mCurrentSelectedItem);
+
+
+        if(getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            return;
+        }
     }
 
     @Override
@@ -66,6 +73,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationF
 
         int itemIndex = NavigationListData.getInstance(this).indexOf(this.mCurrentSelectedItem);
         this.mNavigationFragment.selectItemAtPosition(itemIndex);
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

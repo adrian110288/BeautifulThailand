@@ -6,14 +6,20 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="4dp"
         app:cardCornerRadius="@dimen/card_corner_radius">
 
-        <com.adrianlesniak.beautifulthailand.views.BTSquareImageView
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <ImageView
             android:id="@+id/photo_image_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
 
         </android.support.v7.widget.CardView>
 

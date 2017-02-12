@@ -87,15 +87,6 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
                         //TODO Add loader
 
                         mPlaceDetails = placeDetails;
-
-                        int googlePlayAvailability = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(PlaceDetailsActivity.this);
-                        if(googlePlayAvailability != ConnectionResult.SERVICE_INVALID) {
-
-                            findViewById(R.id.map_container).setVisibility(View.VISIBLE);
-                            ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_fragment))
-                                    .getMapAsync(PlaceDetailsActivity.this);
-                        }
-
                         updateViews();
                     }
 
@@ -180,6 +171,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     @OnClick(R.id.navigate_button)
     public void navigateToPlace(View view) {
 
+        //TODO Change this
         String uri = "http://maps.google.com/maps?saddr=13.7488,100.5286&daddr=" + this.mPlaceDetails.geometry.location.lat + "," + this.mPlaceDetails.geometry.location.lng;
         Intent navigateIntent = new Intent(Intent.ACTION_VIEW);
         navigateIntent.setData(Uri.parse(uri));
@@ -201,7 +193,11 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
 
         this.mPlaceRatingTextView.setText(String.valueOf(this.mPlaceDetails.rating));
 
-        this.mBTPhotoCarousel.setPhotos(getSupportFragmentManager(), this.mPlaceDetails.photos);
+        if(this.mPlaceDetails.photos == null || this.mPlaceDetails.photos.length == 0) {
+            this.mBTPhotoCarousel.setVisibility(View.GONE);
+        } else {
+            this.mBTPhotoCarousel.setPhotos(getSupportFragmentManager(), this.mPlaceDetails.photos);
+        }
 
         this.mTelephoneTextView.setText(this.mPlaceDetails.internationalPhoneNumber != null ? this.mPlaceDetails.internationalPhoneNumber : getResources().getString(R.string.no_telephone_no_message));
         this.mTelephoneTextView.setEnabled(this.mPlaceDetails.internationalPhoneNumber != null);
@@ -211,6 +207,14 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
 
         this.mAddressTextView.setText(this.mPlaceDetails.formattedAddress);
         this.mAddressTextView.setEnabled(this.mPlaceDetails.formattedAddress != null);
+
+        int googlePlayAvailability = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+        if(googlePlayAvailability != ConnectionResult.SERVICE_INVALID) {
+
+            findViewById(R.id.map_container).setVisibility(View.VISIBLE);
+            ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_fragment))
+                    .getMapAsync(PlaceDetailsActivity.this);
+        }
     }
 
     private void setupMap(GoogleMap googleMap) {
