@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adrianlesniak.beautifulthailand.R;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.models.maps.PlacesSearchResponse;
@@ -30,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -68,7 +72,7 @@ public class NearbyFragment extends BaseFragment implements OnPlaceClickListener
         }
 
         // TODO Change this
-        LatLng latLng = new LatLng(13.7488, 100.5286);
+        final LatLng latLng = new LatLng(13.7488, 100.5286);
         MapsApiHelper
                 .getInstance(getContext())
                 .getNearbyPlaces(latLng, DEFAULT_SEARCH_RADIUS)
@@ -81,15 +85,41 @@ public class NearbyFragment extends BaseFragment implements OnPlaceClickListener
                     }
 
                     @Override
-                    public void onNext(List<Place> nearbyPlaces) {
+                    public void onNext(final List<Place> nearbyPlaces) {
 
-                        if(!nearbyPlaces.isEmpty()) {
-                            mAdapter = new NearbyPlacesAdapter(getActivity(), nearbyPlaces, NearbyFragment.this);
-                        } else {
-                            mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.no_nearby_places_message));
-                        }
 
-                        mNearbyPlacesList.setAdapter(mAdapter);
+                        MapsApiHelper.getInstance(getContext())
+                                .getDistanceToPlaces(latLng, nearbyPlaces)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<List<DistanceMatrixElement>>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+                                        // Empty
+                                    }
+
+                                    @Override
+                                    public void onNext(List<DistanceMatrixElement> value) {
+
+                                        if(!nearbyPlaces.isEmpty()) {
+                                            mAdapter = new NearbyPlacesAdapter(getActivity(), nearbyPlaces, NearbyFragment.this);
+                                        } else {
+                                            mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.no_nearby_places_message));
+                                        }
+
+                                        mNearbyPlacesList.setAdapter(mAdapter);
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        // Empty
+                                    }
+                                });
                     }
 
                     @Override

@@ -7,7 +7,9 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.adrianlesniak.beautifulthailand.R;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
@@ -206,13 +208,23 @@ public class MapsApiHelper {
         });
     }
 
-    public Single<DistanceMatrixResponse> getDistanceToPlace(final LatLng currentLocation, final LatLng placeLocation) {
+    public Observable<List<DistanceMatrixElement>> getDistanceToPlaces(final LatLng origin, final List<Place> destinations) {
 
-        return Single.create(new SingleOnSubscribe<DistanceMatrixResponse>() {
+        return Observable.create(new ObservableOnSubscribe<List<DistanceMatrixElement>>() {
             @Override
-            public void subscribe(final SingleEmitter<DistanceMatrixResponse> emitter) throws Exception {
+            public void subscribe(final ObservableEmitter<List<DistanceMatrixElement>> emitter) throws Exception {
 
-                String distanceMatrixUrl = URL_BASE + "distancematrix/json?units=imperial&origins=" + currentLocation.lat +  "," + currentLocation.lng + "&destinations=" + placeLocation.lat + "," + placeLocation.lng + "&key=" + API_KEY;
+                StringBuilder destinationsValue = new StringBuilder();
+
+                final int destinationsCount = destinations.size();
+                for(int index=0;index<destinationsCount;index++) {
+                    destinationsValue.append(destinations.get(index).geometry.location.lat);
+                    destinationsValue.append(",");
+                    destinationsValue.append(destinations.get(index).geometry.location.lng);
+                    destinationsValue.append(index<destinationsCount-1 ? "|" : "");
+                }
+
+                final String distanceMatrixUrl = URL_BASE + "distancematrix/json?units=imperial&origins=" + origin.lat +  "," + origin.lng + "&destinations=" + destinationsValue.toString() + "&key=" + API_KEY;
 
                 Request request = new Request.Builder()
                         .url(distanceMatrixUrl)
@@ -228,7 +240,21 @@ public class MapsApiHelper {
                     public void onResponse(Call call, Response response) throws IOException {
 
                         DistanceMatrixResponse distanceMatrixResponse = mGson.fromJson(response.body().string(), DistanceMatrixResponse.class);
-                        emitter.onSuccess(distanceMatrixResponse);
+
+                        if(distanceMatrixResponse.isSuccessful()) {
+
+                            List<DistanceMatrixElement> distancesList = Arrays.asList(distanceMatrixResponse.rows[0].elements);
+
+                            int distancesListCount = distancesList.size();
+                            for(int index=0;index<distancesListCount;index++) {
+                                DistanceMatrixCache.getInstance().putDistance(destinations.get(index).placeId, distancesList.get(index));
+                            }
+
+                            emitter.onNext(distancesList);
+                            emitter.onComplete();
+                        } else {
+                            emitter.onError(new Throwable(distanceMatrixResponse.status));
+                        }
                     }
                 });
             }

@@ -22,7 +22,7 @@
                 android:id="@+id/progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
 
             <ImageView
                 android:id="@+id/place_photo_view"
@@ -59,14 +59,14 @@
                 android:layout_below="@+id/place_name_view"
                 app:srcCompat="@drawable/state_list_favourite_icon" />
 
-            <TextView
-                android:text="TextView"
+            <com.adrianlesniak.beautifulthailand.views.BTTextView
+                android:id="@+id/distance_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/place_name_view"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="21dp"
-                android:id="@+id/distance_text_view" />
+                android:layout_alignBottom="@+id/place_add_to_fav"
+                app:font_type="bold"
+                tools:text="TextView" />
 
         </RelativeLayout>
 

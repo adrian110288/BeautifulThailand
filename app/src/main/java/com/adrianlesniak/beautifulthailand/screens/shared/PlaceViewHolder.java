@@ -10,10 +10,12 @@ import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.RecentPlacesDistanceList;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
 import com.adrianlesniak.beautifulthailand.models.maps.Photo;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.nearby.OnPlaceClickListener;
+import com.adrianlesniak.beautifulthailand.utilities.DistanceMatrixCache;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -67,42 +69,17 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         this.placeNameView.setText(place.name);
 
         Photo photo = this.mPlace.photos != null && this.mPlace.photos.length > 0 ? this.mPlace.photos[0] : null;
-
         if(photo != null) {
             MapsApiHelper.getInstance(this.mView.getContext()).
                     loadPhoto(photo != null ? photo.photo_reference : null, mProgressView, this.placePhotoView);
         }
 
-        if(RecentPlacesDistanceList.getInstance().containsKey(place.placeId)) {
-            this.setDistanceTextFromResponse(RecentPlacesDistanceList.getInstance().get(place.placeId));
 
-        } else {
-            // TODO Dont forget to change that!
-            LatLng currentLocation= new LatLng(13.737188, 100.523218);
-            LatLng placeLocation = place.geometry.location;
-
-            MapsApiHelper.getInstance(this.mView.getContext())
-                    .getDistanceToPlace(currentLocation, placeLocation)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Consumer<DistanceMatrixResponse>() {
-                        @Override
-                        public void accept(DistanceMatrixResponse distanceResponse) throws Exception {
-
-                            RecentPlacesDistanceList.getInstance()
-                                    .put(place.placeId, distanceResponse);
-
-                            setDistanceTextFromResponse(distanceResponse);
-                        }
-                    });
+        DistanceMatrixElement distanceMatrixElement = DistanceMatrixCache.getInstance().getDistance(place.placeId);
+        if(distanceMatrixElement != null) {
+            this.mDistanceTextView.setText(distanceMatrixElement.distance.text);
         }
 
-    }
-
-    private void setDistanceTextFromResponse(DistanceMatrixResponse response) {
-
-        DistanceMatrixElement firstEl = response.getFirstElement();
-        this.mDistanceTextView.setText(firstEl != null? firstEl.distance != null ? firstEl.distance.text : null : null);
     }
 
 // /        this.mPlaceListItemRemoveListener = listener;
