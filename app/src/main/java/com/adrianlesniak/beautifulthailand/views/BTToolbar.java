@@ -18,23 +18,23 @@ import com.adrianlesniak.beautifulthailand.R;
 
 public class BTToolbar extends Toolbar {
 
-    public interface OnToolbarActionListener {
-        void onPrimaryToolbarButtonClicked();
+    public interface OnToolbarButtonClickListener {
+        void onToolbarNavigationButtonClick();
 
-        void onSecondaryToolbarButtonClicked();
+        void onToolbarActionButtonClick();
     }
 
     private static final int LAYOUT_REF = R.layout.view_toolbar;
 
-    private OnToolbarActionListener mOnToolbarActionListener;
+    private OnToolbarButtonClickListener mOnToolbarButtonClickListener;
 
-    private ImageButton mPrimaryButton;
+    private ImageButton mNavigationButton;
 
-    private int mPrimaryIcon;
+    private int mNavigationIcon;
 
-    private ImageButton mSecondaryButton;
+    private ImageButton mActionButton;
 
-    private int mSecondaryIcon;
+    private int mActionIcon;
 
     private TextView mTitle;
 
@@ -52,8 +52,8 @@ public class BTToolbar extends Toolbar {
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.BTToolbar_attrs);
         try {
 
-            mPrimaryIcon = a.getResourceId(R.styleable.BTToolbar_attrs_primary_icon, -1);
-            mSecondaryIcon = a.getResourceId(R.styleable.BTToolbar_attrs_secondary_icon, -1);
+            mNavigationIcon = a.getResourceId(R.styleable.BTToolbar_attrs_navigation_icon, -1);
+            mActionIcon = a.getResourceId(R.styleable.BTToolbar_attrs_action_icon, -1);
 
         } finally {
             a.recycle();
@@ -67,8 +67,8 @@ public class BTToolbar extends Toolbar {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(LAYOUT_REF, this);
 
-        this.mPrimaryButton = (ImageButton) view.findViewById(R.id.toolbar_primary_button);
-        this.mSecondaryButton = (ImageButton) view.findViewById(R.id.toolbar_secondary_button);
+        this.mNavigationButton = (ImageButton) view.findViewById(R.id.toolbar_navigation_button);
+        this.mActionButton = (ImageButton) view.findViewById(R.id.toolbar_action_button);
         this.setupToolbarButtons();
 
         this.mTitle = (BTTextView) view.findViewById(R.id.toolbar_title);
@@ -76,41 +76,41 @@ public class BTToolbar extends Toolbar {
 
     private void setupToolbarButtons() {
 
-        if(this.mPrimaryIcon == -1) {
-            this.mPrimaryButton.setVisibility(View.GONE);
+        if(this.mNavigationIcon == -1) {
+            this.mNavigationButton.setVisibility(View.GONE);
 
         } else {
-            mPrimaryButton.setImageResource(mPrimaryIcon);
+            mNavigationButton.setImageResource(mNavigationIcon);
 
-            mPrimaryButton.setOnClickListener(new OnClickListener() {
+            mNavigationButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mOnToolbarActionListener != null) {
-                        mOnToolbarActionListener.onPrimaryToolbarButtonClicked();
+                    if(mOnToolbarButtonClickListener != null) {
+                        mOnToolbarButtonClickListener.onToolbarNavigationButtonClick();
                     }
                 }
             });
         }
 
-        if(this.mSecondaryIcon == -1) {
-            this.mSecondaryButton.setVisibility(View.GONE);
+        if(this.mActionIcon == -1) {
+            this.mActionButton.setVisibility(View.GONE);
 
         } else {
-            mSecondaryButton.setImageResource(mSecondaryIcon);
+            mActionButton.setImageResource(mActionIcon);
 
-            mSecondaryButton.setOnClickListener(new OnClickListener() {
+            mActionButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mOnToolbarActionListener != null) {
-                        mOnToolbarActionListener.onSecondaryToolbarButtonClicked();
+                    if(mOnToolbarButtonClickListener != null) {
+                        mOnToolbarButtonClickListener.onToolbarActionButtonClick();
                     }
                 }
             });
         }
     }
 
-    public void setOnToolbarActionListener(OnToolbarActionListener listener) {
-        mOnToolbarActionListener = listener;
+    public void setOnToolbarButtonClickListener(OnToolbarButtonClickListener listener) {
+        mOnToolbarButtonClickListener = listener;
     }
 
     public void setTitle(String title) {

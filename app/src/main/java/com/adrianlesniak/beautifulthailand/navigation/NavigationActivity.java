@@ -1,8 +1,6 @@
 package com.adrianlesniak.beautifulthailand.navigation;
 
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -10,11 +8,10 @@ import android.view.Gravity;
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.screens.nearby.NearbyFragment;
 import com.adrianlesniak.beautifulthailand.utilities.FragmentHelper;
-import com.adrianlesniak.beautifulthailand.views.BTToolbar;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationFragment.OnNavigationItemClickListener {
 
-    private BTToolbar mToolbar;
+//    private BTToolbar mToolbar;
 
     private DrawerLayout mDrawerLayout;
 
@@ -27,18 +24,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
 
-        this.mToolbar = (BTToolbar) findViewById(R.id.toolbar);
-        this.mToolbar.setOnToolbarActionListener(new BTToolbar.OnToolbarActionListener() {
-            @Override
-            public void onPrimaryToolbarButtonClicked() {
-                mDrawerLayout.openDrawer(Gravity.LEFT);
-            }
-
-            @Override
-            public void onSecondaryToolbarButtonClicked() {
-
-            }
-        });
         this.mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         this.mNavigationFragment = (NavigationFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_fragment);
     }
@@ -69,7 +54,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationF
     public void onFragmentAttached(Class fragmentClass) {
 
         this.mCurrentSelectedItem = NavigationListData.getInstance(this).getItemByClass(fragmentClass);
-        this.mToolbar.setTitle(this.mCurrentSelectedItem.getTitle());
 
         int itemIndex = NavigationListData.getInstance(this).indexOf(this.mCurrentSelectedItem);
         this.mNavigationFragment.selectItemAtPosition(itemIndex);
@@ -79,5 +63,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationF
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    public void openDrawer() {
+        mDrawerLayout.openDrawer(Gravity.LEFT);
     }
 }

@@ -38,7 +38,7 @@ public class NavigationFragment extends Fragment implements NavigationListAdapte
             this.mNavigationItemClickListener = (OnNavigationItemClickListener) context;
 
         } catch (ClassCastException e) {
-            throw new ClassCastException("NavigationActivity need to implement OnNavigationItemClickListener");
+            throw new ClassCastException("NavigationActivity must implement OnNavigationItemClickListener interface");
         }
     }
 

@@ -19,16 +19,15 @@ import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
 import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.details.PlaceDetailsActivity;
-import com.adrianlesniak.beautifulthailand.screens.shared.BaseFragment;
 import com.adrianlesniak.beautifulthailand.screens.shared.EmptyAdapter;
 import com.adrianlesniak.beautifulthailand.screens.shared.LoadingAdapter;
+import com.adrianlesniak.beautifulthailand.screens.shared.ToolbarFragment;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
 import com.adrianlesniak.beautifulthailand.utilities.PlaceComparator;
 import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
 import com.adrianlesniak.beautifulthailand.utilities.cache.NearbyPlacesCache;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import io.reactivex.Observer;
@@ -40,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by adrian on 01/02/2017.
  */
 
-public class NearbyFragment extends BaseFragment implements OnPlaceClickListener{
+public class NearbyFragment extends ToolbarFragment implements OnPlaceClickListener{
 
     private int DEFAULT_SEARCH_RADIUS = 500;
 

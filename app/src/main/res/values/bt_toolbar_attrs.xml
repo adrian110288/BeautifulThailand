@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="BTToolbar_attrs">
-        <attr name="primary_icon" format="reference"></attr>
-        <attr name="secondary_icon" format="reference"></attr>
+        <attr name="navigation_icon" format="reference"></attr>
+        <attr name="action_icon" format="reference"></attr>
     </declare-styleable>
 </resources>

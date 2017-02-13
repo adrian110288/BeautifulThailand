@@ -7,25 +7,10 @@
     android:layout_height="match_parent"
     tools:context="com.adrianlesniak.beautifulthailand.navigation.NavigationActivity">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <com.adrianlesniak.beautifulthailand.views.BTToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?android:actionBarSize"
-            android:background="@color/colorPrimary"
-            android:elevation="@dimen/card_elevation"
-            app:primary_icon="@drawable/ic_drawer"/>
-
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </LinearLayout>
+        android:layout_height="match_parent"/>
 
     <FrameLayout
         android:layout_width="@dimen/navigation_width"

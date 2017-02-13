@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.navigation.NavigationListItemModel;
+import com.adrianlesniak.beautifulthailand.screens.shared.ToolbarFragment;
 
 /**
  * Created by adrian on 01/02/2017.
@@ -14,12 +15,11 @@ import com.adrianlesniak.beautifulthailand.navigation.NavigationListItemModel;
 
 public class FragmentHelper {
 
-    public static final String BUNDLE_TITLE = "bundle_title";
 
     public static void pushFragment(Context context, FragmentManager fragmentManager, NavigationListItemModel item) {
 
         Bundle fragmentBundle = new Bundle();
-        fragmentBundle.putString(BUNDLE_TITLE, item.getTitle());
+        fragmentBundle.putString(ToolbarFragment.BUNDLE_TITLE, item.getTitle());
 
         try {
             Fragment f = (Fragment) item.getDestination().newInstance();
