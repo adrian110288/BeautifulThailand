@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <com.adrianlesniak.beautifulthailand.views.BTToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigation_icon="@drawable/ic_drawer"/>
+
+    <fragment
+        android:id="@+id/preference_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.adrianlesniak.beautifulthailand.screens.settings.BTPreferenceFragment"/>
+
+</LinearLayout>

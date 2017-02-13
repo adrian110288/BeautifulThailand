@@ -24,4 +24,7 @@
 
     <string name="navigate_button_title">Navigate</string>
 
+    <!--Preferences-->
+    <string name="image_download_only_wifi_key">image_download_only_wifi</string>
+    <string name="iamge_download_only_wifi_title">Download images only on WiFi</string>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="@string/image_download_only_wifi_key"
+        android:title="@string/iamge_download_only_wifi_title"
+        android:defaultValue="true"/>
+</PreferenceScreen>

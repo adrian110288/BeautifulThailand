@@ -5,6 +5,7 @@ import android.content.Context;
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.screens.favourites.FavouritesFragment;
 import com.adrianlesniak.beautifulthailand.screens.nearby.NearbyFragment;
+import com.adrianlesniak.beautifulthailand.screens.settings.SettingsFragment;
 
 import java.util.ArrayList;
 
@@ -64,8 +65,7 @@ public class NavigationListData extends ArrayList<NavigationListItemModel> {
         NavigationListItemModel itemSettings = new NavigationListItemModel(
                 R.drawable.ic_settings,
                 context.getString(R.string.navigation_item_settings),
-                null
-//                SettingsActivity.class
+                SettingsFragment.class
         );
 
         this.add(itemHome);
@@ -100,10 +100,14 @@ public class NavigationListData extends ArrayList<NavigationListItemModel> {
 
             NavigationListItemModel curr = this.get(index);
 
-            if(curr.getDestination().getSimpleName().equalsIgnoreCase(itemClass.getSimpleName())) {
-                item = curr;
-                break;
+            if(curr.getDestination() != null) {
+                if(curr.getDestination().getSimpleName().equalsIgnoreCase(itemClass.getSimpleName())) {
+                    item = curr;
+                    break;
+                }
             }
+
+
         }
 
         return item;

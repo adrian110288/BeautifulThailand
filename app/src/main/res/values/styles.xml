@@ -6,7 +6,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
-        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:windowBackground">@null</item>
         <item name="android:textColor">@color/colorText</item>
     </style>
 
