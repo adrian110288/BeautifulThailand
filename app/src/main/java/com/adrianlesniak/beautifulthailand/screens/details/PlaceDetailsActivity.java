@@ -10,13 +10,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.models.RecentPlacesDistanceList;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 import com.adrianlesniak.beautifulthailand.models.maps.Review;
 import com.adrianlesniak.beautifulthailand.screens.reviews.PlaceReviewsActivity;
-import com.adrianlesniak.beautifulthailand.utilities.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
+import com.adrianlesniak.beautifulthailand.utilities.cache.PlaceDetailsCache;
 import com.adrianlesniak.beautifulthailand.views.BTPhotoCarousel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -87,6 +87,9 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
                     public void onNext(PlaceDetails placeDetails) {
 
                         //TODO Add loader
+
+                        PlaceDetailsCache.getInstance().
+                                addPlaceDetails(placeDetails);
 
                         mPlaceDetails = placeDetails;
                         updateViews();

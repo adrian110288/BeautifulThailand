@@ -1,10 +1,13 @@
-package com.adrianlesniak.beautifulthailand.utilities;
+package com.adrianlesniak.beautifulthailand.utilities.cache;
 
 import android.util.LruCache;
 
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**

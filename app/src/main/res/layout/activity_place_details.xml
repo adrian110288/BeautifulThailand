@@ -42,9 +42,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp">
+            android:layout_height="wrap_content">
 
             <com.adrianlesniak.beautifulthailand.views.BTTextView
                 android:id="@+id/place_title_text_view"
@@ -232,7 +230,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
                     android:background="@drawable/background_gradient_white_transparent_vertical"
-                    android:rotation="180"
                     android:layout_alignParentTop="true"/>
 
             </RelativeLayout>

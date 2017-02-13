@@ -7,19 +7,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.models.RecentPlacesDistanceList;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
-import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
-import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
-import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
 import com.adrianlesniak.beautifulthailand.models.maps.Photo;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.nearby.OnPlaceClickListener;
-import com.adrianlesniak.beautifulthailand.utilities.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**

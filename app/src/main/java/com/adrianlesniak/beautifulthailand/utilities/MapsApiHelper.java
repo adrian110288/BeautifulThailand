@@ -1,7 +1,6 @@
 package com.adrianlesniak.beautifulthailand.utilities;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -9,12 +8,14 @@ import android.widget.ImageView;
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
-import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetailsResponse;
 import com.adrianlesniak.beautifulthailand.models.maps.PlacesSearchResponse;
+import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.utilities.cache.NearbyPlacesCache;
+import com.adrianlesniak.beautifulthailand.utilities.cache.PlaceDetailsCache;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -25,9 +26,6 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleOnSubscribe;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -74,12 +72,6 @@ public class MapsApiHelper {
             @Override
             public void subscribe(final ObservableEmitter<List<Place>> emitter) throws Exception {
 
-                if(!NearbyPlacesCache.getsInstance().isCacheEmpty()) {
-                    emitter.onNext(NearbyPlacesCache.getsInstance().getCache());
-                    emitter.onComplete();
-                    return;
-                }
-
                 String uri = URL_BASE + "place/nearbysearch/json?location=" + String.valueOf(latLng.lat) + "," + String.valueOf(latLng.lng) + "&radius=" + String.valueOf(radius) + "&key=" + API_KEY;
 
                 Request request = new Request.Builder()
@@ -100,9 +92,6 @@ public class MapsApiHelper {
                         if(placesSearchResponse.isSuccessful()) {
 
                             List<Place> placesList = Arrays.asList(placesSearchResponse.results);
-
-                            NearbyPlacesCache.getsInstance().
-                                    setCache(placesList);
 
                             emitter.onNext(placesList);
                             emitter.onComplete();
@@ -146,9 +135,6 @@ public class MapsApiHelper {
                         PlaceDetailsResponse placeDetailsResponse = mGson.fromJson(response.body().string(), PlaceDetailsResponse.class);
 
                         if(placeDetailsResponse.isSuccessful()) {
-
-                            PlaceDetailsCache.getInstance().
-                                    addPlaceDetails(placeDetailsResponse.result);
 
                             emitter.onNext(placeDetailsResponse.result);
                             emitter.onComplete();
@@ -244,11 +230,6 @@ public class MapsApiHelper {
                         if(distanceMatrixResponse.isSuccessful()) {
 
                             List<DistanceMatrixElement> distancesList = Arrays.asList(distanceMatrixResponse.rows[0].elements);
-
-                            int distancesListCount = distancesList.size();
-                            for(int index=0;index<distancesListCount;index++) {
-                                DistanceMatrixCache.getInstance().putDistance(destinations.get(index).placeId, distancesList.get(index));
-                            }
 
                             emitter.onNext(distancesList);
                             emitter.onComplete();

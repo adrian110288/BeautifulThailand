@@ -16,24 +16,22 @@ import android.view.ViewGroup;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
-import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
-import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
-import com.adrianlesniak.beautifulthailand.models.maps.PlacesSearchResponse;
 import com.adrianlesniak.beautifulthailand.screens.details.PlaceDetailsActivity;
 import com.adrianlesniak.beautifulthailand.screens.shared.BaseFragment;
 import com.adrianlesniak.beautifulthailand.screens.shared.EmptyAdapter;
 import com.adrianlesniak.beautifulthailand.screens.shared.LoadingAdapter;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
-import com.adrianlesniak.beautifulthailand.utilities.NearbyPlacesCache;
+import com.adrianlesniak.beautifulthailand.utilities.PlaceComparator;
+import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.utilities.cache.NearbyPlacesCache;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.reactivex.Observer;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -71,6 +69,12 @@ public class NearbyFragment extends BaseFragment implements OnPlaceClickListener
             return;
         }
 
+        if(!NearbyPlacesCache.getsInstance().isCacheEmpty()) {
+            mAdapter = new NearbyPlacesAdapter(getActivity(), NearbyPlacesCache.getsInstance().getCache(), NearbyFragment.this);
+            mNearbyPlacesList.setAdapter(mAdapter);
+            return;
+        }
+
         // TODO Change this
         final LatLng latLng = new LatLng(13.7488, 100.5286);
         MapsApiHelper
@@ -87,6 +91,11 @@ public class NearbyFragment extends BaseFragment implements OnPlaceClickListener
                     @Override
                     public void onNext(final List<Place> nearbyPlaces) {
 
+                        if(nearbyPlaces.isEmpty()) {
+                            mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.no_nearby_places_message));
+                            mNearbyPlacesList.setAdapter(mAdapter);
+                            return;
+                        }
 
                         MapsApiHelper.getInstance(getContext())
                                 .getDistanceToPlaces(latLng, nearbyPlaces)
@@ -99,14 +108,17 @@ public class NearbyFragment extends BaseFragment implements OnPlaceClickListener
                                     }
 
                                     @Override
-                                    public void onNext(List<DistanceMatrixElement> value) {
+                                    public void onNext(List<DistanceMatrixElement> distancesList) {
 
-                                        if(!nearbyPlaces.isEmpty()) {
-                                            mAdapter = new NearbyPlacesAdapter(getActivity(), nearbyPlaces, NearbyFragment.this);
-                                        } else {
-                                            mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.no_nearby_places_message));
+                                        int distancesListCount = distancesList.size();
+                                        for(int index=0;index<distancesListCount;index++) {
+                                            DistanceMatrixCache.getInstance().putDistance(nearbyPlaces.get(index).placeId, distancesList.get(index));
                                         }
 
+                                        Collections.sort(nearbyPlaces, new PlaceComparator());
+                                        NearbyPlacesCache.getsInstance().setCache(nearbyPlaces);
+
+                                        mAdapter = new NearbyPlacesAdapter(getActivity(), nearbyPlaces, NearbyFragment.this);
                                         mNearbyPlacesList.setAdapter(mAdapter);
                                     }
 

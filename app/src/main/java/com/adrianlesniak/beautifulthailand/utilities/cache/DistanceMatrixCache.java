@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand.utilities;
+package com.adrianlesniak.beautifulthailand.utilities.cache;
 
 import android.support.v4.util.ArrayMap;
 
