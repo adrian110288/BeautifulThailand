@@ -51,6 +51,108 @@ public class NearbyFragment extends ToolbarFragment implements OnPlaceClickListe
 
     private RecyclerView.Adapter mAdapter;
 
+    private Observer nearbyPlacesObserver = new Observer<List<Place>>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+            // Empty
+        }
+
+        @Override
+        public void onNext(final List<Place> nearbyPlaces) {
+
+            if(nearbyPlaces.isEmpty()) {
+                mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.no_nearby_places_message));
+                mNearbyPlacesList.setAdapter(mAdapter);
+                return;
+            }
+
+            MapsApiHelper.getInstance(getContext())
+                    .getDistanceToPlaces(latLng, nearbyPlaces)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<List<DistanceMatrixElement>>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            // Empty
+                        }
+
+                        @Override
+                        public void onNext(List<DistanceMatrixElement> distancesList) {
+
+                            int distancesListCount = distancesList.size();
+                            for(int index=0;index<distancesListCount;index++) {
+                                DistanceMatrixCache.getInstance().putDistance(nearbyPlaces.get(index).placeId, distancesList.get(index));
+                            }
+
+                            Collections.sort(nearbyPlaces, new PlaceComparator());
+                            NearbyPlacesCache.getsInstance().setCache(nearbyPlaces);
+
+                            mAdapter = new NearbyPlacesAdapter(getActivity(), nearbyPlaces, NearbyFragment.this);
+                            mNearbyPlacesList.setAdapter(mAdapter);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            // Empty
+                        }
+                    });
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.error_loading_places_message));
+            mNearbyPlacesList.setAdapter(mAdapter);
+        }
+
+        @Override
+        public void onComplete() {
+            // Empty
+        }
+    };
+
+    private Observer isInThailandObserver = new Observer<Boolean>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(Boolean value) {
+
+            if(!value) {
+                mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.error_not_in_thailand));
+                mNearbyPlacesList.setAdapter(mAdapter);
+                return;
+            }
+
+            MapsApiHelper
+                    .getInstance(getContext())
+                    .getNearbyPlaces(latLng, DEFAULT_SEARCH_RADIUS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(nearbyPlacesObserver);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.error_loading_places_message));
+            mNearbyPlacesList.setAdapter(mAdapter);
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    };
+
+    // TODO Change this
+    final LatLng latLng = new LatLng(13.7488, 100.5286);
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,76 +176,11 @@ public class NearbyFragment extends ToolbarFragment implements OnPlaceClickListe
             return;
         }
 
-        // TODO Change this
-        final LatLng latLng = new LatLng(13.7488, 100.5286);
-        MapsApiHelper
-                .getInstance(getContext())
-                .getNearbyPlaces(latLng, DEFAULT_SEARCH_RADIUS)
+        MapsApiHelper.getInstance(getContext())
+                .isInThailand(latLng)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Place>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        // Empty
-                    }
-
-                    @Override
-                    public void onNext(final List<Place> nearbyPlaces) {
-
-                        if(nearbyPlaces.isEmpty()) {
-                            mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.no_nearby_places_message));
-                            mNearbyPlacesList.setAdapter(mAdapter);
-                            return;
-                        }
-
-                        MapsApiHelper.getInstance(getContext())
-                                .getDistanceToPlaces(latLng, nearbyPlaces)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Observer<List<DistanceMatrixElement>>() {
-                                    @Override
-                                    public void onSubscribe(Disposable d) {
-                                        // Empty
-                                    }
-
-                                    @Override
-                                    public void onNext(List<DistanceMatrixElement> distancesList) {
-
-                                        int distancesListCount = distancesList.size();
-                                        for(int index=0;index<distancesListCount;index++) {
-                                            DistanceMatrixCache.getInstance().putDistance(nearbyPlaces.get(index).placeId, distancesList.get(index));
-                                        }
-
-                                        Collections.sort(nearbyPlaces, new PlaceComparator());
-                                        NearbyPlacesCache.getsInstance().setCache(nearbyPlaces);
-
-                                        mAdapter = new NearbyPlacesAdapter(getActivity(), nearbyPlaces, NearbyFragment.this);
-                                        mNearbyPlacesList.setAdapter(mAdapter);
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    @Override
-                                    public void onComplete() {
-                                        // Empty
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.error_loading_places_message));
-                        mNearbyPlacesList.setAdapter(mAdapter);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        // Empty
-                    }
-                });
+                .subscribe(isInThailandObserver);
     }
 
     @Nullable
@@ -171,7 +208,6 @@ public class NearbyFragment extends ToolbarFragment implements OnPlaceClickListe
 
         Intent detailsIntent = new Intent(getContext(), PlaceDetailsActivity.class);
         detailsIntent.putExtras(detailsBundle);
-//        detailsIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         getActivity().startActivity(detailsIntent);
     }

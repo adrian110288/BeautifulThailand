@@ -6,15 +6,16 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.adrianlesniak.beautifulthailand.R;
+import com.adrianlesniak.beautifulthailand.models.maps.AddressComponent;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
+import com.adrianlesniak.beautifulthailand.models.maps.GeocodingResponse;
+import com.adrianlesniak.beautifulthailand.models.maps.GeocodingResult;
 import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetailsResponse;
 import com.adrianlesniak.beautifulthailand.models.maps.PlacesSearchResponse;
-import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
-import com.adrianlesniak.beautifulthailand.utilities.cache.NearbyPlacesCache;
 import com.adrianlesniak.beautifulthailand.utilities.cache.PlaceDetailsCache;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -240,6 +241,66 @@ public class MapsApiHelper {
                 });
             }
         });
+
+    }
+
+    public Observable<Boolean> isInThailand(final LatLng currentLocation) {
+
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(final ObservableEmitter<Boolean> emitter) throws Exception {
+
+                final String geocodingUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" +  currentLocation.lat + "," + currentLocation.lng + "&sensor=false";
+
+                Request request = new Request.Builder()
+                        .url(geocodingUrl)
+                        .build();
+
+                mClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        emitter.onError(e);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+
+                        GeocodingResponse geocodingResponse = mGson.fromJson(response.body().string(), GeocodingResponse.class);
+
+                        if(geocodingResponse.isSuccessful()) {
+                            AddressComponent th = findAddressComponentForShortName(geocodingResponse.results, "TH");
+
+                            emitter.onNext(th != null);
+                            emitter.onComplete();
+                        } else {
+                            emitter.onError(new Throwable(geocodingResponse.status));
+                        }
+                    }
+                });
+
+            }
+        });
+
+    }
+
+    private AddressComponent findAddressComponentForShortName(GeocodingResult[] geocodingResult, String shortNameToFind) {
+
+        AddressComponent found = null;
+
+        for(int resultIndex=0;resultIndex< geocodingResult.length; resultIndex++) {
+            for(int addressComponentIndex=0;addressComponentIndex< geocodingResult[resultIndex].addressComponents.length; addressComponentIndex++) {
+                if(geocodingResult[resultIndex].addressComponents[addressComponentIndex].shortName.equals(shortNameToFind)) {
+                    found = geocodingResult[resultIndex].addressComponents[addressComponentIndex];
+                    break;
+                }
+            }
+
+            if(found != null) {
+                break;
+            }
+        }
+
+        return found;
 
     }
 }
