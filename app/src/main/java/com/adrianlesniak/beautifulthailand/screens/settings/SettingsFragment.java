@@ -19,4 +19,14 @@ public class SettingsFragment extends ToolbarFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        getActivity().getFragmentManager()
+                .beginTransaction()
+                .add(R.id.preference_fragment_container, BTPreferenceFragment.getInstance())
+                .commit();
+    }
 }

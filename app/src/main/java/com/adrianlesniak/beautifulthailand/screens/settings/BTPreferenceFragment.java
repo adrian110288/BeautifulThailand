@@ -12,6 +12,10 @@ import com.adrianlesniak.beautifulthailand.R;
 
 public class BTPreferenceFragment extends PreferenceFragment {
 
+    public static BTPreferenceFragment getInstance() {
+        return new BTPreferenceFragment();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
-        android:key="@string/image_download_only_wifi_key"
-        android:title="@string/iamge_download_only_wifi_title"
+        android:key="@string/pref_image_download_only_wifi_key"
+        android:title="@string/pref_image_download_only_wifi_title"
         android:defaultValue="true"/>
+    <ListPreference
+        android:key="@string/pref_distance_unit_key"
+        android:title="@string/pref_distance_unit_title"
+        android:defaultValue="@string/pref_distance_unit_default"
+        android:entries="@array/pref_distance_units_entries"
+        android:entryValues="@array/pref_distance_units_entry_values"
+        android:summary="%s"/>
 </PreferenceScreen>
