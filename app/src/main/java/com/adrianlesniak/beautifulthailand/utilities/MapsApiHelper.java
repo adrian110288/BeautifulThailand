@@ -1,6 +1,7 @@
 package com.adrianlesniak.beautifulthailand.utilities;
 
 import android.content.Context;
+import android.location.Location;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -67,13 +68,13 @@ public class MapsApiHelper {
         return sInstance;
     }
 
-    public Observable getNearbyPlaces(final LatLng latLng, final int radius) {
+    public Observable getNearbyPlaces(final Location location, final int radius) {
 
         return Observable.create(new ObservableOnSubscribe<List<Place>>() {
             @Override
             public void subscribe(final ObservableEmitter<List<Place>> emitter) throws Exception {
 
-                String uri = URL_BASE + "place/nearbysearch/json?location=" + String.valueOf(latLng.lat) + "," + String.valueOf(latLng.lng) + "&radius=" + String.valueOf(radius) + "&key=" + API_KEY;
+                String uri = URL_BASE + "place/nearbysearch/json?location=" + String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude()) + "&radius=" + String.valueOf(radius) + "&key=" + API_KEY;
 
                 Request request = new Request.Builder()
                         .url(uri)
@@ -195,7 +196,7 @@ public class MapsApiHelper {
         });
     }
 
-    public Observable<List<DistanceMatrixElement>> getDistanceToPlaces(final LatLng origin, final List<Place> destinations) {
+    public Observable<List<DistanceMatrixElement>> getDistanceToPlaces(final Location origin, final List<Place> destinations) {
 
         return Observable.create(new ObservableOnSubscribe<List<DistanceMatrixElement>>() {
             @Override
@@ -211,7 +212,7 @@ public class MapsApiHelper {
                     destinationsValue.append(index<destinationsCount-1 ? "|" : "");
                 }
 
-                final String distanceMatrixUrl = URL_BASE + "distancematrix/json?units=imperial&origins=" + origin.lat +  "," + origin.lng + "&destinations=" + destinationsValue.toString() + "&key=" + API_KEY;
+                final String distanceMatrixUrl = URL_BASE + "distancematrix/json?units=imperial&origins=" + origin.getLatitude() +  "," + origin.getLongitude()+ "&destinations=" + destinationsValue.toString() + "&key=" + API_KEY;
 
                 Request request = new Request.Builder()
                         .url(distanceMatrixUrl)
@@ -244,13 +245,13 @@ public class MapsApiHelper {
 
     }
 
-    public Observable<Boolean> isInThailand(final LatLng currentLocation) {
+    public Observable<Boolean> isInThailand(final Location currentLocation) {
 
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(final ObservableEmitter<Boolean> emitter) throws Exception {
 
-                final String geocodingUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" +  currentLocation.lat + "," + currentLocation.lng + "&sensor=false";
+                final String geocodingUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" +  currentLocation.getLatitude() + "," + currentLocation.getLongitude()+ "&sensor=false";
 
                 Request request = new Request.Builder()
                         .url(geocodingUrl)

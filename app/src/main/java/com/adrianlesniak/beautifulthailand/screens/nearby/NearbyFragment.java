@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,10 +22,12 @@ import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.details.PlaceDetailsActivity;
 import com.adrianlesniak.beautifulthailand.screens.shared.EmptyAdapter;
 import com.adrianlesniak.beautifulthailand.screens.shared.LoadingAdapter;
+import com.adrianlesniak.beautifulthailand.screens.shared.LocationAwareActivity;
 import com.adrianlesniak.beautifulthailand.screens.shared.ToolbarFragment;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
 import com.adrianlesniak.beautifulthailand.utilities.PlaceComparator;
 import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.utilities.cache.LocationCache;
 import com.adrianlesniak.beautifulthailand.utilities.cache.NearbyPlacesCache;
 
 import java.util.Collections;
@@ -39,13 +42,9 @@ import io.reactivex.schedulers.Schedulers;
  * Created by adrian on 01/02/2017.
  */
 
-public class NearbyFragment extends ToolbarFragment implements OnPlaceClickListener{
+public class NearbyFragment extends ToolbarFragment implements LocationCache.OnLocationUpdateListener, OnPlaceClickListener{
 
     private int DEFAULT_SEARCH_RADIUS = 500;
-
-    private static final int BT_PERMISSION_REQUEST_FINE_LCOATION = 1;
-
-    private LocationManager mLocationManager;
 
     private RecyclerView mNearbyPlacesList;
 
@@ -67,7 +66,7 @@ public class NearbyFragment extends ToolbarFragment implements OnPlaceClickListe
             }
 
             MapsApiHelper.getInstance(getContext())
-                    .getDistanceToPlaces(latLng, nearbyPlaces)
+                    .getDistanceToPlaces(LocationCache.getInstance().getLocationCache(), nearbyPlaces)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<List<DistanceMatrixElement>>() {
@@ -132,7 +131,7 @@ public class NearbyFragment extends ToolbarFragment implements OnPlaceClickListe
 
             MapsApiHelper
                     .getInstance(getContext())
-                    .getNearbyPlaces(latLng, DEFAULT_SEARCH_RADIUS)
+                    .getNearbyPlaces(LocationCache.getInstance().getLocationCache(), DEFAULT_SEARCH_RADIUS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(nearbyPlacesObserver);
@@ -150,25 +149,14 @@ public class NearbyFragment extends ToolbarFragment implements OnPlaceClickListe
         }
     };
 
-    // TODO Change this
-    final LatLng latLng = new LatLng(13.7488, 100.5286);
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        this.mLocationManager = (LocationManager) getContext().getSystemService(getContext().LOCATION_SERVICE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity)getContext(), new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, BT_PERMISSION_REQUEST_FINE_LCOATION);
-
-            return;
-        }
 
         if(!NearbyPlacesCache.getsInstance().isCacheEmpty()) {
             mAdapter = new NearbyPlacesAdapter(getActivity(), NearbyPlacesCache.getsInstance().getCache(), NearbyFragment.this);
@@ -176,11 +164,19 @@ public class NearbyFragment extends ToolbarFragment implements OnPlaceClickListe
             return;
         }
 
-        MapsApiHelper.getInstance(getContext())
-                .isInThailand(latLng)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isInThailandObserver);
+        if(getActivity() instanceof LocationAwareActivity){
+
+            LocationCache.getInstance().setOnLocationUpdateListener(this);
+            ((LocationAwareActivity)getActivity()).requestCurrentLocation();
+        }
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        //TODO remove location update listener
     }
 
     @Nullable
@@ -212,33 +208,13 @@ public class NearbyFragment extends ToolbarFragment implements OnPlaceClickListe
         getActivity().startActivity(detailsIntent);
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-//        switch (requestCode) {
-//            case BT_PERMISSION_REQUEST_FINE_LCOATION: {
-//                // If request is cancelled, the result arrays are empty.
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//
-//                    this.requestCurrentLocation();
-//
-//                } else {
-//
-//                    // permission denied, boo! Disable the
-//                    // functionality that depends on this permission.
-//                }
-//                return;
-//            }
-//        }
-//    }
+    @Override
+    public void onLocationUpdated(Location newLocation) {
 
-//    public void requestCurrentLocation() {
-//        this.mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, new LocationListenerAdapter() {
-//            @Override
-//            public void onLocationChanged(Location location) {
-//                mLocationManager.removeUpdates(this);
-//            }
-//        }, null);
-//    }
-
+        MapsApiHelper.getInstance(getContext())
+                .isInThailand(newLocation)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(isInThailandObserver);
+    }
 }
