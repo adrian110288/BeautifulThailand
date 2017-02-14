@@ -9,7 +9,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigation_icon="@drawable/ic_drawer"/>
+        app:navigation_icon="@drawable/ic_drawer"
+        android:background="@android:color/white"/>
 
     <FrameLayout
         android:id="@+id/preference_fragment_container"

@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:navigation_icon="@drawable/ic_drawer"
-        app:action_icon="@drawable/ic_filter"/>
+        app:action_icon="@drawable/ic_filter"
+        android:background="@android:color/white"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/nearby_places_list"

@@ -2,6 +2,7 @@ package com.adrianlesniak.beautifulthailand.screens.shared;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 import com.adrianlesniak.beautifulthailand.R;
@@ -36,6 +37,6 @@ public class ToolbarFragment extends BaseFragment implements BTToolbar.OnToolbar
 
     @Override
     public void onToolbarActionButtonClick() {
-
+        ViewCompat.setElevation(this.mToolbar, getResources().getDimensionPixelSize(R.dimen.card_elevation));
     }
 }
