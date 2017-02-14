@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
@@ -39,9 +43,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class PlaceDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class PlaceDetailsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnScrollChangeListener {
 
     public static final String BUNDLE_PLACE_ID = "place_id";
+
+    @BindView(R.id.scroll_view) ScrollView mDetailsScrollView;
+
+    @BindView(R.id.back_frame) FrameLayout mBackFrame;
 
     @BindView(R.id.place_title_text_view) TextView mPlaceTitleTextView;
 
@@ -61,6 +69,31 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
 
     private PlaceDetails mPlaceDetails;
 
+    private Observer<PlaceDetails> mPlaceDetailsObserver = new Observer<PlaceDetails>() {
+        @Override
+        public void onSubscribe(Disposable d) { }
+
+        @Override
+        public void onNext(PlaceDetails placeDetails) {
+
+            //TODO Add loader
+
+            PlaceDetailsCache.getInstance().
+                    addPlaceDetails(placeDetails);
+
+            mPlaceDetails = placeDetails;
+            updateViews();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            //TODO Add error handling
+        }
+
+        @Override
+        public void onComplete() {}
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,31 +112,15 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
                 .getPlaceDetails(placeId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<PlaceDetails>() {
-                    @Override
-                    public void onSubscribe(Disposable d) { }
+                .subscribe(mPlaceDetailsObserver);
 
-                    @Override
-                    public void onNext(PlaceDetails placeDetails) {
+        this.mDetailsScrollView.setOnScrollChangeListener(this);
+    }
 
-                        //TODO Add loader
-
-                        PlaceDetailsCache.getInstance().
-                                addPlaceDetails(placeDetails);
-
-                        mPlaceDetails = placeDetails;
-                        updateViews();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        //TODO Add error handling
-                    }
-
-                    @Override
-                    public void onComplete() {}
-                });
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.mDetailsScrollView.setOnScrollChangeListener(null);
     }
 
     @Override
@@ -244,4 +261,8 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
     }
 
+    @Override
+    public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+        ViewCompat.setElevation(this.mBackFrame, Math.min(scrollY/getResources().getDisplayMetrics().density, getResources().getDimensionPixelSize(R.dimen.card_elevation)));
+    }
 }

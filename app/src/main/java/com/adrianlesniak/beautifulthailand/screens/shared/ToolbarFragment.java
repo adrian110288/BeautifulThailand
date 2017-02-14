@@ -36,7 +36,5 @@ public class ToolbarFragment extends BaseFragment implements BTToolbar.OnToolbar
     }
 
     @Override
-    public void onToolbarActionButtonClick() {
-        ViewCompat.setElevation(this.mToolbar, getResources().getDimensionPixelSize(R.dimen.card_elevation));
-    }
+    public void onToolbarActionButtonClick() { }
 }
