@@ -6,6 +6,7 @@ import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.screens.favourites.FavouritesFragment;
 import com.adrianlesniak.beautifulthailand.screens.nearby.NearbyFragment;
 import com.adrianlesniak.beautifulthailand.screens.settings.SettingsFragment;
+import com.adrianlesniak.beautifulthailand.screens.weather.WeatherFragment;
 
 import java.util.ArrayList;
 
@@ -44,8 +45,7 @@ public class NavigationListData extends ArrayList<NavigationListItemModel> {
         NavigationListItemModel itemWeather = new NavigationListItemModel(
                 R.drawable.ic_weather,
                 context.getString(R.string.navigation_item_weather),
-                null
-//                WeatherActivity.class
+                WeatherFragment.class
         );
 
         NavigationListItemModel itemCurrency = new NavigationListItemModel(

@@ -2,9 +2,7 @@ package com.adrianlesniak.beautifulthailand.utilities.cache;
 
 import android.location.Location;
 
-import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
-
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -23,7 +21,7 @@ public class LocationCache {
 
     private long mLocationUpdateTime = 0;
 
-    private Set<OnLocationUpdateListener> mLocationUpdateListenerPool;
+    private Set<OnLocationUpdateListener> mLocationUpdateListenerPool = new HashSet<>();
 
     private LocationCache() {}
 
@@ -38,6 +36,10 @@ public class LocationCache {
 
     public void setOnLocationUpdateListener(OnLocationUpdateListener listener) {
         this.mLocationUpdateListenerPool.add(listener);
+    }
+
+    public void removeOnLocationUpdateListener(OnLocationUpdateListener listener) {
+        this.mLocationUpdateListenerPool.remove(listener);
     }
 
     public void setLocationCache(Location location) {

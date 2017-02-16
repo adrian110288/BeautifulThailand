@@ -1,14 +1,9 @@
 package com.adrianlesniak.beautifulthailand.screens.nearby;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,13 +12,12 @@ import android.view.ViewGroup;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
-import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.details.PlaceDetailsActivity;
 import com.adrianlesniak.beautifulthailand.screens.shared.EmptyAdapter;
 import com.adrianlesniak.beautifulthailand.screens.shared.LoadingAdapter;
 import com.adrianlesniak.beautifulthailand.screens.shared.LocationAwareActivity;
-import com.adrianlesniak.beautifulthailand.screens.shared.ToolbarFragment;
+import com.adrianlesniak.beautifulthailand.screens.shared.LocationDependentFragment;
 import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
 import com.adrianlesniak.beautifulthailand.utilities.PlaceComparator;
 import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
@@ -42,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by adrian on 01/02/2017.
  */
 
-public class NearbyFragment extends ToolbarFragment implements LocationCache.OnLocationUpdateListener, OnPlaceClickListener{
+public class NearbyFragment extends LocationDependentFragment implements OnPlaceClickListener{
 
     private int DEFAULT_SEARCH_RADIUS = 500;
 
@@ -150,11 +144,6 @@ public class NearbyFragment extends ToolbarFragment implements LocationCache.OnL
     };
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -165,18 +154,8 @@ public class NearbyFragment extends ToolbarFragment implements LocationCache.OnL
         }
 
         if(getActivity() instanceof LocationAwareActivity){
-
-            LocationCache.getInstance().setOnLocationUpdateListener(this);
-            ((LocationAwareActivity)getActivity()).requestCurrentLocation();
+            ((LocationAwareActivity) getActivity()).requestCurrentLocation();
         }
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        //TODO remove location update listener
     }
 
     @Nullable

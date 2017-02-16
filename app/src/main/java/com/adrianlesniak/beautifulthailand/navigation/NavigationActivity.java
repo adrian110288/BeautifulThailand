@@ -2,14 +2,14 @@ package com.adrianlesniak.beautifulthailand.navigation;
 
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.screens.nearby.NearbyFragment;
+import com.adrianlesniak.beautifulthailand.screens.shared.LocationAwareActivity;
 import com.adrianlesniak.beautifulthailand.utilities.FragmentHelper;
 
-public class NavigationActivity extends AppCompatActivity implements NavigationFragment.OnNavigationItemClickListener {
+public class NavigationActivity extends LocationAwareActivity implements NavigationFragment.OnNavigationItemClickListener {
 
 //    private BTToolbar mToolbar;
 
@@ -34,11 +34,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationF
 
         this.mCurrentSelectedItem = NavigationListData.getInstance(this).getItemByClass(NearbyFragment.class);
         FragmentHelper.pushFragment(this, getSupportFragmentManager(), this.mCurrentSelectedItem);
-
-
-        if(getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            return;
-        }
     }
 
     @Override
