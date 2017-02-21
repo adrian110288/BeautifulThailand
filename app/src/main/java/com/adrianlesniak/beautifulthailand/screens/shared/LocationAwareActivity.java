@@ -28,7 +28,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
  * Created by adrian on 14/02/2017.
  */
 
-public class LocationAwareActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, ResultCallback<LocationSettingsResult>, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class LocationAwareActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int BT_PERMISSION_REQUEST_FINE_LOCATION = 0x1;
 
@@ -77,8 +77,36 @@ public class LocationAwareActivity extends AppCompatActivity implements GoogleAp
             return;
         }
 
+        checkLocationSettings();
+    }
+
+    private void checkLocationSettings() {
         PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(this.mGoogleApiClient, this.mLocationSettingRequestBuilder.build());
-        result.setResultCallback(this);
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
+                Status resultStatus = locationSettingsResult.getStatus();
+
+                switch (resultStatus.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS: {
+                        startLocationUpdates();
+                        break;
+                    }
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED: {
+                        try {
+                            resultStatus.startResolutionForResult(LocationAwareActivity.this, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE: {
+
+                        break;
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -91,7 +119,7 @@ public class LocationAwareActivity extends AppCompatActivity implements GoogleAp
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    requestCurrentLocation();
+                    checkLocationSettings();
 
                 } else {
 
@@ -118,31 +146,6 @@ public class LocationAwareActivity extends AppCompatActivity implements GoogleAp
     }
 
     @Override
-    public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
-
-        Status resultStatus = locationSettingsResult.getStatus();
-
-        switch (resultStatus.getStatusCode()) {
-            case LocationSettingsStatusCodes.SUCCESS: {
-                startLocationUpdates();
-                break;
-            }
-            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED: {
-                try {
-                    resultStatus.startResolutionForResult(this, REQUEST_CHECK_SETTINGS);
-                } catch (IntentSender.SendIntentException e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
-            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE: {
-
-                break;
-            }
-        }
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -157,16 +160,16 @@ public class LocationAwareActivity extends AppCompatActivity implements GoogleAp
                     break;
                 }
             }
-
         }
     }
 
     private void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient, this.mLocationRequest, this);
+        LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient, this.mLocationRequest, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                LocationCache.getInstance().setLocationCache(location);
+            }
+        });
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        LocationCache.getInstance().setLocationCache(location);
-    }
 }
