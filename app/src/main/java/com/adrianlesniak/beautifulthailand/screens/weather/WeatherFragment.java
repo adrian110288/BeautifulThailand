@@ -11,9 +11,9 @@ import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.weather.WeatherData;
 import com.adrianlesniak.beautifulthailand.screens.shared.LocationAwareActivity;
 import com.adrianlesniak.beautifulthailand.screens.shared.LocationDependentFragment;
-import com.adrianlesniak.beautifulthailand.utilities.cache.LocationCache;
-import com.adrianlesniak.beautifulthailand.utilities.cache.WeatherApiHelper;
-import com.adrianlesniak.beautifulthailand.utilities.cache.WeatherCache;
+import com.adrianlesniak.beautifulthailand.cache.LocationCache;
+import com.adrianlesniak.beautifulthailand.apis.OpenWeatherMapApiHelper;
+import com.adrianlesniak.beautifulthailand.cache.WeatherCache;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -79,7 +79,7 @@ public class WeatherFragment extends LocationDependentFragment {
     @Override
     public void onLocationUpdated(Location newLocation) {
 
-        WeatherApiHelper.getWeatherDataByLocation(newLocation)
+        OpenWeatherMapApiHelper.getWeatherDataByLocation(newLocation)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this.mWeatherDataObserver);

@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand.utilities;
+package com.adrianlesniak.beautifulthailand.apis;
 
 import android.content.Context;
 import android.location.Location;
@@ -12,12 +12,11 @@ import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
 import com.adrianlesniak.beautifulthailand.models.maps.GeocodingResponse;
 import com.adrianlesniak.beautifulthailand.models.maps.GeocodingResult;
-import com.adrianlesniak.beautifulthailand.models.maps.LatLng;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetailsResponse;
 import com.adrianlesniak.beautifulthailand.models.maps.PlacesSearchResponse;
-import com.adrianlesniak.beautifulthailand.utilities.cache.PlaceDetailsCache;
+import com.adrianlesniak.beautifulthailand.cache.PlaceDetailsCache;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -38,9 +37,9 @@ import okhttp3.Response;
  * Created by adrian on 01/02/2017.
  */
 
-public class MapsApiHelper {
+public class GoogleMapsApiHelper {
 
-    private static MapsApiHelper sInstance;
+    private static GoogleMapsApiHelper sInstance;
 
     private static final String URL_BASE = "https://maps.googleapis.com/maps/api/";
 
@@ -52,17 +51,17 @@ public class MapsApiHelper {
 
     private Gson mGson;
 
-    private MapsApiHelper(Context context) {
+    private GoogleMapsApiHelper(Context context) {
         this.mContext = context;
         this.API_KEY = mContext.getResources().getString(R.string.google_maps_api_key);
         this.mClient = new OkHttpClient();
         this.mGson = new Gson();
     }
 
-    public static MapsApiHelper getInstance(Context context) {
+    public static GoogleMapsApiHelper getInstance(Context context) {
 
         if(sInstance == null) {
-            sInstance = new MapsApiHelper(context);
+            sInstance = new GoogleMapsApiHelper(context);
         }
 
         return sInstance;

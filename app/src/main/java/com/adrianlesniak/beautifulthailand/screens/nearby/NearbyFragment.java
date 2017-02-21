@@ -18,11 +18,11 @@ import com.adrianlesniak.beautifulthailand.screens.shared.EmptyAdapter;
 import com.adrianlesniak.beautifulthailand.screens.shared.LoadingAdapter;
 import com.adrianlesniak.beautifulthailand.screens.shared.LocationAwareActivity;
 import com.adrianlesniak.beautifulthailand.screens.shared.LocationDependentFragment;
-import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
+import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
 import com.adrianlesniak.beautifulthailand.utilities.PlaceComparator;
-import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
-import com.adrianlesniak.beautifulthailand.utilities.cache.LocationCache;
-import com.adrianlesniak.beautifulthailand.utilities.cache.NearbyPlacesCache;
+import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.cache.LocationCache;
+import com.adrianlesniak.beautifulthailand.cache.NearbyPlacesCache;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,7 +59,7 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
                 return;
             }
 
-            MapsApiHelper.getInstance(getContext())
+            GoogleMapsApiHelper.getInstance(getContext())
                     .getDistanceToPlaces(LocationCache.getInstance().getLocationCache(), nearbyPlaces)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -123,7 +123,7 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
                 return;
             }
 
-            MapsApiHelper
+            GoogleMapsApiHelper
                     .getInstance(getContext())
                     .getNearbyPlaces(LocationCache.getInstance().getLocationCache(), DEFAULT_SEARCH_RADIUS)
                     .subscribeOn(Schedulers.io())
@@ -190,7 +190,7 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
     @Override
     public void onLocationUpdated(Location newLocation) {
 
-        MapsApiHelper.getInstance(getContext())
+        GoogleMapsApiHelper.getInstance(getContext())
                 .isInThailand(newLocation)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -1,8 +1,7 @@
-package com.adrianlesniak.beautifulthailand.utilities.cache;
+package com.adrianlesniak.beautifulthailand.cache;
 
 import android.util.ArrayMap;
 
-import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 
 /**

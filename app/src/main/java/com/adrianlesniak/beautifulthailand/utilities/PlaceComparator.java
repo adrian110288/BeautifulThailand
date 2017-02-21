@@ -2,7 +2,7 @@ package com.adrianlesniak.beautifulthailand.utilities;
 
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
-import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
 
 import java.util.Comparator;
 

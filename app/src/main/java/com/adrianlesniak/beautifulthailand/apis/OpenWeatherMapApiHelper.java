@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand.utilities.cache;
+package com.adrianlesniak.beautifulthailand.apis;
 
 import android.location.Location;
 
@@ -12,7 +12,7 @@ import io.reactivex.ObservableOnSubscribe;
  * Created by adrian on 15/02/2017.
  */
 
-public class WeatherApiHelper {
+public class OpenWeatherMapApiHelper {
 
     public static Observable<WeatherData> getWeatherDataByLocation(Location location) {
 

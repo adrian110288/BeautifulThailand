@@ -1,4 +1,4 @@
-package com.adrianlesniak.beautifulthailand.utilities.cache;
+package com.adrianlesniak.beautifulthailand.cache;
 
 import com.adrianlesniak.beautifulthailand.models.weather.WeatherData;
 

@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.models.maps.Photo;
-import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
+import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
 
 /**
  * Created by adrian on 04/02/2017.
@@ -90,7 +90,7 @@ public class BTPhotoCarousel extends ViewPager {
             ImageView imageView = ((ImageView) view.findViewById(R.id.photo_image_view));
             ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
-            MapsApiHelper.getInstance(getContext())
+            GoogleMapsApiHelper.getInstance(getContext())
                     .loadPhoto(photoReference, progressBar, imageView);
 
         }

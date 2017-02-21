@@ -11,7 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.adrianlesniak.beautifulthailand.utilities.LocationListenerAdapter;
-import com.adrianlesniak.beautifulthailand.utilities.cache.LocationCache;
+import com.adrianlesniak.beautifulthailand.cache.LocationCache;
 
 /**
  * Created by adrian on 14/02/2017.
