@@ -1,9 +1,8 @@
-package com.adrianlesniak.beautifulthailand.utilities.cache;
+package com.adrianlesniak.beautifulthailand.cache;
 
 import android.support.v4.util.ArrayMap;
 
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
-import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 
 /**
  * Created by adrian on 12/02/2017.

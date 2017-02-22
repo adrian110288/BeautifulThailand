@@ -11,11 +11,8 @@ import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
 import com.adrianlesniak.beautifulthailand.models.maps.Photo;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.nearby.OnPlaceClickListener;
-import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
-import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
 
 /**
  * Created by adrian on 25/01/2017.
@@ -65,8 +62,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
 
         Photo photo = this.mPlace.photos != null && this.mPlace.photos.length > 0 ? this.mPlace.photos[0] : null;
         if(photo != null) {
-            MapsApiHelper.getInstance(this.mView.getContext()).
-                    loadPhoto(photo != null ? photo.photo_reference : null, mProgressView, this.placePhotoView);
+            GoogleMapsApiHelper.getInstance(this.mView.getContext()).
+                    loadPhoto(this.mView.getContext(), photo != null ? photo.photo_reference : null, mProgressView, this.placePhotoView);
         }
 
 

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
@@ -18,9 +17,9 @@ import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 import com.adrianlesniak.beautifulthailand.models.maps.Review;
 import com.adrianlesniak.beautifulthailand.screens.reviews.PlaceReviewsActivity;
-import com.adrianlesniak.beautifulthailand.utilities.cache.DistanceMatrixCache;
-import com.adrianlesniak.beautifulthailand.utilities.MapsApiHelper;
-import com.adrianlesniak.beautifulthailand.utilities.cache.PlaceDetailsCache;
+import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
+import com.adrianlesniak.beautifulthailand.cache.PlaceDetailsCache;
 import com.adrianlesniak.beautifulthailand.views.BTPhotoCarousel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -108,7 +107,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
 
         final String placeId = getIntent().getExtras().getString(BUNDLE_PLACE_ID);
 
-        MapsApiHelper.getInstance(this)
+        GoogleMapsApiHelper.getInstance(this)
                 .getPlaceDetails(placeId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -1,6 +1,6 @@
 package com.adrianlesniak.beautifulthailand.screens.shared;
 
-import com.adrianlesniak.beautifulthailand.utilities.cache.LocationCache;
+import com.adrianlesniak.beautifulthailand.cache.LocationCache;
 
 /**
  * Created by adrian on 15/02/2017.
