@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +38,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by adrian on 01/02/2017.
  */
 
-public class NearbyFragment extends LocationDependentFragment implements OnPlaceClickListener{
+public class NearbyFragment extends LocationDependentFragment implements OnPlaceClickListener {
 
     private int DEFAULT_SEARCH_RADIUS = 500;
 
@@ -170,6 +172,13 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
 
         this.mNearbyPlacesList = (RecyclerView) view.findViewById(R.id.nearby_places_list);
         this.mNearbyPlacesList.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.mNearbyPlacesList.addOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                setToolbarElevation(recyclerView.computeVerticalScrollOffset());
+            }
+        });
 
         this.mAdapter = new LoadingAdapter(getActivity());
         this.mNearbyPlacesList.setAdapter(this.mAdapter);

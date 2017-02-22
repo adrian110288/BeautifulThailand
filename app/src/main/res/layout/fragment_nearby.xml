@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/windowBackground">
+    android:layout_height="match_parent">
 
     <com.adrianlesniak.beautifulthailand.views.BTToolbar
         android:id="@+id/toolbar"
@@ -11,8 +10,7 @@
         android:layout_height="?attr/actionBarSize"
         app:navigation_icon="@drawable/ic_drawer"
         app:action_icon="@drawable/ic_filter"
-        android:background="@android:color/white"
-        android:elevation="@dimen/card_elevation"/>
+        android:background="@android:color/white"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/nearby_places_list"

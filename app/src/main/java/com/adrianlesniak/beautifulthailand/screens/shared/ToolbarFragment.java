@@ -37,4 +37,8 @@ public class ToolbarFragment extends BaseFragment implements BTToolbar.OnToolbar
 
     @Override
     public void onToolbarActionButtonClick() { }
+
+    public void setToolbarElevation(int scrollY) {
+        ViewCompat.setElevation(this.mToolbar, Math.min(scrollY/getResources().getDisplayMetrics().density, getResources().getDimensionPixelSize(R.dimen.card_elevation)));
+    }
 }
