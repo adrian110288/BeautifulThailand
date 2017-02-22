@@ -91,7 +91,7 @@ public class BTPhotoCarousel extends ViewPager {
             ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
             GoogleMapsApiHelper.getInstance(getContext())
-                    .loadPhoto(photoReference, progressBar, imageView);
+                    .loadPhoto(imageView.getContext(), photoReference, progressBar, imageView);
 
         }
     }

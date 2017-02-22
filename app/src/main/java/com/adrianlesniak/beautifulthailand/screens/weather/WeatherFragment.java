@@ -79,7 +79,8 @@ public class WeatherFragment extends LocationDependentFragment {
     @Override
     public void onLocationUpdated(Location newLocation) {
 
-        OpenWeatherMapApiHelper.getWeatherDataByLocation(newLocation)
+        OpenWeatherMapApiHelper.getInstance(getContext())
+                .getWeatherDataByLocation(newLocation)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this.mWeatherDataObserver);

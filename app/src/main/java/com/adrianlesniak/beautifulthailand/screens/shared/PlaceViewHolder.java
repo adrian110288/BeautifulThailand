@@ -63,7 +63,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         Photo photo = this.mPlace.photos != null && this.mPlace.photos.length > 0 ? this.mPlace.photos[0] : null;
         if(photo != null) {
             GoogleMapsApiHelper.getInstance(this.mView.getContext()).
-                    loadPhoto(photo != null ? photo.photo_reference : null, mProgressView, this.placePhotoView);
+                    loadPhoto(this.mView.getContext(), photo != null ? photo.photo_reference : null, mProgressView, this.placePhotoView);
         }
 
 

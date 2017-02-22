@@ -17,7 +17,6 @@ import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetailsResponse;
 import com.adrianlesniak.beautifulthailand.models.maps.PlacesSearchResponse;
 import com.adrianlesniak.beautifulthailand.cache.PlaceDetailsCache;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -29,7 +28,6 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -37,34 +35,30 @@ import okhttp3.Response;
  * Created by adrian on 01/02/2017.
  */
 
-public class GoogleMapsApiHelper {
+public class GoogleMapsApiHelper extends RemoteApiHelper{
 
     private static GoogleMapsApiHelper sInstance;
 
-    private static final String URL_BASE = "https://maps.googleapis.com/maps/api/";
-
-    private Context mContext;
-
-    private String API_KEY = null;
-
-    private OkHttpClient mClient;
-
-    private Gson mGson;
-
     private GoogleMapsApiHelper(Context context) {
-        this.mContext = context;
-        this.API_KEY = mContext.getResources().getString(R.string.google_maps_api_key);
-        this.mClient = new OkHttpClient();
-        this.mGson = new Gson();
+        super(context);
     }
 
     public static GoogleMapsApiHelper getInstance(Context context) {
-
         if(sInstance == null) {
             sInstance = new GoogleMapsApiHelper(context);
         }
 
         return sInstance;
+    }
+
+    @Override
+    protected String getApiKey(Context context) {
+        return context.getResources().getString(R.string.google_maps_api_key);
+    }
+
+    @Override
+    protected String getBaseUrl() {
+        return "https://maps.googleapis.com/maps/api/";
     }
 
     public Observable getNearbyPlaces(final Location location, final int radius) {
@@ -118,7 +112,7 @@ public class GoogleMapsApiHelper {
                     return;
                 }
 
-                String uri = URL_BASE + "place/details/json?placeid=" + placeId + "&key=" +API_KEY;
+                String uri = URL_BASE + "place/details/json?placeid=" + placeId + "&key=" + API_KEY;
 
                 Request request = new Request.Builder()
                         .url(uri)
@@ -150,7 +144,7 @@ public class GoogleMapsApiHelper {
         });
     }
 
-    public void loadPhoto(final String photoReference, final View progressView, final ImageView target) {
+    public void loadPhoto(final Context context, final String photoReference, final View progressView, final ImageView target) {
 
         if(photoReference == null) {
             progressView.setVisibility(View.GONE);
@@ -167,7 +161,7 @@ public class GoogleMapsApiHelper {
 
                 String photoUrlRequest = URL_BASE + "place/photo?maxwidth=" + String.valueOf(maxPhotoWidth) + "&photoreference=" + photoReference + "&key=" + API_KEY;
 
-                Picasso.with(mContext)
+                Picasso.with(context)
                         .load(photoUrlRequest)
                         .fit()
                         .centerCrop()
