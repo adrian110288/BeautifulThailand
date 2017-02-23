@@ -1,6 +1,6 @@
 package com.adrianlesniak.beautifulthailand.cache;
 
-import com.adrianlesniak.beautifulthailand.models.weather.WeatherData;
+import com.adrianlesniak.beautifulthailand.models.weather.CurrentWeatherResponse;
 
 /**
  * Created by adrian on 15/02/2017.
@@ -10,7 +10,7 @@ public class WeatherCache {
 
     private static WeatherCache sInstance;
 
-    private WeatherData mWeatherData;
+    private CurrentWeatherResponse mWeatherData;
 
     private long mLastUpdate = 0;
 
@@ -25,12 +25,12 @@ public class WeatherCache {
         return sInstance;
     }
 
-    public void setWeatherData(WeatherData weatherData) {
+    public void setWeatherData(CurrentWeatherResponse weatherData) {
         this.mWeatherData = weatherData;
         this.mLastUpdate = System.currentTimeMillis();
     }
 
-    public WeatherData getWeatherData() {
+    public CurrentWeatherResponse getWeatherData() {
         return this.mWeatherData;
     }
 

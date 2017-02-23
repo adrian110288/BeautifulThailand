@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.models.weather.WeatherData;
+import com.adrianlesniak.beautifulthailand.models.weather.CurrentWeatherResponse;
 import com.adrianlesniak.beautifulthailand.screens.shared.LocationAwareActivity;
 import com.adrianlesniak.beautifulthailand.screens.shared.LocationDependentFragment;
 import com.adrianlesniak.beautifulthailand.cache.LocationCache;
@@ -26,14 +26,14 @@ import io.reactivex.schedulers.Schedulers;
 
 public class WeatherFragment extends LocationDependentFragment {
 
-    private WeatherData mWeatherData;
+    private CurrentWeatherResponse mWeatherData;
 
-    private Observer<WeatherData> mWeatherDataObserver = new Observer<WeatherData>() {
+    private Observer<CurrentWeatherResponse> mWeatherDataObserver = new Observer<CurrentWeatherResponse>() {
         @Override
         public void onSubscribe(Disposable d) { }
 
         @Override
-        public void onNext(WeatherData newWeatherData) {
+        public void onNext(CurrentWeatherResponse newWeatherData) {
 
             WeatherCache.getInstance().setWeatherData(newWeatherData);
 

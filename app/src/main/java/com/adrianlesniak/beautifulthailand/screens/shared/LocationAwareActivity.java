@@ -28,7 +28,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
  * Created by adrian on 14/02/2017.
  */
 
-public class LocationAwareActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class LocationAwareActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private static final int BT_PERMISSION_REQUEST_FINE_LOCATION = 0x1;
 
@@ -55,7 +55,8 @@ public class LocationAwareActivity extends AppCompatActivity implements GoogleAp
                 .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         this.mLocationSettingRequestBuilder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(this.mLocationRequest);
+                .addLocationRequest(this.mLocationRequest)
+                .setAlwaysShow(true);
 
     }
 
@@ -69,9 +70,13 @@ public class LocationAwareActivity extends AppCompatActivity implements GoogleAp
     protected void onStop() {
         super.onStop();
         this.mGoogleApiClient.disconnect();
+        LocationServices.FusedLocationApi.removeLocationUpdates(this.mGoogleApiClient, this);
     }
 
     public void requestCurrentLocation() {
+
+        if(this.mGoogleApiClient.isConnected()) return;
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, BT_PERMISSION_REQUEST_FINE_LOCATION);
             return;
@@ -164,12 +169,12 @@ public class LocationAwareActivity extends AppCompatActivity implements GoogleAp
     }
 
     private void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient, this.mLocationRequest, new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                LocationCache.getInstance().setLocationCache(location);
-            }
-        });
+        LocationServices.FusedLocationApi.requestLocationUpdates(this.mGoogleApiClient, this.mLocationRequest, this);
     }
 
+
+    @Override
+    public void onLocationChanged(Location location) {
+        LocationCache.getInstance().setLocationCache(location);
+    }
 }

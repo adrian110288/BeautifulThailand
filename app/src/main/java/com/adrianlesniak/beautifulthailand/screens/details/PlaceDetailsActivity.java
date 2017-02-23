@@ -13,13 +13,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
+import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
+import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.cache.PlaceDetailsCache;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 import com.adrianlesniak.beautifulthailand.models.maps.Review;
 import com.adrianlesniak.beautifulthailand.screens.reviews.PlaceReviewsActivity;
-import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
-import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
-import com.adrianlesniak.beautifulthailand.cache.PlaceDetailsCache;
 import com.adrianlesniak.beautifulthailand.views.BTPhotoCarousel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -207,7 +207,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     private void updateViews() {
         this.mPlaceTitleTextView.setText(this.mPlaceDetails.name);
 
-        DistanceMatrixElement distanceMatrixElement = DistanceMatrixCache.getInstance().getDistance(this.mPlaceDetails.placeId);
+        DistanceMatrixRow.DistanceMatrixElement distanceMatrixElement = DistanceMatrixCache.getInstance().getDistance(this.mPlaceDetails.placeId);
         if(distanceMatrixElement != null) {
             this.mPlaceDistanceTextView.setText(distanceMatrixElement.distance.text);
         }

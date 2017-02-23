@@ -1,12 +1,13 @@
 package com.adrianlesniak.beautifulthailand.models.maps;
 
+import com.adrianlesniak.beautifulthailand.models.ApiCallResponse;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by adrian on 04/02/2017.
  */
 
-public class MapsResponse {
+public class GoogleMapsResponse implements ApiCallResponse {
 
     private static final String STATUS_OK = "OK";
 

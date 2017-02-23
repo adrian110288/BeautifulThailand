@@ -7,16 +7,15 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.models.maps.AddressComponent;
-import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
+import com.adrianlesniak.beautifulthailand.cache.PlaceDetailsCache;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixResponse;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 import com.adrianlesniak.beautifulthailand.models.maps.GeocodingResponse;
 import com.adrianlesniak.beautifulthailand.models.maps.GeocodingResult;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetailsResponse;
 import com.adrianlesniak.beautifulthailand.models.maps.PlacesSearchResponse;
-import com.adrianlesniak.beautifulthailand.cache.PlaceDetailsCache;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -189,11 +188,11 @@ public class GoogleMapsApiHelper extends RemoteApiHelper{
         });
     }
 
-    public Observable<List<DistanceMatrixElement>> getDistanceToPlaces(final Location origin, final List<Place> destinations) {
+    public Observable<List<DistanceMatrixRow.DistanceMatrixElement>> getDistanceToPlaces(final Location origin, final List<Place> destinations) {
 
-        return Observable.create(new ObservableOnSubscribe<List<DistanceMatrixElement>>() {
+        return Observable.create(new ObservableOnSubscribe<List<DistanceMatrixRow.DistanceMatrixElement>>() {
             @Override
-            public void subscribe(final ObservableEmitter<List<DistanceMatrixElement>> emitter) throws Exception {
+            public void subscribe(final ObservableEmitter<List<DistanceMatrixRow.DistanceMatrixElement>> emitter) throws Exception {
 
                 StringBuilder destinationsValue = new StringBuilder();
 
@@ -224,7 +223,7 @@ public class GoogleMapsApiHelper extends RemoteApiHelper{
 
                         if(distanceMatrixResponse.isSuccessful()) {
 
-                            List<DistanceMatrixElement> distancesList = Arrays.asList(distanceMatrixResponse.rows[0].elements);
+                            List<DistanceMatrixRow.DistanceMatrixElement> distancesList = Arrays.asList(distanceMatrixResponse.rows[0].elements);
 
                             emitter.onNext(distancesList);
                             emitter.onComplete();
@@ -262,7 +261,7 @@ public class GoogleMapsApiHelper extends RemoteApiHelper{
                         GeocodingResponse geocodingResponse = mGson.fromJson(response.body().string(), GeocodingResponse.class);
 
                         if(geocodingResponse.isSuccessful()) {
-                            AddressComponent th = findAddressComponentForShortName(geocodingResponse.results, "TH");
+                            GeocodingResult.AddressComponent th = findAddressComponentForShortName(geocodingResponse.results, "TH");
 
                             emitter.onNext(th != null);
                             emitter.onComplete();
@@ -277,9 +276,9 @@ public class GoogleMapsApiHelper extends RemoteApiHelper{
 
     }
 
-    private AddressComponent findAddressComponentForShortName(GeocodingResult[] geocodingResult, String shortNameToFind) {
+    private GeocodingResult.AddressComponent findAddressComponentForShortName(GeocodingResult[] geocodingResult, String shortNameToFind) {
 
-        AddressComponent found = null;
+        GeocodingResult.AddressComponent found = null;
 
         for(int resultIndex=0;resultIndex< geocodingResult.length; resultIndex++) {
             for(int addressComponentIndex=0;addressComponentIndex< geocodingResult[resultIndex].addressComponents.length; addressComponentIndex++) {
