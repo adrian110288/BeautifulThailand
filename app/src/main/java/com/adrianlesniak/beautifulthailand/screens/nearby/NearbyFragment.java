@@ -11,18 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
+import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
+import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.cache.LocationCache;
+import com.adrianlesniak.beautifulthailand.cache.NearbyPlacesCache;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.details.PlaceDetailsActivity;
 import com.adrianlesniak.beautifulthailand.screens.shared.EmptyAdapter;
 import com.adrianlesniak.beautifulthailand.screens.shared.LoadingAdapter;
 import com.adrianlesniak.beautifulthailand.screens.shared.LocationAwareActivity;
 import com.adrianlesniak.beautifulthailand.screens.shared.LocationDependentFragment;
-import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
 import com.adrianlesniak.beautifulthailand.utilities.PlaceComparator;
-import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
-import com.adrianlesniak.beautifulthailand.cache.LocationCache;
-import com.adrianlesniak.beautifulthailand.cache.NearbyPlacesCache;
 
 import java.util.Collections;
 import java.util.List;
@@ -63,14 +63,14 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
                     .getDistanceToPlaces(LocationCache.getInstance().getLocationCache(), nearbyPlaces)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<DistanceMatrixElement>>() {
+                    .subscribe(new Observer<List<DistanceMatrixRow.DistanceMatrixElement>>() {
                         @Override
                         public void onSubscribe(Disposable d) {
                             // Empty
                         }
 
                         @Override
-                        public void onNext(List<DistanceMatrixElement> distancesList) {
+                        public void onNext(List<DistanceMatrixRow.DistanceMatrixElement> distancesList) {
 
                             int distancesListCount = distancesList.size();
                             for(int index=0;index<distancesListCount;index++) {

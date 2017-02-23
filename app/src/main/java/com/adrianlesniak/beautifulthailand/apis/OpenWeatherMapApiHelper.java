@@ -2,7 +2,7 @@ package com.adrianlesniak.beautifulthailand.apis;
 
 import android.location.Location;
 
-import com.adrianlesniak.beautifulthailand.models.weather.WeatherData;
+import com.adrianlesniak.beautifulthailand.models.weather.CurrentWeatherResponse;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -14,11 +14,11 @@ import io.reactivex.ObservableOnSubscribe;
 
 public class OpenWeatherMapApiHelper {
 
-    public static Observable<WeatherData> getWeatherDataByLocation(Location location) {
+    public static Observable<CurrentWeatherResponse> getWeatherDataByLocation(Location location) {
 
-        return Observable.create(new ObservableOnSubscribe<WeatherData>() {
+        return Observable.create(new ObservableOnSubscribe<CurrentWeatherResponse>() {
             @Override
-            public void subscribe(final ObservableEmitter<WeatherData> emitter) throws Exception {
+            public void subscribe(final ObservableEmitter<CurrentWeatherResponse> emitter) throws Exception {
 
             }
         });

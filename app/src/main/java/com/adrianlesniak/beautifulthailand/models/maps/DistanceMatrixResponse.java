@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by adrian on 06/02/2017.
  */
 
-public class DistanceMatrixResponse extends MapsResponse {
+public class DistanceMatrixResponse extends GoogleMapsResponse {
 
     @SerializedName("origin_addresses")
     public String[] originAddresses;
@@ -16,7 +16,7 @@ public class DistanceMatrixResponse extends MapsResponse {
 
     public DistanceMatrixRow[] rows;
 
-    public DistanceMatrixElement getFirstElement() {
+    public DistanceMatrixRow.DistanceMatrixElement getFirstElement() {
 
         if(rows.length > 0 && rows[0].elements.length > 0) {
             return rows[0].elements[0];
@@ -24,4 +24,6 @@ public class DistanceMatrixResponse extends MapsResponse {
 
         return null;
     }
+
+
 }

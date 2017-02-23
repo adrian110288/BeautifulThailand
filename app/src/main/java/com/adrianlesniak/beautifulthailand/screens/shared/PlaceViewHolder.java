@@ -7,12 +7,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.adrianlesniak.beautifulthailand.R;
-import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixElement;
+import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
+import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
+import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 import com.adrianlesniak.beautifulthailand.models.maps.Photo;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.nearby.OnPlaceClickListener;
-import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
-import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
 
 /**
  * Created by adrian on 25/01/2017.
@@ -67,7 +67,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         }
 
 
-        DistanceMatrixElement distanceMatrixElement = DistanceMatrixCache.getInstance().getDistance(place.placeId);
+        DistanceMatrixRow.DistanceMatrixElement distanceMatrixElement = DistanceMatrixCache.getInstance().getDistance(place.placeId);
         if(distanceMatrixElement != null) {
             this.mDistanceTextView.setText(distanceMatrixElement.distance.text);
         }
