@@ -15,5 +15,11 @@
     <dimen name="card_corner_radius">2dp</dimen>
     <dimen name="navigate_button_height">60dp</dimen>
     <dimen name="map_view_height">260dp</dimen>
+    <dimen name="place_list_item_duration_distance_icon_size">18dp</dimen>
+    <dimen name="place_list_item_duration_distance_icon_margin">4dp</dimen>
+
+    <!--Text sizes-->
+    <dimen name="place_list_item_title">20sp</dimen>
+    <dimen name="place_list_item_duration_distance_text">14sp</dimen>
 
 </resources>
