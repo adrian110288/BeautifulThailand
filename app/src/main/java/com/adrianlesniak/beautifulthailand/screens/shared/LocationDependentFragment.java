@@ -1,5 +1,7 @@
 package com.adrianlesniak.beautifulthailand.screens.shared;
 
+import android.location.Location;
+
 import com.adrianlesniak.beautifulthailand.cache.LocationCache;
 
 /**
@@ -19,4 +21,11 @@ public abstract class LocationDependentFragment extends ToolbarFragment implemen
         super.onStop();
         LocationCache.getInstance().removeOnLocationUpdateListener(this);
     }
+
+    @Override
+    public void onLocationUpdated(Location newLocation) {
+        initializeApiCall(newLocation);
+    }
+
+    protected abstract void initializeApiCall(Location location);
 }

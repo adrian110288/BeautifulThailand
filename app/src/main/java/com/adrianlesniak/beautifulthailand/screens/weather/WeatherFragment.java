@@ -66,24 +66,26 @@ public class WeatherFragment extends LocationDependentFragment {
     public void onStart() {
         super.onStart();
 
-        if(LocationCache.getInstance().getLocationCache() == null || WeatherCache.getInstance().getWeatherData() == null) {
-            if(getActivity() instanceof LocationAwareActivity) {
-                ((LocationAwareActivity) getActivity()).requestCurrentLocation();
-            }
+        if(WeatherCache.getInstance().getWeatherData() != null) {
+            this.mWeatherData = WeatherCache.getInstance().getWeatherData();
             return;
         }
 
-        this.mWeatherData = WeatherCache.getInstance().getWeatherData();
+        if(LocationCache.getInstance().getLocationCache() != null) {
+            initializeApiCall(LocationCache.getInstance().getLocationCache());
+        } else {
+            if(getActivity() instanceof LocationAwareActivity) {
+                ((LocationAwareActivity) getActivity()).requestCurrentLocation();
+            }
+        }
     }
 
     @Override
-    public void onLocationUpdated(Location newLocation) {
-
+    protected void initializeApiCall(Location location) {
         OpenWeatherMapApiHelper.getInstance(getContext())
-                .getWeatherDataByLocation(newLocation)
+                .getWeatherDataByLocation(location)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this.mWeatherDataObserver);
-
     }
 }

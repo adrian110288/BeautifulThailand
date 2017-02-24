@@ -40,6 +40,8 @@ public class LocationAwareActivity extends AppCompatActivity implements GoogleAp
 
     private LocationSettingsRequest.Builder mLocationSettingRequestBuilder;
 
+    private boolean mLocationRequested = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,20 +71,27 @@ public class LocationAwareActivity extends AppCompatActivity implements GoogleAp
     @Override
     protected void onStop() {
         super.onStop();
-        this.mGoogleApiClient.disconnect();
+
+        if(!this.mGoogleApiClient.isConnected()) {
+            this.mGoogleApiClient.disconnect();
+        }
+
         LocationServices.FusedLocationApi.removeLocationUpdates(this.mGoogleApiClient, this);
     }
 
     public void requestCurrentLocation() {
 
-        if(this.mGoogleApiClient.isConnected()) return;
+        if(this.mGoogleApiClient.isConnected()) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, BT_PERMISSION_REQUEST_FINE_LOCATION);
+                return;
+            }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, BT_PERMISSION_REQUEST_FINE_LOCATION);
+            checkLocationSettings();
             return;
         }
 
-        checkLocationSettings();
+        this.mLocationRequested = true;
     }
 
     private void checkLocationSettings() {
@@ -138,6 +147,14 @@ public class LocationAwareActivity extends AppCompatActivity implements GoogleAp
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
+        if(this.mLocationRequested) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, BT_PERMISSION_REQUEST_FINE_LOCATION);
+                return;
+            }
+
+            checkLocationSettings();
+        }
     }
 
     @Override
@@ -176,5 +193,6 @@ public class LocationAwareActivity extends AppCompatActivity implements GoogleAp
     @Override
     public void onLocationChanged(Location location) {
         LocationCache.getInstance().setLocationCache(location);
+        this.mLocationRequested = false;
     }
 }

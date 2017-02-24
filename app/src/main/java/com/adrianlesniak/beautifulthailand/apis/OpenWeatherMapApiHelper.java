@@ -56,6 +56,7 @@ public class OpenWeatherMapApiHelper extends RemoteApiHelper{
                     .build();
 
                 Response response = mClient.newCall(request).execute();
+                CurrentWeatherResponse currentWeatherResponse = mGson.fromJson(response.body().string(), CurrentWeatherResponse.class);
             }
         });
     }

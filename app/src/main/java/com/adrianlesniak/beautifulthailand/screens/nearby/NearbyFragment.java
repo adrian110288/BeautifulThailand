@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -155,7 +154,7 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
             return;
         }
 
-        if(getActivity() instanceof LocationAwareActivity){
+        if(getActivity() instanceof LocationAwareActivity) {
             ((LocationAwareActivity) getActivity()).requestCurrentLocation();
         }
     }
@@ -197,12 +196,12 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
     }
 
     @Override
-    public void onLocationUpdated(Location newLocation) {
-
+    protected void initializeApiCall(Location location) {
         GoogleMapsApiHelper.getInstance(getContext())
-                .isInThailand(newLocation)
+                .isInThailand(location)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isInThailandObserver);
     }
+
 }
