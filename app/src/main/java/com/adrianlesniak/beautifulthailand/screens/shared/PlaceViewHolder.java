@@ -32,6 +32,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
 
     private TextView mDistanceTextView;
 
+    private TextView mDurationTextView;
+
     private View mProgressView;
 
     public PlaceViewHolder(View itemView) {
@@ -42,6 +44,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         this.placePhotoView = (ImageView) itemView.findViewById(R.id.place_photo_view);
         this.addToFavouriteView = (ImageButton) itemView.findViewById(R.id.place_add_to_fav);
         this.mDistanceTextView = (TextView) itemView.findViewById(R.id.distance_text_view);
+        this.mDurationTextView = (TextView) itemView.findViewById(R.id.duration_text_view);
         this.mProgressView = itemView.findViewById(R.id.progress_bar);
     }
 
@@ -70,6 +73,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         DistanceMatrixRow.DistanceMatrixElement distanceMatrixElement = DistanceMatrixCache.getInstance().getDistance(place.placeId);
         if(distanceMatrixElement != null) {
             this.mDistanceTextView.setText(distanceMatrixElement.distance.text);
+            this.mDurationTextView.setText(distanceMatrixElement.duration.text);
         }
 
     }

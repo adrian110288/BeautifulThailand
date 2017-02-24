@@ -16,63 +16,95 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <FrameLayout
+        <ImageView
+            android:id="@+id/place_photo_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-            <ImageView
-                android:id="@+id/place_photo_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop" />
-
-        </FrameLayout>
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/background_gradient_place_title"
-            android:padding="@dimen/activity_vertical_margin">
+            android:layout_centerInParent="true"
+            android:background="#80000000">
 
             <com.adrianlesniak.beautifulthailand.views.BTTextView
                 android:id="@+id/place_name_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:padding="@dimen/activity_vertical_margin"
                 android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:font_type="bold"
-                tools:text="Stretford Grammar School" />
+                android:layout_centerInParent="true"
+                android:textAlignment="center"
+                android:textSize="@dimen/place_list_item_title"
+                app:font_type="heavy"
+                tools:text="Place Name" />
 
-            <ImageButton
-                android:id="@+id/place_add_to_fav"
-                style="@style/BTIconStyle.BTIconButtonRedStyle"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/place_name_view"
-                app:srcCompat="@drawable/state_list_favourite_icon" />
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin">
+                    <ImageView
+                        android:layout_width="@dimen/place_list_item_duration_distance_icon_size"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_watch"
+                        android:tint="@android:color/white"
+                        android:layout_marginRight="@dimen/place_list_item_duration_distance_icon_margin"/>
+                    <com.adrianlesniak.beautifulthailand.views.BTTextView
+                        android:id="@+id/duration_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/place_list_item_duration_distance_text"
+                        tools:text="12min"
+                        app:font_type="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="@dimen/place_list_item_duration_distance_icon_size"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_navigate"
+                            android:tint="@android:color/white"
+                            android:layout_marginRight="@dimen/place_list_item_duration_distance_icon_margin"/>
+                        <com.adrianlesniak.beautifulthailand.views.BTTextView
+                            android:id="@+id/distance_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/place_list_item_duration_distance_text"
+                            android:layout_gravity="center"
+                            tools:text="145ft"
+                            app:font_type="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
 
-            <com.adrianlesniak.beautifulthailand.views.BTTextView
-                android:id="@+id/distance_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/place_add_to_fav"
-                android:layout_alignParentEnd="true"
-                android:textColor="@android:color/white"
-                app:font_type="bold" />
+
 
         </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/place_add_to_fav"
+            style="@style/BTIconStyle.BTIconButtonRedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/activity_vertical_margin"
+            app:srcCompat="@drawable/state_list_favourite_icon" />
 
     </RelativeLayout>
 
