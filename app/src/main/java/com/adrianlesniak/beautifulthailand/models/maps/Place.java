@@ -10,21 +10,21 @@ import java.net.URL;
 
 public class Place {
 
-    public Geometry geometry;
+    @SerializedName("place_id")
+    public String placeId;
 
     public String name;
 
-    public URL icon;
+    public Geometry geometry;
 
-    @SerializedName("place_id")
-    public String placeId;
+//    public URL icon;
 
     public float rating;
 
     public String types[];
 
-    @SerializedName("opening_hours")
-    public OpeningHours openingHours;
+//    @SerializedName("opening_hours")
+//    public OpeningHours openingHours;
 
     public Photo photos[];
 

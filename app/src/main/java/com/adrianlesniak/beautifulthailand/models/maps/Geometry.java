@@ -16,6 +16,7 @@ public class Geometry {
         /**
          * Construct a location with a latitude longitude pair.
          */
+        public LatLng() {}
         public LatLng(double lat, double lng) {
             this.lat = lat;
             this.lng = lng;
