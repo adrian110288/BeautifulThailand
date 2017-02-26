@@ -6,9 +6,9 @@ import android.provider.BaseColumns;
  * Created by adrian on 24/02/2017.
  */
 
-public class BTContract {
+public class PlacesPersistenceContract {
 
-    private BTContract() {}
+    private PlacesPersistenceContract() {}
 
     public static class Place implements BaseColumns {
         public static final String TABLE_NAME = "favourite_places";

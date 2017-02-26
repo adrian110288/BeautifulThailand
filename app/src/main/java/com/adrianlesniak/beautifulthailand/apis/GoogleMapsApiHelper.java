@@ -2,6 +2,7 @@ package com.adrianlesniak.beautifulthailand.apis;
 
 import android.content.Context;
 import android.location.Location;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -143,10 +144,14 @@ public class GoogleMapsApiHelper extends RemoteApiHelper{
         });
     }
 
-    public void loadPhoto(final Context context, final String photoReference, final View progressView, final ImageView target) {
+    public void loadPhoto(final Context context, final String photoReference, @Nullable final View progressView, final ImageView target) {
 
         if(photoReference == null) {
-            progressView.setVisibility(View.GONE);
+
+            if(progressView != null) {
+                progressView.setVisibility(View.GONE);
+            }
+
             target.setScaleType(ImageView.ScaleType.CENTER);
             target.setImageDrawable(target.getContext().getResources().getDrawable(R.drawable.ic_image, null));
             return;

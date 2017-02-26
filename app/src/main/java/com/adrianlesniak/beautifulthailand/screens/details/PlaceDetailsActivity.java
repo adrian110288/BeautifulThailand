@@ -16,10 +16,13 @@ import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
 import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
 import com.adrianlesniak.beautifulthailand.cache.PlaceDetailsCache;
+import com.adrianlesniak.beautifulthailand.db.PlacesLocalDataSource;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
+import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
 import com.adrianlesniak.beautifulthailand.models.maps.Review;
 import com.adrianlesniak.beautifulthailand.screens.reviews.PlaceReviewsActivity;
+import com.adrianlesniak.beautifulthailand.utilities.ObserverAdapter;
 import com.adrianlesniak.beautifulthailand.views.BTPhotoCarousel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -37,61 +40,49 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class PlaceDetailsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnScrollChangeListener {
 
-    public static final String BUNDLE_PLACE_ID = "place_id";
+    public static final String BUNDLE_PLACE = "place";
 
-    @BindView(R.id.scroll_view) ScrollView mDetailsScrollView;
+    @BindView(R.id.scroll_view)
+    ScrollView mDetailsScrollView;
 
-    @BindView(R.id.back_frame) FrameLayout mBackFrame;
+    @BindView(R.id.back_frame)
+    FrameLayout mBackFrame;
 
-    @BindView(R.id.place_title_text_view) TextView mPlaceTitleTextView;
+    @BindView(R.id.place_title_text_view)
+    TextView mPlaceTitleTextView;
 
-    @BindView(R.id.place_distance_text_view) TextView mPlaceDistanceTextView;
+    @BindView(R.id.place_distance_text_view)
+    TextView mPlaceDistanceTextView;
 
-    @BindView(R.id.place_review_count) TextView mPlaceReviewCount;
+    @BindView(R.id.place_review_count)
+    TextView mPlaceReviewCount;
 
-    @BindView(R.id.rating_text_view) TextView mPlaceRatingTextView;
+    @BindView(R.id.rating_text_view)
+    TextView mPlaceRatingTextView;
 
-    @BindView(R.id.photo_carousel) BTPhotoCarousel mBTPhotoCarousel;
+    @BindView(R.id.photo_carousel)
+    BTPhotoCarousel mBTPhotoCarousel;
 
-    @BindView(R.id.telephone_text_view) TextView mTelephoneTextView;
+    @BindView(R.id.telephone_text_view)
+    TextView mTelephoneTextView;
 
-    @BindView(R.id.website_text_view) TextView mWebsiteTextView;
+    @BindView(R.id.website_text_view)
+    TextView mWebsiteTextView;
 
-    @BindView(R.id.address_text_view) TextView mAddressTextView;
+    @BindView(R.id.address_text_view)
+    TextView mAddressTextView;
+
+    @BindView(R.id.favourite_button)
+    View mFavouriteButton;
+
+    private Place mPlace;
 
     private PlaceDetails mPlaceDetails;
-
-    private Observer<PlaceDetails> mPlaceDetailsObserver = new Observer<PlaceDetails>() {
-        @Override
-        public void onSubscribe(Disposable d) { }
-
-        @Override
-        public void onNext(PlaceDetails placeDetails) {
-
-            //TODO Add loader
-
-            PlaceDetailsCache.getInstance().
-                    addPlaceDetails(placeDetails);
-
-            mPlaceDetails = placeDetails;
-            updateViews();
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            //TODO Add error handling
-        }
-
-        @Override
-        public void onComplete() {}
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,19 +90,56 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
         this.setContentView(R.layout.activity_place_details);
 
         ButterKnife.bind(this);
+
+        this.mPlace = getIntent().getParcelableExtra(BUNDLE_PLACE);
+
+        GoogleMapsApiHelper.getInstance(this)
+                .getPlaceDetails(mPlace.placeId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new ObserverAdapter() {
+
+                    @Override
+                    public void onNext(Object placeDetails) {
+
+                        if(!(placeDetails instanceof PlaceDetails)) return;
+
+                        //TODO Add loader
+
+                        PlaceDetailsCache.getInstance().
+                                addPlaceDetails((PlaceDetails) placeDetails);
+
+                        mPlaceDetails = (PlaceDetails) placeDetails;
+                        updateViews();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //TODO Add error handling
+                    }
+                });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        final String placeId = getIntent().getExtras().getString(BUNDLE_PLACE_ID);
-
-        GoogleMapsApiHelper.getInstance(this)
-                .getPlaceDetails(placeId)
+        PlacesLocalDataSource.getInstance(this)
+                .getFavouritePlaceById(this.mPlace.placeId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mPlaceDetailsObserver);
+                .subscribe(new ObserverAdapter() {
+
+                    @Override
+                    public void onNext(Object value) {
+                        mFavouriteButton.setSelected(value != null);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mFavouriteButton.setSelected(false);
+                    }
+                });
 
         this.mDetailsScrollView.setOnScrollChangeListener(this);
     }
@@ -130,6 +158,22 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     @OnClick(R.id.back)
     public void onBack(View view) {
         finish();
+    }
+
+    @OnClick(R.id.favourite_button)
+    public void onFavouritePlace(View view) {
+
+        PlacesLocalDataSource.getInstance(this)
+                .setPlaceFavourite(mPlace, !mFavouriteButton.isSelected())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new ObserverAdapter() {
+
+                    @Override
+                    public void onNext(Object value) {
+                        mFavouriteButton.setSelected((Boolean) value);
+                    }
+                });
     }
 
     @OnClick(R.id.place_review_count)

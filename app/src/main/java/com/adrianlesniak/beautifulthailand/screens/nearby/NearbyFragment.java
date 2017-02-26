@@ -41,7 +41,7 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
 
     private int DEFAULT_SEARCH_RADIUS = 500;
 
-    private RecyclerView mNearbyPlacesList;
+    private RecyclerView mPlacesList;
 
     private RecyclerView.Adapter mAdapter;
 
@@ -56,7 +56,7 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
 
             if(nearbyPlaces.isEmpty()) {
                 mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.no_nearby_places_message));
-                mNearbyPlacesList.setAdapter(mAdapter);
+                mPlacesList.setAdapter(mAdapter);
                 return;
             }
 
@@ -82,7 +82,7 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
                             NearbyPlacesCache.getsInstance().setCache(nearbyPlaces);
 
                             mAdapter = new NearbyPlacesAdapter(getActivity(), nearbyPlaces, NearbyFragment.this);
-                            mNearbyPlacesList.setAdapter(mAdapter);
+                            mPlacesList.setAdapter(mAdapter);
                         }
 
                         @Override
@@ -100,7 +100,7 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
         @Override
         public void onError(Throwable e) {
             mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.error_loading_places_message));
-            mNearbyPlacesList.setAdapter(mAdapter);
+            mPlacesList.setAdapter(mAdapter);
         }
 
         @Override
@@ -120,7 +120,7 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
 
             if(!value) {
                 mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.error_not_in_thailand));
-                mNearbyPlacesList.setAdapter(mAdapter);
+                mPlacesList.setAdapter(mAdapter);
                 return;
             }
 
@@ -135,7 +135,7 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
         @Override
         public void onError(Throwable e) {
             mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.error_loading_places_message));
-            mNearbyPlacesList.setAdapter(mAdapter);
+            mPlacesList.setAdapter(mAdapter);
         }
 
         @Override
@@ -150,7 +150,7 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
 
         if(!NearbyPlacesCache.getsInstance().isCacheEmpty()) {
             mAdapter = new NearbyPlacesAdapter(getActivity(), NearbyPlacesCache.getsInstance().getCache(), NearbyFragment.this);
-            mNearbyPlacesList.setAdapter(mAdapter);
+            mPlacesList.setAdapter(mAdapter);
             return;
         }
 
@@ -162,16 +162,16 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_nearby, container, false);
+        return inflater.inflate(R.layout.fragment_places, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.mNearbyPlacesList = (RecyclerView) view.findViewById(R.id.nearby_places_list);
-        this.mNearbyPlacesList.setLayoutManager(new LinearLayoutManager(getContext()));
-        this.mNearbyPlacesList.addOnScrollListener(new OnScrollListener() {
+        this.mPlacesList = (RecyclerView) view.findViewById(R.id.places_list);
+        this.mPlacesList.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.mPlacesList.addOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -180,14 +180,14 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
         });
 
         this.mAdapter = new LoadingAdapter(getActivity());
-        this.mNearbyPlacesList.setAdapter(this.mAdapter);
+        this.mPlacesList.setAdapter(this.mAdapter);
     }
 
     @Override
     public void onPlaceClicked(Place place) {
 
         Bundle detailsBundle = new Bundle();
-        detailsBundle.putString(PlaceDetailsActivity.BUNDLE_PLACE_ID, place.placeId);
+        detailsBundle.putParcelable(PlaceDetailsActivity.BUNDLE_PLACE, place);
 
         Intent detailsIntent = new Intent(getContext(), PlaceDetailsActivity.class);
         detailsIntent.putExtras(detailsBundle);

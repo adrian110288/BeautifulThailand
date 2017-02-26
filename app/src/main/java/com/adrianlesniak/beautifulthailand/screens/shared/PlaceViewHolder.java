@@ -14,61 +14,44 @@ import com.adrianlesniak.beautifulthailand.models.maps.Photo;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.nearby.OnPlaceClickListener;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by adrian on 25/01/2017.
  */
 
 public class PlaceViewHolder extends RecyclerView.ViewHolder {
 
-    private View mView;
+    @BindView(R.id.place_name_view)
+    public TextView placeNameView;
 
-    private Place mPlace;
+    @BindView(R.id.place_photo_view)
+    public ImageView placePhotoView;
 
-    private TextView placeNameView;
+    @BindView(R.id.place_add_to_fav)
+    public ImageButton addToFavouriteButton;
 
-    private ImageView placePhotoView;
+    @BindView(R.id.distance_text_view)
+    public TextView mDistanceTextView;
 
-    protected ImageButton addToFavouriteView;
-
-    private TextView mDistanceTextView;
-
-    private TextView mDurationTextView;
-
-    private View mProgressView;
+    @BindView(R.id.duration_text_view)
+    public TextView mDurationTextView;
 
     public PlaceViewHolder(View itemView) {
         super(itemView);
-
-        this.mView = itemView;
-        this.placeNameView = (TextView) itemView.findViewById(R.id.place_name_view);
-        this.placePhotoView = (ImageView) itemView.findViewById(R.id.place_photo_view);
-        this.addToFavouriteView = (ImageButton) itemView.findViewById(R.id.place_add_to_fav);
-        this.mDistanceTextView = (TextView) itemView.findViewById(R.id.distance_text_view);
-        this.mDurationTextView = (TextView) itemView.findViewById(R.id.duration_text_view);
-        this.mProgressView = itemView.findViewById(R.id.progress_bar);
+        ButterKnife.bind(this, itemView);
     }
 
-    public void bindData(final Place place, final OnPlaceClickListener listener) {
-
-        this.mPlace = place;
-
-        this.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(listener != null) {
-                    listener.onPlaceClicked(place);
-                }
-            }
-        });
+    public void bindData(final Place place) {
 
         this.placeNameView.setText(place.name);
 
-        Photo photo = this.mPlace.photos != null && this.mPlace.photos.length > 0 ? this.mPlace.photos[0] : null;
+        Photo photo = place.photos != null && !place.photos.isEmpty() ? place.photos.get(0) : null;
         if(photo != null) {
-            GoogleMapsApiHelper.getInstance(this.mView.getContext()).
-                    loadPhoto(this.mView.getContext(), photo != null ? photo.photo_reference : null, mProgressView, this.placePhotoView);
+            GoogleMapsApiHelper.getInstance(this.itemView.getContext()).
+                    loadPhoto(this.itemView.getContext(), photo.photo_reference, null, this.placePhotoView);
         }
-
 
         DistanceMatrixRow.DistanceMatrixElement distanceMatrixElement = DistanceMatrixCache.getInstance().getDistance(place.placeId);
         if(distanceMatrixElement != null) {
@@ -77,23 +60,5 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         }
 
     }
-
-// /        this.mPlaceListItemRemoveListener = listener;
-//    }
-//
-//    @Override
-//    public void onClick(View view) {
-//
-//        if(this.mPlace != null) {
-//            if(view == addToFavouriteView) {
-//
-//            }
-//
-//
-//            if(this.mPlaceListItemRemoveListener != null) {
-//                this.mPlaceListItemRemoveListener.onPlaceListItemRemove(this.mPlace.placeId);
-//            }
-//        }
-//    }   public void setOnPlaceListItemRemoveListener(DatabasePlacesListAdapter.OnPlaceListItemRemoveListener listener) {
 
 }

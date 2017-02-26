@@ -7,13 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adrianlesniak.beautifulthailand.R;
+import com.adrianlesniak.beautifulthailand.db.PlacesLocalDataSource;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.shared.PlaceViewHolder;
+import com.adrianlesniak.beautifulthailand.utilities.ObserverAdapter;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by adrian on 01/02/2017.
@@ -40,8 +45,54 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(PlaceViewHolder holder, int position) {
-        holder.bindData(this.mPlaces.get(position), mPlaceClickListener);
+    public void onBindViewHolder(final PlaceViewHolder holder, int position) {
+
+        final Place place = this.mPlaces.get(position);
+
+        PlacesLocalDataSource.getInstance(holder.itemView.getContext())
+                .getFavouritePlaceById(place.placeId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new ObserverAdapter() {
+                    @Override
+                    public void onNext(Object value) {
+                        holder.addToFavouriteButton.setSelected(value != null);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        holder.addToFavouriteButton.setSelected(false);
+                    }
+
+                });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mPlaceClickListener != null) {
+                    mPlaceClickListener.onPlaceClicked(place);
+                }
+            }
+        });
+
+        holder.addToFavouriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PlacesLocalDataSource.getInstance(holder.itemView.getContext())
+                        .setPlaceFavourite(place, !holder.addToFavouriteButton.isSelected())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new ObserverAdapter() {
+                            @Override
+                            public void onNext(Object value) {
+                                holder.addToFavouriteButton.setSelected((Boolean) value);
+                            }
+                        });
+            }
+        });
+
+        holder.bindData(place);
     }
 
     @Override
