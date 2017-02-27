@@ -4,13 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.Nullable;
 
-import com.adrianlesniak.beautifulthailand.models.maps.Geometry;
 import com.adrianlesniak.beautifulthailand.models.maps.Photo;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,9 +64,20 @@ public class PlacesLocalDataSource implements PlacesDataSource{
 
                 if(allPlaceCursor != null) {
 
-                    while (allPlaceCursor.moveToNext()) {
-                        Place place = PlacesDataSourceHelper.initPlaceFromCursor(allPlaceCursor);
-                        placesList.add(place);
+                    try {
+
+                        int cursorLen = allPlaceCursor.getCount();
+                        for(int index=0; index<cursorLen; index++) {
+
+                            if(allPlaceCursor.moveToPosition(index)) {
+                                Place place = PlacesDataSourceHelper.initPlaceFromCursor(allPlaceCursor);
+                                placesList.add(place);
+                            }
+                        }
+
+                    } finally {
+
+                        allPlaceCursor.close();
                     }
                 }
 
@@ -84,10 +94,12 @@ public class PlacesLocalDataSource implements PlacesDataSource{
             @Override
             public void subscribe(final ObservableEmitter<Place> emitter) throws Exception {
 
-                Place place = getFavouritePlaceByIdSync(placeId);
+                SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+                Place place = getFavouritePlaceByIdSync(db, placeId);
 
                 if(place == null) {
-                    emitter.onError(new Throwable("Place id is not favourite"));
+                    emitter.onError(new Throwable("Place not found"));
 
                 } else {
                     emitter.onNext(place);
@@ -98,10 +110,7 @@ public class PlacesLocalDataSource implements PlacesDataSource{
         });
     }
 
-    @Override
-    public Place getFavouritePlaceByIdSync(@NotNull String placeId) {
-
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+    private Place getFavouritePlaceByIdSync(@NotNull final SQLiteDatabase db, @NotNull String placeId) {
 
         String[] placeProjection = {
                 PlacesPersistenceContract.Place.COLUMN_NAME_PLACE_ID,
@@ -129,66 +138,20 @@ public class PlacesLocalDataSource implements PlacesDataSource{
     }
 
     @Override
-    public Observable<Boolean> setPlaceFavourite(@NotNull final Place place, final boolean isFavourite) {
+    public Observable<Boolean> setPlaceFavourite(@NotNull final Place place, final boolean shouldBeFavourite) {
 
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
 
-                boolean jobDone = isFavourite? favouritePlaceSync(place) : unfavouritePlaceSync(place);
+                SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-                emitter.onNext(jobDone ? isFavourite : !isFavourite);
+                boolean jobDone = shouldBeFavourite? favouritePlaceSync(db, place) : unfavouritePlaceSync(db, place);
+
+                emitter.onNext(jobDone ? shouldBeFavourite : !shouldBeFavourite);
                 emitter.onComplete();
             }
         });
-    }
-
-    private boolean favouritePlaceSync(@NotNull final Place place) {
-
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-        db.beginTransaction();
-
-        ContentValues placeValues = PlacesDataSourceHelper.getContentValuesFromPlace(place);
-        long rowId = db.insert(PlacesPersistenceContract.Place.TABLE_NAME, null, placeValues);
-
-        if(rowId == -1) {
-            return false;
-        }
-
-        for (Photo photo :
-                place.photos) {
-
-            ContentValues photoValues = PlacesDataSourceHelper.getContentValuesFromPhoto(photo, place);
-            db.insert(PlacesPersistenceContract.Photo.TABLE_NAME, null, photoValues);
-        }
-
-        db.setTransactionSuccessful();
-        db.endTransaction();
-
-        return rowId > -1;
-    }
-
-    private boolean unfavouritePlaceSync(@NotNull final Place place) {
-
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-        db.beginTransaction();
-
-        String placeSelection = PlacesPersistenceContract.Place.COLUMN_NAME_PLACE_ID + " LIKE ?";
-        String[] placeSelectionArgs = { place.placeId };
-        int placeRowsDeleted = db.delete(PlacesPersistenceContract.Place.TABLE_NAME, placeSelection, placeSelectionArgs);
-
-        if(placeRowsDeleted > 0) {
-            String photoSelection = PlacesPersistenceContract.Photo.COLUMN_NAME_PLACE_ID + " LIKE ?";
-            String[] photoSelectionArgs = { place.placeId };
-            db.delete(PlacesPersistenceContract.Photo.TABLE_NAME, photoSelection, photoSelectionArgs);
-        }
-
-        db.setTransactionSuccessful();
-        db.endTransaction();
-
-        return placeRowsDeleted > 0;
     }
 
     @Override
@@ -209,8 +172,10 @@ public class PlacesLocalDataSource implements PlacesDataSource{
 
     private List<Photo> getPhotosForPlaceSync(SQLiteDatabase injectedDb, String placeId) {
 
+        List<Photo> photosList = new ArrayList<>();
+
         if(injectedDb == null) {
-            return new ArrayList<>(0);
+            return photosList;
         }
 
         String[] photoProjection = {
@@ -222,20 +187,19 @@ public class PlacesLocalDataSource implements PlacesDataSource{
         String photoSelection = PlacesPersistenceContract.Photo.COLUMN_NAME_PLACE_ID + " = ?";
         String[] photoSelectionArgs = { placeId };
 
+        injectedDb.beginTransaction();
+
         Cursor photosCursor = injectedDb.query(PlacesPersistenceContract.Photo.TABLE_NAME, photoProjection, photoSelection, photoSelectionArgs, null, null, null, null);
-        List<Photo> photosList = new ArrayList<>(photosCursor.getCount());
 
         try {
 
-            while (photosCursor.moveToNext()) {
+            int cursorLen = photosCursor.getCount();
+            for(int index=0;index<cursorLen;index++) {
 
-                Photo photo = new Photo();
-
-                photo.width = photosCursor.getInt(photosCursor.getColumnIndexOrThrow(PlacesPersistenceContract.Photo.COLUMN_NAME_WIDTH));
-                photo.height = photosCursor.getInt(photosCursor.getColumnIndexOrThrow(PlacesPersistenceContract.Photo.COLUMN_NAME_HEIGHT));
-                photo.photo_reference = photosCursor.getString(photosCursor.getColumnIndexOrThrow(PlacesPersistenceContract.Photo.COLUMN_NAME_PHOTO_REFERENCE));
-
-                photosList.add(photo);
+                if(photosCursor.moveToPosition(index)) {
+                    Photo photo = PlacesDataSourceHelper.initPhotoFromCursor(photosCursor);
+                    photosList.add(photo);
+                }
             }
 
         } finally {
@@ -243,7 +207,94 @@ public class PlacesLocalDataSource implements PlacesDataSource{
             photosCursor.close();
         }
 
+        injectedDb.setTransactionSuccessful();
+        injectedDb.endTransaction();
+
         return photosList;
+    }
+
+    private boolean insertPhotosForPlace(@NotNull final SQLiteDatabase db, @NotNull String placeId, @Nullable List<Photo> photosList) {
+
+        if(photosList == null || photosList.isEmpty()){
+            return true;
+        }
+
+        int insertedPhotos = 0;
+
+        int photosListLen = photosList.size();
+        for(int index=0; index<photosListLen; index++) {
+            ContentValues photoValues = PlacesDataSourceHelper.getContentValuesFromPhoto(photosList.get(index), placeId);
+            long rowId = db.insert(PlacesPersistenceContract.Photo.TABLE_NAME, null, photoValues);
+
+            if(rowId != -1) {
+                insertedPhotos+=1;
+            }
+        }
+
+        return insertedPhotos == photosListLen;
+    }
+
+    private boolean favouritePlaceSync(@NotNull final SQLiteDatabase db, @NotNull final Place place) {
+
+        Place existingPlace = getFavouritePlaceByIdSync(db, place.placeId);
+
+        if(existingPlace != null) {
+            return true;
+        }
+
+        db.beginTransaction();
+
+        ContentValues placeValues = PlacesDataSourceHelper.getContentValuesFromPlace(place);
+        long rowId = db.insert(PlacesPersistenceContract.Place.TABLE_NAME, null, placeValues);
+
+        boolean success = rowId > -1 && insertPhotosForPlace(db, place.placeId, place.photos);
+
+        if(success) {
+            db.setTransactionSuccessful();
+        }
+        db.endTransaction();
+
+        return success;
+    }
+
+    private boolean unfavouritePlaceSync(@NotNull final SQLiteDatabase db, @NotNull final Place place) {
+
+        db.beginTransaction();
+
+        String placeSelection = PlacesPersistenceContract.Place.COLUMN_NAME_PLACE_ID + " LIKE ?";
+        String[] placeSelectionArgs = { place.placeId };
+
+        int placeRowsDeleted = db.delete(PlacesPersistenceContract.Place.TABLE_NAME, placeSelection, placeSelectionArgs);
+
+        boolean success = placeRowsDeleted > 0 && deletePhotosForPlaceSync(db, place);
+
+        if(success) {
+            db.setTransactionSuccessful();
+        }
+
+        db.endTransaction();
+
+        return success;
+    }
+
+    private boolean deletePhotosForPlaceSync(@NotNull final SQLiteDatabase db, Place place) {
+
+        String photoSelection = PlacesPersistenceContract.Photo.COLUMN_NAME_PLACE_ID + " LIKE ?";
+        String[] photoSelectionArgs = { place.placeId };
+
+        db.beginTransaction();
+
+        int rowsDeleted = db.delete(PlacesPersistenceContract.Photo.TABLE_NAME, photoSelection, photoSelectionArgs);
+
+        boolean success = place.photos == null || place.photos.isEmpty() || rowsDeleted == place.photos.size();
+
+        if(success) {
+            db.setTransactionSuccessful();
+        }
+
+        db.endTransaction();
+
+        return success;
     }
 
     public void closeDataSource() {

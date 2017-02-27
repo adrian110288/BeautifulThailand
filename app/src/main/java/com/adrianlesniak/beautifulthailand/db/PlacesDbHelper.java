@@ -15,8 +15,7 @@ public class PlacesDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_PLACE_ENTRIES =
             "CREATE TABLE " + PlacesPersistenceContract.Place.TABLE_NAME + " (" +
-                    PlacesPersistenceContract.Place._ID + " INTEGER PRIMARY KEY," +
-                    PlacesPersistenceContract.Place.COLUMN_NAME_PLACE_ID + " TEXT," +
+                    PlacesPersistenceContract.Place.COLUMN_NAME_PLACE_ID + " TEXT PRIMARY KEY," +
                     PlacesPersistenceContract.Place.COLUMN_NAME_PLACE_NAME + " TEXT," +
                     PlacesPersistenceContract.Place.COLUMN_NAME_LAT_LNG + " TEXT," +
                     PlacesPersistenceContract.Place.COLUMN_NAME_RATING + " REAL," +
@@ -26,10 +25,9 @@ public class PlacesDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_PHOTO_ENTRIES =
             "CREATE TABLE " + PlacesPersistenceContract.Photo.TABLE_NAME + " (" +
-                    PlacesPersistenceContract.Photo._ID + " INTEGER PRIMARY KEY," +
+                    PlacesPersistenceContract.Photo.COLUMN_NAME_PHOTO_REFERENCE + " TEXT PRIMARY KEY," +
                     PlacesPersistenceContract.Photo.COLUMN_NAME_HEIGHT + " INTEGER," +
                     PlacesPersistenceContract.Photo.COLUMN_NAME_WIDTH + " INTEGER," +
-                    PlacesPersistenceContract.Photo.COLUMN_NAME_PHOTO_REFERENCE + " TEXT," +
                     PlacesPersistenceContract.Photo.COLUMN_NAME_PLACE_ID + " TEXT," +
                     " FOREIGN KEY (" + PlacesPersistenceContract.Photo.COLUMN_NAME_PLACE_ID + ") REFERENCES " + PlacesPersistenceContract.Place.TABLE_NAME + "(" + PlacesPersistenceContract.Place.COLUMN_NAME_PLACE_ID + "))";
 

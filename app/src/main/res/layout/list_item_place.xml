@@ -104,7 +104,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:padding="@dimen/activity_vertical_margin"
-            app:srcCompat="@drawable/state_list_favourite_icon" />
+            app:srcCompat="@drawable/state_list_favourite_icon"
+            android:background="@drawable/ripple_red"/>
 
     </RelativeLayout>
 

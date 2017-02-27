@@ -29,13 +29,13 @@ public class PlacesDataSourceHelper {
         return values;
     }
 
-    public static ContentValues getContentValuesFromPhoto(Photo photo, Place place) {
+    public static ContentValues getContentValuesFromPhoto(Photo photo, String placeId) {
 
         ContentValues values = new ContentValues();
         values.put(PlacesPersistenceContract.Photo.COLUMN_NAME_WIDTH, photo.width);
         values.put(PlacesPersistenceContract.Photo.COLUMN_NAME_HEIGHT, photo.height);
         values.put(PlacesPersistenceContract.Photo.COLUMN_NAME_PHOTO_REFERENCE, photo.photo_reference);
-        values.put(PlacesPersistenceContract.Photo.COLUMN_NAME_PLACE_ID, place.placeId);
+        values.put(PlacesPersistenceContract.Photo.COLUMN_NAME_PLACE_ID, placeId);
 
         return values;
     }
@@ -45,8 +45,6 @@ public class PlacesDataSourceHelper {
         if(placeCursor == null || placeCursor.getCount() == 0) {
             return null;
         }
-
-        placeCursor.moveToFirst();
 
         Place place = new Place();
 
@@ -73,5 +71,16 @@ public class PlacesDataSourceHelper {
         place.permanentlyClosed = placeCursor.getInt(placeCursor.getColumnIndexOrThrow(PlacesPersistenceContract.Place.COLUMN_NAME_CLOSED)) == 1;
 
         return place;
+    }
+
+    public static Photo initPhotoFromCursor(Cursor photosCursor) {
+
+        Photo photo = new Photo();
+
+        photo.width = photosCursor.getInt(photosCursor.getColumnIndexOrThrow(PlacesPersistenceContract.Photo.COLUMN_NAME_WIDTH));
+        photo.height = photosCursor.getInt(photosCursor.getColumnIndexOrThrow(PlacesPersistenceContract.Photo.COLUMN_NAME_HEIGHT));
+        photo.photo_reference = photosCursor.getString(photosCursor.getColumnIndexOrThrow(PlacesPersistenceContract.Photo.COLUMN_NAME_PHOTO_REFERENCE));
+
+        return photo;
     }
 }
