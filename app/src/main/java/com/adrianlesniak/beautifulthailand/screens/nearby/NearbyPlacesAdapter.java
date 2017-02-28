@@ -8,13 +8,11 @@ import android.view.ViewGroup;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.db.PlacesLocalDataSource;
+import com.adrianlesniak.beautifulthailand.models.NullableObject;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.shared.PlaceViewHolder;
 import com.adrianlesniak.beautifulthailand.utilities.ObserverAdapter;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -56,7 +54,7 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
                 .subscribe(new ObserverAdapter() {
                     @Override
                     public void onNext(Object value) {
-                        holder.addToFavouriteButton.setSelected(value != null);
+                        holder.addToFavouriteButton.setSelected(!((NullableObject)value).isNull());
                     }
 
                     @Override

@@ -1,5 +1,6 @@
 package com.adrianlesniak.beautifulthailand.db;
 
+import com.adrianlesniak.beautifulthailand.models.NullableObject;
 import com.adrianlesniak.beautifulthailand.models.maps.Photo;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 
@@ -17,7 +18,7 @@ public interface PlacesDataSource {
 
     Observable<List<Place>> getFavouritePlaces();
 
-    Observable<Place> getFavouritePlaceById(@NotNull String placeId);
+    Observable<NullableObject> getFavouritePlaceById(@NotNull String placeId);
 
     Observable<Boolean> setPlaceFavourite(@NotNull Place place, boolean isFavourite);
 

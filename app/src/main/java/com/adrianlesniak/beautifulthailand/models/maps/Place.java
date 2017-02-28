@@ -3,16 +3,16 @@ package com.adrianlesniak.beautifulthailand.models.maps;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.adrianlesniak.beautifulthailand.models.NullableObject;
 import com.google.gson.annotations.SerializedName;
 
-import java.net.URL;
 import java.util.List;
 
 /**
  * Created by adrian on 04/02/2017.
  */
 
-public class Place implements Parcelable {
+public class Place implements Parcelable, NullableObject {
 
     @SerializedName("place_id")
     public String placeId;
@@ -79,4 +79,9 @@ public class Place implements Parcelable {
             return new Place[size];
         }
     };
+
+    @Override
+    public boolean isNull() {
+        return false;
+    }
 }

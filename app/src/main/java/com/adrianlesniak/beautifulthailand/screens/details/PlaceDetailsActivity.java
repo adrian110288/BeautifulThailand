@@ -17,6 +17,7 @@ import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
 import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
 import com.adrianlesniak.beautifulthailand.cache.PlaceDetailsCache;
 import com.adrianlesniak.beautifulthailand.db.PlacesLocalDataSource;
+import com.adrianlesniak.beautifulthailand.models.NullableObject;
 import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.models.maps.PlaceDetails;
@@ -132,12 +133,7 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
 
                     @Override
                     public void onNext(Object value) {
-                        mFavouriteButton.setSelected(value != null);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mFavouriteButton.setSelected(false);
+                        mFavouriteButton.setSelected(!((NullableObject)value).isNull());
                     }
                 });
 

@@ -3,6 +3,8 @@ package com.adrianlesniak.beautifulthailand.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.adrianlesniak.beautifulthailand.models.NullPlace;
+import com.adrianlesniak.beautifulthailand.models.NullableObject;
 import com.adrianlesniak.beautifulthailand.models.maps.Geometry;
 import com.adrianlesniak.beautifulthailand.models.maps.Photo;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
@@ -40,10 +42,10 @@ public class PlacesDataSourceHelper {
         return values;
     }
 
-    public static Place initPlaceFromCursor(Cursor placeCursor) {
+    public static NullableObject initPlaceFromCursor(Cursor placeCursor) {
 
         if(placeCursor == null || placeCursor.getCount() == 0) {
-            return null;
+            return new NullPlace();
         }
 
         Place place = new Place();

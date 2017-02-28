@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.adrianlesniak.beautifulthailand.models.NullableObject;
 import com.adrianlesniak.beautifulthailand.models.maps.Photo;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 
@@ -70,8 +71,15 @@ public class PlacesLocalDataSource implements PlacesDataSource{
                         for(int index=0; index<cursorLen; index++) {
 
                             if(allPlaceCursor.moveToPosition(index)) {
-                                Place place = PlacesDataSourceHelper.initPlaceFromCursor(allPlaceCursor);
-                                placesList.add(place);
+
+                                NullableObject nullablePlace = PlacesDataSourceHelper.initPlaceFromCursor(allPlaceCursor);
+
+                                if(!nullablePlace.isNull()) {
+
+                                    Place place  = (Place) nullablePlace;
+                                    place.photos = getPhotosForPlaceSync(db, place.placeId);
+                                    placesList.add(place);
+                                }
                             }
                         }
 
@@ -88,29 +96,23 @@ public class PlacesLocalDataSource implements PlacesDataSource{
     }
 
     @Override
-    public Observable<Place> getFavouritePlaceById(@NotNull final String placeId) {
+    public Observable<NullableObject> getFavouritePlaceById(@NotNull final String placeId) {
 
-        return Observable.create(new ObservableOnSubscribe<Place>() {
+        return Observable.create(new ObservableOnSubscribe<NullableObject>() {
             @Override
-            public void subscribe(final ObservableEmitter<Place> emitter) throws Exception {
+            public void subscribe(final ObservableEmitter<NullableObject> emitter) throws Exception {
 
                 SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-                Place place = getFavouritePlaceByIdSync(db, placeId);
+                NullableObject place = getFavouritePlaceByIdSync(db, placeId);
 
-                if(place == null) {
-                    emitter.onError(new Throwable("Place not found"));
-
-                } else {
-                    emitter.onNext(place);
-                }
-
+                emitter.onNext(place);
                 emitter.onComplete();
             }
         });
     }
 
-    private Place getFavouritePlaceByIdSync(@NotNull final SQLiteDatabase db, @NotNull String placeId) {
+    private NullableObject getFavouritePlaceByIdSync(@NotNull final SQLiteDatabase db, @NotNull String placeId) {
 
         String[] placeProjection = {
                 PlacesPersistenceContract.Place.COLUMN_NAME_PLACE_ID,
@@ -125,13 +127,21 @@ public class PlacesLocalDataSource implements PlacesDataSource{
         String placeSelection = PlacesPersistenceContract.Place.COLUMN_NAME_PLACE_ID + " = ?";
         String[] placeSelectionArgs = { placeId };
 
+        NullableObject place;
+
         Cursor placeCursor = db.query(PlacesPersistenceContract.Place.TABLE_NAME, placeProjection, placeSelection, placeSelectionArgs, null, null, null, null);
 
-        Place place = PlacesDataSourceHelper.initPlaceFromCursor(placeCursor);
-        placeCursor.close();
+        try {
+            placeCursor.moveToFirst();
+            place = PlacesDataSourceHelper.initPlaceFromCursor(placeCursor);
 
-        if(place != null) {
-            place.photos = getPhotosForPlaceSync(db, placeId);
+        } finally {
+
+            placeCursor.close();
+        }
+
+        if(!place.isNull()) {
+            ((Place)place).photos = getPhotosForPlaceSync(db, placeId);
         }
 
         return place;
@@ -236,9 +246,9 @@ public class PlacesLocalDataSource implements PlacesDataSource{
 
     private boolean favouritePlaceSync(@NotNull final SQLiteDatabase db, @NotNull final Place place) {
 
-        Place existingPlace = getFavouritePlaceByIdSync(db, place.placeId);
+        NullableObject existingPlace = getFavouritePlaceByIdSync(db, place.placeId);
 
-        if(existingPlace != null) {
+        if(!existingPlace.isNull()) {
             return true;
         }
 
