@@ -17,7 +17,7 @@ public class NearbyPlacesCache {
 
     private NearbyPlacesCache() {}
 
-    public static NearbyPlacesCache getsInstance() {
+    public static NearbyPlacesCache getInstance() {
 
         if(sInstance == null) {
             sInstance = new NearbyPlacesCache();

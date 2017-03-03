@@ -10,153 +10,52 @@ import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.apis.GoogleMapsApiHelper;
 import com.adrianlesniak.beautifulthailand.cache.DistanceMatrixCache;
-import com.adrianlesniak.beautifulthailand.cache.LocationCache;
 import com.adrianlesniak.beautifulthailand.cache.NearbyPlacesCache;
-import com.adrianlesniak.beautifulthailand.models.maps.DistanceMatrixRow;
 import com.adrianlesniak.beautifulthailand.models.maps.Place;
 import com.adrianlesniak.beautifulthailand.screens.details.PlaceDetailsActivity;
 import com.adrianlesniak.beautifulthailand.screens.shared.EmptyAdapter;
-import com.adrianlesniak.beautifulthailand.screens.shared.LoadingAdapter;
 import com.adrianlesniak.beautifulthailand.screens.shared.LocationAwareActivity;
 import com.adrianlesniak.beautifulthailand.screens.shared.LocationDependentFragment;
-import com.adrianlesniak.beautifulthailand.utilities.PlaceComparator;
 
-import java.util.Collections;
 import java.util.List;
 
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by adrian on 01/02/2017.
  */
 
-public class NearbyFragment extends LocationDependentFragment implements OnPlaceClickListener {
+public class NearbyFragment extends LocationDependentFragment implements OnPlaceClickListener, NearbyContract.View {
 
     private int DEFAULT_SEARCH_RADIUS = 500;
 
-    private RecyclerView mPlacesList;
+    @BindView(R.id.progress_bar)
+    public ProgressBar mProgressBar;
 
-    private RecyclerView.Adapter mAdapter;
+    @BindView(R.id.places_list)
+    public RecyclerView mPlacesList;
 
-    private Observer nearbyPlacesObserver = new Observer<List<Place>>() {
-        @Override
-        public void onSubscribe(Disposable d) {
-            // Empty
-        }
+    private NearbyPresenter mPresenter;
 
-        @Override
-        public void onNext(final List<Place> nearbyPlaces) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-            if(nearbyPlaces.isEmpty()) {
-                mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.no_nearby_places_message));
-                mPlacesList.setAdapter(mAdapter);
-                return;
-            }
-
-            GoogleMapsApiHelper.getInstance(getContext())
-                    .getDistanceToPlaces(LocationCache.getInstance().getLocationCache(), nearbyPlaces)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<DistanceMatrixRow.DistanceMatrixElement>>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                            // Empty
-                        }
-
-                        @Override
-                        public void onNext(List<DistanceMatrixRow.DistanceMatrixElement> distancesList) {
-
-                            int distancesListCount = distancesList.size();
-                            for(int index=0;index<distancesListCount;index++) {
-                                DistanceMatrixCache.getInstance().putDistance(nearbyPlaces.get(index).placeId, distancesList.get(index));
-                            }
-
-                            Collections.sort(nearbyPlaces, new PlaceComparator());
-                            NearbyPlacesCache.getsInstance().setCache(nearbyPlaces);
-
-                            mAdapter = new NearbyPlacesAdapter(getActivity(), nearbyPlaces, NearbyFragment.this);
-                            mPlacesList.setAdapter(mAdapter);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            // Empty
-                        }
-                    });
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.error_loading_places_message));
-            mPlacesList.setAdapter(mAdapter);
-        }
-
-        @Override
-        public void onComplete() {
-            // Empty
-        }
-    };
-
-    private Observer isInThailandObserver = new Observer<Boolean>() {
-        @Override
-        public void onSubscribe(Disposable d) {
-
-        }
-
-        @Override
-        public void onNext(Boolean value) {
-
-            if(!value) {
-                mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.error_not_in_thailand));
-                mPlacesList.setAdapter(mAdapter);
-                return;
-            }
-
-            GoogleMapsApiHelper
-                    .getInstance(getContext())
-                    .getNearbyPlaces(LocationCache.getInstance().getLocationCache(), DEFAULT_SEARCH_RADIUS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(nearbyPlacesObserver);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            mAdapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.error_loading_places_message));
-            mPlacesList.setAdapter(mAdapter);
-        }
-
-        @Override
-        public void onComplete() {
-
-        }
-    };
+        this.mPresenter = new NearbyPresenter(GoogleMapsApiHelper.getInstance(getContext()), NearbyPlacesCache.getInstance(), DistanceMatrixCache.getInstance(), this);
+        this.mPresenter.setSearchRadius(DEFAULT_SEARCH_RADIUS);
+    }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if(!NearbyPlacesCache.getsInstance().isCacheEmpty()) {
-            mAdapter = new NearbyPlacesAdapter(getActivity(), NearbyPlacesCache.getsInstance().getCache(), NearbyFragment.this);
-            mPlacesList.setAdapter(mAdapter);
-            return;
-        }
-
-        if(getActivity() instanceof LocationAwareActivity) {
-            ((LocationAwareActivity) getActivity()).requestCurrentLocation();
-        }
+        this.mPresenter.loadPlaces();
     }
 
     @Nullable
@@ -169,7 +68,8 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.mPlacesList = (RecyclerView) view.findViewById(R.id.places_list);
+        ButterKnife.bind(this, view);
+
         this.mPlacesList.setLayoutManager(new LinearLayoutManager(getContext()));
         this.mPlacesList.addOnScrollListener(new OnScrollListener() {
             @Override
@@ -178,9 +78,6 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
                 setToolbarElevation(recyclerView.computeVerticalScrollOffset());
             }
         });
-
-        this.mAdapter = new LoadingAdapter(getActivity());
-        this.mPlacesList.setAdapter(this.mAdapter);
     }
 
     @Override
@@ -197,11 +94,63 @@ public class NearbyFragment extends LocationDependentFragment implements OnPlace
 
     @Override
     protected void initializeApiCall(Location location) {
-        GoogleMapsApiHelper.getInstance(getContext())
-                .isInThailand(location)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isInThailandObserver);
+        this.mPresenter.checkIsInThailand(location);
     }
 
+    @Override
+    public void showPlaces(List<Place> places) {
+
+        if(places.isEmpty()) {
+            if(getActivity() instanceof LocationAwareActivity) {
+                ((LocationAwareActivity) getActivity()).requestCurrentLocation();
+            }
+
+            return;
+        }
+
+        setAdapterWithPlaces(places);
+    }
+
+    @Override
+    public void showNearbyPlaces(List<Place> nearbyPlaces) {
+
+        if(nearbyPlaces.isEmpty()) {
+            showEmptyAdapter();
+            return;
+        }
+
+        setAdapterWithPlaces(nearbyPlaces);
+    }
+
+    @Override
+    public void showLoading() {
+        this.mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void dismissLoading() {
+        this.mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setIsInThailand(boolean isInThailand) {
+
+        if(!isInThailand) {
+            this.showEmptyAdapter();
+
+            return;
+        }
+
+        mPresenter.loadNearbyPlaces();
+    }
+
+    private void showEmptyAdapter() {
+        RecyclerView.Adapter adapter = new EmptyAdapter(getActivity(), getResources().getString(R.string.error_loading_places_message));
+        mPlacesList.setAdapter(adapter);
+    }
+
+    private void setAdapterWithPlaces(List<Place> places) {
+        NearbyPlacesAdapter mAdapter = new NearbyPlacesAdapter(getActivity(), places, this);
+        this.mPlacesList.setAdapter(mAdapter);
+    }
 }
