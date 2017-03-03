@@ -42,25 +42,25 @@ public class NavigationListData extends ArrayList<NavigationListItemModel> {
                 FavouritesFragment.class
         );
 
-        NavigationListItemModel itemWeather = new NavigationListItemModel(
-                R.drawable.ic_weather,
-                context.getString(R.string.navigation_item_weather),
-                WeatherFragment.class
-        );
-
-        NavigationListItemModel itemCurrency = new NavigationListItemModel(
-                R.drawable.ic_currency,
-                context.getString(R.string.navigation_item_currency),
-                null
-//                CurrencyActivity.class
-        );
-
-        NavigationListItemModel itemFood = new NavigationListItemModel(
-                R.drawable.ic_food,
-                context.getString(R.string.navigation_item_food),
-                null
-//                FoodActivity.class
-        );
+//        NavigationListItemModel itemWeather = new NavigationListItemModel(
+//                R.drawable.ic_weather,
+//                context.getString(R.string.navigation_item_weather),
+//                WeatherFragment.class
+//        );
+//
+//        NavigationListItemModel itemCurrency = new NavigationListItemModel(
+//                R.drawable.ic_currency,
+//                context.getString(R.string.navigation_item_currency),
+//                null
+////                CurrencyActivity.class
+//        );
+//
+//        NavigationListItemModel itemFood = new NavigationListItemModel(
+//                R.drawable.ic_food,
+//                context.getString(R.string.navigation_item_food),
+//                null
+////                FoodActivity.class
+//        );
 
         NavigationListItemModel itemSettings = new NavigationListItemModel(
                 R.drawable.ic_settings,
@@ -70,9 +70,9 @@ public class NavigationListData extends ArrayList<NavigationListItemModel> {
 
         this.add(itemHome);
         this.add(itemFavourite);
-        this.add(itemWeather);
-        this.add(itemCurrency);
-        this.add(itemFood);
+//        this.add(itemWeather);
+//        this.add(itemCurrency);
+//        this.add(itemFood);
         this.add(itemSettings);
     }
 

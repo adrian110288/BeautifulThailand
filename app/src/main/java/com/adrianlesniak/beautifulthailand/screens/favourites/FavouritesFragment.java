@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.adrianlesniak.beautifulthailand.R;
 import com.adrianlesniak.beautifulthailand.db.PlacesLocalDataSource;
@@ -31,49 +32,30 @@ import io.reactivex.disposables.Disposable;
  * Created by adrian on 02/02/2017.
  */
 
-public class FavouritesFragment extends ToolbarFragment implements OnPlaceClickListener {
+public class FavouritesFragment extends ToolbarFragment implements OnPlaceClickListener, FavouritesContract.View {
+
+    @BindView(R.id.progress_bar)
+    public ProgressBar mProgressBar;
 
     @BindView(R.id.places_list)
     public RecyclerView mPlacesList;
 
     private RecyclerView.Adapter mAdapter;
 
+    private FavouritesPresenter mPresenter;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.mPresenter = new FavouritesPresenter(PlacesLocalDataSource.getInstance(getContext()), this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        PlacesLocalDataSource.getInstance(getContext())
-                .getFavouritePlaces()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Place>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<Place> placesList) {
-
-                        mAdapter = new NearbyPlacesAdapter(getContext(), placesList, FavouritesFragment.this);
-                        mPlacesList.setAdapter(mAdapter);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        this.mPresenter.loadPlaces();
     }
 
     @Nullable
@@ -94,5 +76,22 @@ public class FavouritesFragment extends ToolbarFragment implements OnPlaceClickL
     @Override
     public void onPlaceClicked(Place place) {
 
+    }
+
+    @Override
+    public void showPlaces(List<Place> placesList) {
+
+        mAdapter = new NearbyPlacesAdapter(getContext(), placesList, FavouritesFragment.this);
+        mPlacesList.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void showLoading() {
+        this.mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void dismissLoading() {
+        this.mProgressBar.setVisibility(View.GONE);
     }
 }

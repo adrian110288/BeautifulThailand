@@ -39,6 +39,13 @@ public class PlaceDetailsPresenter implements PlaceDetailsContract.Presenter {
     @Override
     public void loadPlaceDetails(String placeId) {
 
+        PlaceDetails cachedPlaceDetails = checkCacheForPlaceDetails(placeId);
+
+        if(cachedPlaceDetails != null) {
+            mView.showPlaceDetails(cachedPlaceDetails);
+            return;
+        }
+
         this.mGoogleMapsApiHelper
                 .getPlaceDetails(placeId)
                 .subscribeOn(Schedulers.io())
@@ -54,7 +61,6 @@ public class PlaceDetailsPresenter implements PlaceDetailsContract.Presenter {
 
                         PlaceDetailsCache.getInstance().addPlaceDetails(placeDetails);
                         mView.showPlaceDetails(placeDetails);
-
                     }
 
                     @Override
@@ -83,5 +89,9 @@ public class PlaceDetailsPresenter implements PlaceDetailsContract.Presenter {
                         mView.setPlaceFavourite(!((NullableObject)value).isNull());
                     }
                 });
+    }
+
+    private PlaceDetails checkCacheForPlaceDetails(String placeId) {
+        return PlaceDetailsCache.getInstance().getPlaceDetails(placeId);
     }
 }

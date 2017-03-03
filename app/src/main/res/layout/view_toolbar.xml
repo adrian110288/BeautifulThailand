@@ -9,20 +9,18 @@
     <ImageButton
         android:id="@+id/toolbar_navigation_button"
         style="@style/BTIconStyle.BTIconButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/touchable_image_button_area"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/standard_margin" />
+        tools:src="@drawable/ic_drawer"/>
 
     <ImageButton
         android:id="@+id/toolbar_action_button"
         style="@style/BTIconStyle.BTIconButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/touchable_image_button_area"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/standard_margin" />
+        tools:src="@drawable/ic_filter"/>
 
     <com.adrianlesniak.beautifulthailand.views.BTTextView
         android:id="@+id/toolbar_title"

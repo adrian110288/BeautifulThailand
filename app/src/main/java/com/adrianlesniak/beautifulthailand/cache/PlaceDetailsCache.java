@@ -27,9 +27,11 @@ public class PlaceDetailsCache {
 
     public void addPlaceDetails(PlaceDetails place) {
 
-        if(!this.mCache.containsKey(place.placeId)) {
-            this.mCache.put(place.placeId, place);
-        }
+        this.mCache.put(place.placeId, place);
+
+//        if(!this.mCache.containsKey(place.placeId)) {
+//
+//        }
     }
 
     public PlaceDetails getPlaceDetails(String placeId) {
@@ -38,5 +40,9 @@ public class PlaceDetailsCache {
 
     public boolean isCached(String placeId) {
         return this.mCache.containsKey(placeId);
+    }
+
+    public int size() {
+        return this.mCache.size();
     }
 }

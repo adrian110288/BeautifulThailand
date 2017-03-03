@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        debug {
-            keyAlias 'debugstore'
-            keyPassword 'debugstore'
-            storeFile file('../debug.keystore.jks')
-            storePassword 'debugstore'
-        }
-    }
+//    signingConfigs {
+//        debug {
+//            keyAlias 'debugstore'
+//            keyPassword 'debugstore'
+//            storeFile file('../debug.keystore.jks')
+//            storePassword 'debugstore'
+//        }
+//    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
@@ -29,8 +29,11 @@ android {
         debug {
             minifyEnabled false
             proguardFiles 'proguard-rules-debug.pro'
-            signingConfig signingConfigs.debug
+//            signingConfig signingConfigs.debug
         }
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
     lintOptions {
         abortOnError false
@@ -59,4 +62,5 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.5.1'
     compile 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'org.jetbrains:annotations-java5:15.0'
+
 }
