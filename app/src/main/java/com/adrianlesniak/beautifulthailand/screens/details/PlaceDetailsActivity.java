@@ -44,7 +44,7 @@ import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class PlaceDetailsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnScrollChangeListener {
+public class PlaceDetailsActivity extends AppCompatActivity implements OnMapReadyCallback, PlaceDetailsContract.View {
 
     public static final String BUNDLE_PLACE = "place";
 
@@ -81,6 +81,8 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
     @BindView(R.id.favourite_button)
     View mFavouriteButton;
 
+    private PlaceDetailsPresenter mPresenter;
+
     private Place mPlace;
 
     private PlaceDetails mPlaceDetails;
@@ -94,56 +96,26 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
 
         this.mPlace = getIntent().getParcelableExtra(BUNDLE_PLACE);
 
-        GoogleMapsApiHelper.getInstance(this)
-                .getPlaceDetails(mPlace.placeId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new ObserverAdapter() {
+        this.mPresenter = new PlaceDetailsPresenter(
+                PlacesLocalDataSource.getInstance(this),
+                GoogleMapsApiHelper.getInstance(this),
+                this);
 
-                    @Override
-                    public void onNext(Object placeDetails) {
+        this.mPresenter.loadPlaceDetails(this.mPlace.placeId);
 
-                        if(!(placeDetails instanceof PlaceDetails)) return;
+        this.mDetailsScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                ViewCompat.setElevation(mBackFrame, Math.min(scrollY/getResources().getDisplayMetrics().density, getResources().getDimensionPixelSize(R.dimen.card_elevation)));
 
-                        //TODO Add loader
-
-                        PlaceDetailsCache.getInstance().
-                                addPlaceDetails((PlaceDetails) placeDetails);
-
-                        mPlaceDetails = (PlaceDetails) placeDetails;
-                        updateViews();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        //TODO Add error handling
-                    }
-                });
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        PlacesLocalDataSource.getInstance(this)
-                .getFavouritePlaceById(this.mPlace.placeId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new ObserverAdapter() {
-
-                    @Override
-                    public void onNext(Object value) {
-                        mFavouriteButton.setSelected(!((NullableObject)value).isNull());
-                    }
-                });
-
-        this.mDetailsScrollView.setOnScrollChangeListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        this.mDetailsScrollView.setOnScrollChangeListener(null);
+        this.mPresenter.checkIsPlaceFavourite(this.mPlace.placeId);
     }
 
     @Override
@@ -244,7 +216,30 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
         }
     }
 
-    private void updateViews() {
+    private void setupMap(GoogleMap googleMap) {
+
+        LatLng placeCoord = new LatLng(this.mPlaceDetails.geometry.location.lat, this.mPlaceDetails.geometry.location.lng);
+        MarkerOptions markerOptions = new MarkerOptions()
+                .draggable(false)
+                .position(placeCoord);
+
+        googleMap.addMarker(markerOptions );
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory
+                .newLatLngZoom(markerOptions.getPosition(), 15);
+
+        googleMap.moveCamera(cameraUpdate);
+
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+    }
+
+    @Override
+    public void showPlaceDetails(PlaceDetails placeDetails) {
+
+        this.mPlaceDetails = placeDetails;
+
         this.mPlaceTitleTextView.setText(this.mPlaceDetails.name);
 
         DistanceMatrixRow.DistanceMatrixElement distanceMatrixElement = DistanceMatrixCache.getInstance().getDistance(this.mPlaceDetails.placeId);
@@ -281,27 +276,8 @@ public class PlaceDetailsActivity extends AppCompatActivity implements OnMapRead
         }
     }
 
-    private void setupMap(GoogleMap googleMap) {
-
-        LatLng placeCoord = new LatLng(this.mPlaceDetails.geometry.location.lat, this.mPlaceDetails.geometry.location.lng);
-        MarkerOptions markerOptions = new MarkerOptions()
-                .draggable(false)
-                .position(placeCoord);
-
-        googleMap.addMarker(markerOptions );
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory
-                .newLatLngZoom(markerOptions.getPosition(), 15);
-
-        googleMap.moveCamera(cameraUpdate);
-
-        googleMap.getUiSettings().setAllGesturesEnabled(false);
-        googleMap.getUiSettings().setMapToolbarEnabled(false);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-    }
-
     @Override
-    public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-        ViewCompat.setElevation(this.mBackFrame, Math.min(scrollY/getResources().getDisplayMetrics().density, getResources().getDimensionPixelSize(R.dimen.card_elevation)));
+    public void setPlaceFavourite(boolean isFavourite) {
+        this.mFavouriteButton.setSelected(isFavourite);
     }
 }
